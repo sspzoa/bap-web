@@ -17,8 +17,17 @@ export const parseMenu = (menuStr: string) => {
   return menuStr ? menuStr.split(/\/(?![^()]*\))/) : [];
 };
 
-export const useMealData = () => {
+export const useMealData = (initialData?: MealData, initialDate?: Date) => {
+  // 초기 날짜 설정
   const [currentDate, setCurrentDate] = useAtom(currentDateAtom);
+
+  // 서버에서 받은 초기 날짜가 있으면 사용
+  useEffect(() => {
+    if (initialDate) {
+      setCurrentDate(initialDate);
+    }
+  }, [initialDate, setCurrentDate]);
+
   const formattedDate = format(currentDate, "yyyy-MM-dd");
   const queryClient = useQueryClient();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -29,11 +38,13 @@ export const useMealData = () => {
   const [isMobile, setIsMobile] = useState(false);
   const [initialLoad, setInitialLoad] = useState(true);
 
+  // 서버에서 받은 초기 데이터를 사용하도록 수정
   const { data, isLoading, isError } = useQuery({
     queryKey: ["mealData", formattedDate],
     queryFn: () => fetchMealData(formattedDate),
     staleTime: 1000 * 60 * 5,
     retry: false,
+    initialData: formattedDate === format(initialDate || new Date(), "yyyy-MM-dd") ? initialData : undefined,
   });
 
   useEffect(() => {
