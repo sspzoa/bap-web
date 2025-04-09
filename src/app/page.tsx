@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Glass from "@/components/Glass";
-import {format} from "date-fns";
+import {addHours, format} from "date-fns";
 import {ko} from "date-fns/locale";
 import {parseMenu, useMealData} from "@/hooks/useMealData";
 import {MealSectionProps} from "@/types";
@@ -29,7 +29,9 @@ export default function Home() {
   const dinnerItems = data ? parseMenu(data.dinner) : [];
 
   function getInitialOpacity() {
-    const currentTime = new Date().toTimeString().slice(0, 8);
+    const now = new Date();
+    const koreaTime = addHours(now, 9 - (-now.getTimezoneOffset() / 60));
+    const currentTime = koreaTime.toTimeString().slice(0, 8);
 
     if (currentTime >= "19:30:00" || currentTime < "08:00:00") {
       return { breakfast: 1, lunch: 0, dinner: 0 };
