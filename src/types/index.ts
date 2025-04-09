@@ -16,5 +16,5 @@ export interface MealSectionProps {
   imageUrl: string;
   isLoading: boolean;
   isError?: boolean;
-  id?: string; // ScrollMagic 타겟 요소 ID 추가
+  id?: string;
 }
