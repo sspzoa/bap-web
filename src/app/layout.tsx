@@ -2,6 +2,18 @@ import type {Metadata} from "next";
 import "./globals.css";
 import React from "react";
 import Providers from "@/app/providers";
+import localFont from 'next/font/local';
+
+const suitFont = localFont({
+  src: [
+    {
+      path: './fonts/SUIT-Variable.woff2',
+      style: 'normal',
+    },
+  ],
+  variable: '--font-suit',
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
   title: "밥",
@@ -13,11 +25,11 @@ export const metadata: Metadata = {
 
 export default function RootLayout({children}: Readonly<{ children: React.ReactNode; }>) {
   return (
-    <html lang="ko">
+    <html lang="ko" className={`${suitFont.variable}`}>
     <head>
       <meta name="google-site-verification" content="Autqjgf5q34Q-Bi4JnRwIuiJW-WzwkCU6Y4wlGU0IVU" />
     </head>
-    <body className={`antialiased`}>
+    <body className={`antialiased font-suit`}>
     <Providers>
       {children}
     </Providers>
