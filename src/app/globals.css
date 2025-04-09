@@ -1,16 +1,12 @@
-@import "tailwindcss";
+@import url("https://cdn.jsdelivr.net/gh/sun-typeface/SUIT@2/fonts/variable/woff2/SUIT-Variable.css");
 
-@layer base {
-    :root {
-        --font-suit: 'SUIT Variable', sans-serif;
-    }
-}
+@import "tailwindcss";
 
 body {
     color: white;
     line-height: 1.6;
     text-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
-    font-family: var(--font-suit);
+    font-family: 'SUIT Variable', sans-serif;
     user-select: none;
     -ms-overflow-style: none;
 }

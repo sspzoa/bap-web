@@ -17,72 +17,23 @@ export const parseMenu = (menuStr: string) => {
   return menuStr ? menuStr.split(/\/(?![^()]*\))/) : [];
 };
 
-export const getInitialMealState = () => {
-  const currentTime = new Date().toTimeString().slice(0, 8);
-
-  if (currentTime >= "19:30:00") {
-    return {
-      date: addDays(new Date(), 1),
-      breakfastOpacity: 1,
-      lunchOpacity: 0,
-      dinnerOpacity: 0,
-      scrollPosition: 0
-    };
-  } else if (currentTime >= "14:00:00") {
-    return {
-      date: new Date(),
-      breakfastOpacity: 0,
-      lunchOpacity: 0,
-      dinnerOpacity: 1,
-      scrollPosition: 2
-    };
-  } else if (currentTime >= "08:00:00") {
-    return {
-      date: new Date(),
-      breakfastOpacity: 0,
-      lunchOpacity: 1,
-      dinnerOpacity: 0,
-      scrollPosition: 1
-    };
-  } else {
-    return {
-      date: new Date(),
-      breakfastOpacity: 1,
-      lunchOpacity: 0,
-      dinnerOpacity: 0,
-      scrollPosition: 0
-    };
-  }
-};
-
-export const useMealData = (initialData?: MealData, initialDate?: Date) => {
-  const initialState = getInitialMealState();
-
+export const useMealData = () => {
   const [currentDate, setCurrentDate] = useAtom(currentDateAtom);
-  const initialRender = useRef(true);
-
-  useEffect(() => {
-    if (initialRender.current) {
-      setCurrentDate(initialState.date);
-      initialRender.current = false;
-    }
-  }, [initialState.date, setCurrentDate]);
-
   const formattedDate = format(currentDate, "yyyy-MM-dd");
   const queryClient = useQueryClient();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
-  const [breakfastOpacity, setBreakfastOpacity] = useState(initialState.breakfastOpacity);
-  const [lunchOpacity, setLunchOpacity] = useState(initialState.lunchOpacity);
-  const [dinnerOpacity, setDinnerOpacity] = useState(initialState.dinnerOpacity);
+  const [breakfastOpacity, setBreakfastOpacity] = useState(1);
+  const [lunchOpacity, setLunchOpacity] = useState(0);
+  const [dinnerOpacity, setDinnerOpacity] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
+  const [initialLoad, setInitialLoad] = useState(true);
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["mealData", formattedDate],
     queryFn: () => fetchMealData(formattedDate),
     staleTime: 1000 * 60 * 5,
     retry: false,
-    initialData: formattedDate === format(initialDate || initialState.date, "yyyy-MM-dd") ? initialData : undefined,
   });
 
   useEffect(() => {
@@ -117,13 +68,36 @@ export const useMealData = (initialData?: MealData, initialDate?: Date) => {
     setCurrentDate(new Date());
   };
 
-  useEffect(() => {
-    if (scrollContainerRef.current && isMobile) {
-      const scrollContainer = scrollContainerRef.current;
-      const scrollWidth = scrollContainer.scrollWidth / 3;
-      scrollContainer.scrollLeft = scrollWidth * initialState.scrollPosition;
+  const setMealByTime = () => {
+    if (!scrollContainerRef.current) return;
+
+    const currentTime = new Date().toTimeString().slice(0, 8);
+    const scrollContainer = scrollContainerRef.current;
+    const scrollWidth = scrollContainer.scrollWidth / 3;
+
+    if (currentTime >= "19:30:00") {
+      setCurrentDate(addDays(new Date(), 1));
+      scrollContainer.scrollLeft = 0;
+      setBreakfastOpacity(1);
+      setLunchOpacity(0);
+      setDinnerOpacity(0);
+    } else if (currentTime >= "14:00:00") {
+      scrollContainer.scrollLeft = scrollWidth * 2;
+      setBreakfastOpacity(0);
+      setLunchOpacity(0);
+      setDinnerOpacity(1);
+    } else if (currentTime >= "08:00:00") {
+      scrollContainer.scrollLeft = scrollWidth;
+      setBreakfastOpacity(0);
+      setLunchOpacity(1);
+      setDinnerOpacity(0);
+    } else {
+      scrollContainer.scrollLeft = 0;
+      setBreakfastOpacity(1);
+      setLunchOpacity(0);
+      setDinnerOpacity(0);
     }
-  }, [isMobile, initialState.scrollPosition]);
+  };
 
   useEffect(() => {
     const checkIfMobile = () => {
@@ -137,6 +111,8 @@ export const useMealData = (initialData?: MealData, initialDate?: Date) => {
           setBreakfastOpacity(0);
           setLunchOpacity(0);
           setDinnerOpacity(1);
+        } else {
+          setMealByTime();
         }
       }
     };
@@ -149,6 +125,17 @@ export const useMealData = (initialData?: MealData, initialDate?: Date) => {
       window.removeEventListener('resize', checkIfMobile);
     };
   }, [isMobile]);
+
+  useEffect(() => {
+    if (!initialLoad) return;
+
+    if (typeof window !== 'undefined') {
+      setTimeout(() => {
+        setMealByTime();
+        setInitialLoad(false);
+      }, 100);
+    }
+  }, [initialLoad]);
 
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
     if (!isMobile) return;
