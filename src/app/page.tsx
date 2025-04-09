@@ -6,7 +6,6 @@ import {format} from "date-fns";
 import {ko} from "date-fns/locale";
 import {parseMenu, useMealData} from "@/hooks/useMealData";
 import {MealSectionProps} from "@/types";
-import { useEffect, useState } from "react";
 
 export default function Home() {
   const {
@@ -20,7 +19,6 @@ export default function Home() {
     breakfastOpacity,
     lunchOpacity,
     dinnerOpacity,
-    isMobile,
     handleScroll,
     dateInitialized,
     initialLoad
@@ -46,15 +44,15 @@ export default function Home() {
 
   const initialOpacity = getInitialOpacity();
 
+  const showMealContent = dateInitialized || !initialLoad;
+
   return (
     <div className="h-[100dvh] flex items-center justify-center py-4 md:py-8 md:px-8 overflow-hidden relative">
-      <div className="fixed inset-0 w-full h-full">
+      <div className="fixed inset-0 w-full h-full md:hidden">
         <div
           className="absolute inset-0 w-full h-full"
           style={{
-            opacity: isMobile
-              ? (initialLoad ? initialOpacity.breakfast : breakfastOpacity)
-              : initialOpacity.breakfast,
+            opacity: initialLoad ? initialOpacity.breakfast : breakfastOpacity,
             zIndex: 1
           }}
         >
@@ -73,9 +71,7 @@ export default function Home() {
         <div
           className="absolute inset-0 w-full h-full"
           style={{
-            opacity: isMobile
-              ? (initialLoad ? initialOpacity.lunch : lunchOpacity)
-              : initialOpacity.lunch,
+            opacity: initialLoad ? initialOpacity.lunch : lunchOpacity,
             zIndex: 2
           }}
         >
@@ -94,9 +90,28 @@ export default function Home() {
         <div
           className="absolute inset-0 w-full h-full"
           style={{
-            opacity: isMobile
-              ? (initialLoad ? initialOpacity.dinner : dinnerOpacity)
-              : initialOpacity.dinner,
+            opacity: initialLoad ? initialOpacity.dinner : dinnerOpacity,
+            zIndex: 3
+          }}
+        >
+          <Image
+            src="/img/dinner.svg"
+            alt="저녁 배경"
+            fill
+            style={{
+              objectFit: 'cover',
+              objectPosition: '50% 90%'
+            }}
+            priority
+          />
+        </div>
+      </div>
+
+      <div className="fixed inset-0 w-full h-full hidden md:block">
+        <div
+          className="absolute inset-0 w-full h-full"
+          style={{
+            opacity: 1,
             zIndex: 3
           }}
         >
@@ -154,6 +169,7 @@ export default function Home() {
             isLoading={isLoading}
             isError={isError}
             id="breakfast"
+            showContent={showMealContent}
           />
 
           <MealSection
@@ -164,6 +180,7 @@ export default function Home() {
             isLoading={isLoading}
             isError={isError}
             id="lunch"
+            showContent={showMealContent}
           />
 
           <MealSection
@@ -174,6 +191,7 @@ export default function Home() {
             isLoading={isLoading}
             isError={isError}
             id="dinner"
+            showContent={showMealContent}
           />
         </div>
       </div>
@@ -181,54 +199,58 @@ export default function Home() {
   );
 }
 
-function MealSection({icon, title, items, imageUrl, isLoading, isError = false, id}: MealSectionProps) {
+function MealSection({icon, title, items, imageUrl, isLoading, isError = false, id, showContent}: MealSectionProps & { showContent: boolean }) {
   return (
     <Glass
       className="flex-shrink-0 w-full md:flex-1 snap-center snap-always p-4 flex flex-col gap-4 overflow-y-auto"
       data-id={id}
     >
-      <div className="flex flex-row gap-2 items-center h-8">
-        <Image src={icon} alt={title} width={32} height={32}/>
-        <p className="text-[32px] font-extrabold tracking-tight">{title}</p>
-      </div>
+      {showContent && (
+        <>
+          <div className="flex flex-row gap-2 items-center h-8">
+            <Image src={icon} alt={title} width={32} height={32}/>
+            <p className="text-[32px] font-extrabold tracking-tight">{title}</p>
+          </div>
 
-      <div className="flex flex-col gap-2 pr-2">
-        {!isLoading && imageUrl && !isError && (
-          <div className="flex flex-row gap-2">
-            <p className="text-[20px] font-bold">-</p>
-            <a
-              href={imageUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-[20px] font-bold underline active:opacity-50 duration-100"
-            >
-              사진 보기
-            </a>
-          </div>
-        )}
+          <div className="flex flex-col gap-2 pr-2">
+            {!isLoading && imageUrl && !isError && (
+              <div className="flex flex-row gap-2">
+                <p className="text-[20px] font-bold">-</p>
+                <a
+                  href={imageUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[20px] font-bold underline active:opacity-50 duration-100"
+                >
+                  사진 보기
+                </a>
+              </div>
+            )}
 
-        {isLoading ? (
-          <div className="flex flex-row gap-2">
+            {isLoading ? (
+              <div className="flex flex-row gap-2">
+              </div>
+            ) : isError ? (
+              <div className="flex flex-row gap-2">
+                <p className="text-[20px] font-bold">-</p>
+                <p className="text-[20px] font-bold">메뉴 정보가 없습니다</p>
+              </div>
+            ) : items.length > 0 ? (
+              items.map((item, index) => (
+                <div key={`${title.toLowerCase()}-${index}`} className="flex flex-row gap-2">
+                  <p className="text-[20px] font-bold">-</p>
+                  <p className="text-[20px] font-bold break-words">{item}</p>
+                </div>
+              ))
+            ) : (
+              <div className="flex flex-row gap-2">
+                <p className="text-[20px] font-bold">-</p>
+                <p className="text-[20px] font-bold">메뉴 정보가 없습니다</p>
+              </div>
+            )}
           </div>
-        ) : isError ? (
-          <div className="flex flex-row gap-2">
-            <p className="text-[20px] font-bold">-</p>
-            <p className="text-[20px] font-bold">메뉴 정보가 없습니다</p>
-          </div>
-        ) : items.length > 0 ? (
-          items.map((item, index) => (
-            <div key={`${title.toLowerCase()}-${index}`} className="flex flex-row gap-2">
-              <p className="text-[20px] font-bold">-</p>
-              <p className="text-[20px] font-bold break-words">{item}</p>
-            </div>
-          ))
-        ) : (
-          <div className="flex flex-row gap-2">
-            <p className="text-[20px] font-bold">-</p>
-            <p className="text-[20px] font-bold">메뉴 정보가 없습니다</p>
-          </div>
-        )}
-      </div>
+        </>
+      )}
     </Glass>
   );
 }
