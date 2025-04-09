@@ -1,6 +1,6 @@
 import { format } from "date-fns";
 import { MealData } from "@/types";
-import ClientHome from "@/components/ClientHome";
+import ClientHome from "@/components/clientHome";
 
 async function fetchMealData(date: string): Promise<MealData> {
   try {
