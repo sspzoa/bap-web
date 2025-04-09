@@ -82,7 +82,7 @@ export default function Home() {
       <div className="flex flex-col-reverse md:flex-col max-w-[1500px] w-full max-h-[900px] h-full gap-4 z-10">
         <div className="flex flex-row gap-4 px-4 md:px-0">
           <Glass
-            className="hover:scale-105 hover:opacity-50 duration-100 shrink-0 w-[54px] h-[54px] flex justify-center items-center cursor-pointer order-1 md:order-2"
+            className="active:scale-105 active:opacity-50 duration-100 shrink-0 w-[54px] h-[54px] flex justify-center items-center cursor-pointer order-1 md:order-2"
             onClick={handlePrevDay}
           >
             <Image src="/icon/arrow-left.svg" alt="arrow-left" width={32} height={32}/>
@@ -95,7 +95,7 @@ export default function Home() {
           </Glass>
 
           <Glass
-            className="hover:scale-105 hover:opacity-50 duration-100 shrink-0 w-[54px] h-[54px] flex justify-center items-center cursor-pointer order-3 md:order-3"
+            className="active:scale-105 active:opacity-50 duration-100 shrink-0 w-[54px] h-[54px] flex justify-center items-center cursor-pointer order-3 md:order-3"
             onClick={handleNextDay}
           >
             <Image src="/icon/arrow-right.svg" alt="arrow-right" width={32} height={32}/>
@@ -166,7 +166,7 @@ function MealSection({icon, title, items, imageUrl, isLoading, isError = false, 
               href={imageUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-[20px] font-bold underline hover:opacity-50 duration-100"
+              className="text-[20px] font-bold underline active:opacity-50 duration-100"
             >
               사진 보기
             </a>
