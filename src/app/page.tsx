@@ -147,7 +147,7 @@ export default function Home() {
   );
 }
 
-export function MealSection({icon, title, items, imageUrl, isLoading, isError = false, id}: MealSectionProps) {
+function MealSection({icon, title, items, imageUrl, isLoading, isError = false, id}: MealSectionProps) {
   return (
     <Glass
       className="flex-shrink-0 w-full md:flex-1 snap-center snap-always p-4 flex flex-col gap-4 overflow-y-auto"
