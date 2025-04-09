@@ -28,6 +28,7 @@ export const useMealData = () => {
   const [dinnerOpacity, setDinnerOpacity] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
   const [initialLoad, setInitialLoad] = useState(true);
+  const [dateInitialized, setDateInitialized] = useState(false);
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["mealData", formattedDate],
@@ -58,14 +59,17 @@ export const useMealData = () => {
 
   const handlePrevDay = () => {
     setCurrentDate(prevDate => subDays(prevDate, 1));
+    setDateInitialized(true);
   };
 
   const handleNextDay = () => {
     setCurrentDate(prevDate => addDays(prevDate, 1));
+    setDateInitialized(true);
   };
 
   const resetToToday = () => {
     setCurrentDate(new Date());
+    setDateInitialized(true);
   };
 
   const setMealByTime = () => {
@@ -97,6 +101,8 @@ export const useMealData = () => {
       setLunchOpacity(0);
       setDinnerOpacity(0);
     }
+
+    setDateInitialized(true);
   };
 
   useEffect(() => {
@@ -176,6 +182,8 @@ export const useMealData = () => {
     lunchOpacity,
     dinnerOpacity,
     isMobile,
-    handleScroll
+    handleScroll,
+    dateInitialized,
+    initialLoad
   };
 };
