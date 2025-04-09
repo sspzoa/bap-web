@@ -6,6 +6,7 @@ import {format} from "date-fns";
 import {ko} from "date-fns/locale";
 import {parseMenu, useMealData} from "@/hooks/useMealData";
 import {MealSectionProps} from "@/types";
+import { useEffect, useState } from "react";
 
 export default function Home() {
   const {
@@ -20,8 +21,18 @@ export default function Home() {
     lunchOpacity,
     dinnerOpacity,
     isMobile,
-    handleScroll
+    handleScroll,
+    dateInitialized,
+    initialLoad
   } = useMealData();
+
+  const [isFirstRender, setIsFirstRender] = useState(true);
+
+  useEffect(() => {
+    if (isFirstRender) {
+      setIsFirstRender(false);
+    }
+  }, []);
 
   const breakfastItems = data ? parseMenu(data.breakfast) : [];
   const lunchItems = data ? parseMenu(data.lunch) : [];
@@ -32,7 +43,12 @@ export default function Home() {
       <div className="fixed inset-0 w-full h-full">
         <div
           className="absolute inset-0 w-full h-full"
-          style={{ opacity: isMobile ? breakfastOpacity : 0, zIndex: 1 }}
+          style={{
+            opacity: isMobile
+              ? (initialLoad || isFirstRender ? 0 : breakfastOpacity)
+              : (isFirstRender ? 0 : 0),
+            zIndex: 1
+          }}
         >
           <Image
             src="/img/breakfast.svg"
@@ -48,7 +64,12 @@ export default function Home() {
 
         <div
           className="absolute inset-0 w-full h-full"
-          style={{ opacity: isMobile ? lunchOpacity : 0, zIndex: 2 }}
+          style={{
+            opacity: isMobile
+              ? (initialLoad || isFirstRender ? 0 : lunchOpacity)
+              : (isFirstRender ? 0 : 0),
+            zIndex: 2
+          }}
         >
           <Image
             src="/img/lunch.svg"
@@ -64,7 +85,12 @@ export default function Home() {
 
         <div
           className="absolute inset-0 w-full h-full"
-          style={{ opacity: isMobile ? dinnerOpacity : 1, zIndex: 3 }}
+          style={{
+            opacity: isMobile
+              ? (initialLoad || isFirstRender ? 0 : dinnerOpacity)
+              : (isFirstRender ? 0 : 1),
+            zIndex: 3
+          }}
         >
           <Image
             src="/img/dinner.svg"
@@ -90,7 +116,7 @@ export default function Home() {
 
           <Glass className="flex justify-center items-center w-full order-2 md:order-1">
             <p className="text-xl md:text-[22px] font-extrabold tracking-tight">
-              {format(currentDate, "M월 d일 eeee", {locale: ko})}
+              {dateInitialized ? format(currentDate, "M월 d일 eeee", {locale: ko}) : ""}
             </p>
           </Glass>
 
