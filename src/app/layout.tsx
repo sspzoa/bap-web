@@ -6,6 +6,9 @@ import Providers from "@/app/providers";
 export const metadata: Metadata = {
   title: "밥",
   description: "한국디지털미디어고등학고 급식 API",
+  openGraph: {
+    images: [{ url: 'https://xn--rh3b.net/og-image.png' }],
+  },
 };
 
 export default function RootLayout({children}: Readonly<{ children: React.ReactNode; }>) {
