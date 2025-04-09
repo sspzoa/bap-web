@@ -26,17 +26,25 @@ export default function Home() {
     initialLoad
   } = useMealData();
 
-  const [isFirstRender, setIsFirstRender] = useState(true);
-
-  useEffect(() => {
-    if (isFirstRender) {
-      setIsFirstRender(false);
-    }
-  }, []);
-
   const breakfastItems = data ? parseMenu(data.breakfast) : [];
   const lunchItems = data ? parseMenu(data.lunch) : [];
   const dinnerItems = data ? parseMenu(data.dinner) : [];
+
+  function getInitialOpacity() {
+    const currentTime = new Date().toTimeString().slice(0, 8);
+
+    if (currentTime >= "19:30:00" || currentTime < "08:00:00") {
+      return { breakfast: 1, lunch: 0, dinner: 0 };
+    } else if (currentTime >= "14:00:00") {
+      return { breakfast: 0, lunch: 0, dinner: 1 };
+    } else if (currentTime >= "08:00:00") {
+      return { breakfast: 0, lunch: 1, dinner: 0 };
+    } else {
+      return { breakfast: 1, lunch: 0, dinner: 0 };
+    }
+  }
+
+  const initialOpacity = getInitialOpacity();
 
   return (
     <div className="h-[100dvh] flex items-center justify-center py-4 md:py-8 md:px-8 overflow-hidden relative">
@@ -45,8 +53,8 @@ export default function Home() {
           className="absolute inset-0 w-full h-full"
           style={{
             opacity: isMobile
-              ? (initialLoad || isFirstRender ? 0 : breakfastOpacity)
-              : (isFirstRender ? 0 : 0),
+              ? (initialLoad ? initialOpacity.breakfast : breakfastOpacity)
+              : initialOpacity.breakfast,
             zIndex: 1
           }}
         >
@@ -66,8 +74,8 @@ export default function Home() {
           className="absolute inset-0 w-full h-full"
           style={{
             opacity: isMobile
-              ? (initialLoad || isFirstRender ? 0 : lunchOpacity)
-              : (isFirstRender ? 0 : 0),
+              ? (initialLoad ? initialOpacity.lunch : lunchOpacity)
+              : initialOpacity.lunch,
             zIndex: 2
           }}
         >
@@ -87,8 +95,8 @@ export default function Home() {
           className="absolute inset-0 w-full h-full"
           style={{
             opacity: isMobile
-              ? (initialLoad || isFirstRender ? 0 : dinnerOpacity)
-              : (isFirstRender ? 0 : 1),
+              ? (initialLoad ? initialOpacity.dinner : dinnerOpacity)
+              : initialOpacity.dinner,
             zIndex: 3
           }}
         >
