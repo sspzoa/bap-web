@@ -1,4 +1,10 @@
+@import url("https://cdn.jsdelivr.net/gh/sun-typeface/SUIT@2/fonts/static/woff2/SUIT.css");
+
 @import "tailwindcss";
+
+* {
+    font-family: "SUIT", sans-serif;
+}
 
 body {
     line-height: 1.6;
