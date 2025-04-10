@@ -75,21 +75,34 @@ export const useMealData = () => {
     if (!scrollContainerRef.current) return;
 
     const now = new Date();
-    const koreaTime = toZonedTime(now, 'Asia/Seoul');
-    const currentTime = format(koreaTime, 'HH:mm:ss');
+    const koreaTime = new Date(now.getTime() + (9 - (-now.getTimezoneOffset() / 60)) * 60 * 60 * 1000);
+    const currentTime = koreaTime.toTimeString().slice(0, 8);
     const scrollContainer = scrollContainerRef.current;
     const scrollWidth = scrollContainer.scrollWidth / 3;
 
     if (currentTime >= "19:30:00" || currentTime < "08:00:00") {
       if (currentTime >= "19:30:00") {
-        const tomorrow = new Date();
-        const tomorrowInKorea = toZonedTime(addDays(tomorrow, 1), 'Asia/Seoul');
-        setCurrentDate(tomorrowInKorea);
+        const tomorrow = addDays(new Date(), 1);
+        setCurrentDate(tomorrow);
+
+        scrollContainer.scrollLeft = 0;
+        setBreakfastOpacity(1);
+        setLunchOpacity(0);
+        setDinnerOpacity(0);
+
+        const tomorrowFormatted = format(tomorrow, "yyyy-MM-dd");
+        queryClient.prefetchQuery({
+          queryKey: ["mealData", tomorrowFormatted],
+          queryFn: () => fetchMealData(tomorrowFormatted),
+          staleTime: 1000 * 60 * 5,
+          retry: false,
+        });
+      } else {
+        scrollContainer.scrollLeft = 0;
+        setBreakfastOpacity(1);
+        setLunchOpacity(0);
+        setDinnerOpacity(0);
       }
-      scrollContainer.scrollLeft = 0;
-      setBreakfastOpacity(1);
-      setLunchOpacity(0);
-      setDinnerOpacity(0);
     } else if (currentTime >= "14:00:00") {
       scrollContainer.scrollLeft = scrollWidth * 2;
       setBreakfastOpacity(0);
@@ -99,11 +112,6 @@ export const useMealData = () => {
       scrollContainer.scrollLeft = scrollWidth;
       setBreakfastOpacity(0);
       setLunchOpacity(1);
-      setDinnerOpacity(0);
-    } else {
-      scrollContainer.scrollLeft = 0;
-      setBreakfastOpacity(1);
-      setLunchOpacity(0);
       setDinnerOpacity(0);
     }
 
@@ -146,7 +154,7 @@ export const useMealData = () => {
         setInitialLoad(false);
       }, 100);
     }
-  }, [initialLoad]);
+  }, [initialLoad, setMealByTime, queryClient]);
 
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
     if (!isMobile) return;
