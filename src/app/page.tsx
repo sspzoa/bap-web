@@ -5,6 +5,7 @@ import Glass from "@/components/Glass";
 import {addHours, format} from "date-fns";
 import {ko} from "date-fns/locale";
 import {parseMenu, useMealData} from "@/hooks/useMealData";
+
 import {MealSectionProps} from "@/types";
 import Link from "next/link";
 
@@ -17,6 +18,7 @@ export default function Home() {
     handlePrevDay,
     handleNextDay,
     resetToToday,
+    setMealByTime,
     scrollContainerRef,
     breakfastOpacity,
     lunchOpacity,
@@ -143,7 +145,10 @@ export default function Home() {
 
           <Glass
             className="flex justify-center items-center w-full h-full cursor-pointer active:scale-95 active:opacity-50 duration-100 order-2 md:order-1"
-            onClick={resetToToday}
+            onClick={() => {
+              resetToToday();
+              setMealByTime();
+            }}
           >
             <p className="text-xl md:text-[22px] font-extrabold tracking-tight">
               {dateInitialized ? format(currentDate, "M월 d일 eeee", {locale: ko}) : ""}

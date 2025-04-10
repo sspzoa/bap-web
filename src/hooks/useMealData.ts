@@ -75,12 +75,16 @@ export const useMealData = () => {
   const setMealByTime = () => {
     if (!scrollContainerRef.current) return;
 
-    const currentTime = new Date().toTimeString().slice(0, 8);
+    const now = new Date();
+    const koreaTime = new Date(now.getTime() + (9 - (-now.getTimezoneOffset() / 60)) * 60 * 60 * 1000);
+    const currentTime = koreaTime.toTimeString().slice(0, 8);
     const scrollContainer = scrollContainerRef.current;
     const scrollWidth = scrollContainer.scrollWidth / 3;
 
-    if (currentTime >= "19:30:00") {
-      setCurrentDate(addDays(new Date(), 1));
+    if (currentTime >= "19:30:00" || currentTime < "08:00:00") {
+      if (currentTime >= "19:30:00") {
+        setCurrentDate(addDays(new Date(), 1));
+      }
       scrollContainer.scrollLeft = 0;
       setBreakfastOpacity(1);
       setLunchOpacity(0);
@@ -177,6 +181,7 @@ export const useMealData = () => {
     handlePrevDay,
     handleNextDay,
     resetToToday,
+    setMealByTime,
     scrollContainerRef,
     breakfastOpacity,
     lunchOpacity,
