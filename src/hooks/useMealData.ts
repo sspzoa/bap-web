@@ -1,5 +1,6 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { format, subDays, addDays } from "date-fns";
+import {toZonedTime } from "date-fns-tz";
 import { useEffect, useState, useRef } from "react";
 import { useAtom } from "jotai";
 import { MealData } from "@/types";
@@ -68,7 +69,9 @@ export const useMealData = () => {
   };
 
   const resetToToday = () => {
-    setCurrentDate(new Date());
+    const now = new Date();
+    const koreaTime = toZonedTime(now, 'Asia/Seoul');
+    setCurrentDate(koreaTime);
     setDateInitialized(true);
   };
 
@@ -76,14 +79,16 @@ export const useMealData = () => {
     if (!scrollContainerRef.current) return;
 
     const now = new Date();
-    const koreaTime = new Date(now.getTime() + (9 - (-now.getTimezoneOffset() / 60)) * 60 * 60 * 1000);
-    const currentTime = koreaTime.toTimeString().slice(0, 8);
+    const koreaTime = toZonedTime(now, 'Asia/Seoul');
+    const currentTime = format(koreaTime, 'HH:mm:ss');
     const scrollContainer = scrollContainerRef.current;
     const scrollWidth = scrollContainer.scrollWidth / 3;
 
     if (currentTime >= "19:30:00" || currentTime < "08:00:00") {
       if (currentTime >= "19:30:00") {
-        setCurrentDate(addDays(new Date(), 1));
+        const tomorrow = new Date();
+        const tomorrowInKorea = toZonedTime(addDays(tomorrow, 1), 'Asia/Seoul');
+        setCurrentDate(tomorrowInKorea);
       }
       scrollContainer.scrollLeft = 0;
       setBreakfastOpacity(1);
