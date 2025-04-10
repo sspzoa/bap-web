@@ -1,5 +1,4 @@
 import { format } from "date-fns";
-import { toZonedTime } from "date-fns-tz";
 import { MealData } from "@/types";
 import MealLayout from "@/components/MealLayout";
 
@@ -22,17 +21,14 @@ async function getMealData(date: string): Promise<MealData | null> {
 
 function getDateToFetch() {
   const now = new Date();
-  const koreaTime = toZonedTime(now, 'Asia/Seoul');
-  const currentTime = format(koreaTime, 'HH:mm:ss');
 
-  if (currentTime >= "19:30:00") {
-    const tomorrow = new Date(koreaTime);
-    tomorrow.setDate(koreaTime.getDate() + 1);
-
+  if (now.getHours() >= 19 && now.getMinutes() >= 30) {
+    const tomorrow = new Date(now);
+    tomorrow.setDate(now.getDate() + 1);
     return tomorrow;
   }
 
-  return koreaTime;
+  return now;
 }
 
 export default async function Page() {
