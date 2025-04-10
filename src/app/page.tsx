@@ -140,7 +140,7 @@ export default function Home() {
           </Glass>
 
           <Glass className="flex justify-center items-center w-full order-2 md:order-1">
-            <p className="text-xl md:text-[22px] font-extrabold tracking-tight">
+            <p className="text-xl md:text-[22px] font-bold md:font-extrabold tracking-tight">
               {dateInitialized ? format(currentDate, "M월 d일 eeee", {locale: ko}) : ""}
             </p>
           </Glass>
@@ -211,7 +211,7 @@ function MealSection({icon, title, items, imageUrl, isLoading, isError = false, 
         <>
           <div className="flex flex-row gap-2 items-center h-8">
             <Image src={icon} alt={title} width={32} height={32}/>
-            <p className="text-[32px] font-extrabold tracking-tight">{title}</p>
+            <p className="text-[32px] font-bold md:font-extrabold tracking-tight">{title}</p>
           </div>
 
           <div className="flex flex-col gap-2 pr-2">
