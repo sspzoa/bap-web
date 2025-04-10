@@ -1,15 +1,17 @@
-@import url("https://cdn.jsdelivr.net/gh/sun-typeface/SUIT@2/fonts/static/woff2/SUIT.css");
-
 @import "tailwindcss";
 
+:root {
+    --font-suit: 'SUIT Variable', sans-serif;
+    --background: #ffffff;
+}
+
 * {
-    font-family: "SUIT", sans-serif;
+    font-family: var(--font-suit), sans-serif;
 }
 
 body {
     line-height: 1.6;
     text-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
-    font-family: 'SUIT Variable', sans-serif;
     user-select: none;
     -ms-overflow-style: none;
     background: var(--background);
@@ -18,10 +20,6 @@ body {
 
 ::-webkit-scrollbar {
     display: none;
-}
-
-:root {
-    --background: #ffffff;
 }
 
 @theme inline {
