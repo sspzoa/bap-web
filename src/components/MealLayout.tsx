@@ -31,6 +31,7 @@ export default function MealLayout({ initialData, initialDate }: MealLayoutProps
   const queryClient = useQueryClient();
   const [currentDate, setCurrentDate] = useState<Date>(initialDate);
   const formattedDate = format(currentDate, "yyyy-MM-dd");
+  const [simpleMealToggle, setSimpleMealToggle] = useState(false);
 
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [breakfastOpacity, setBreakfastOpacity] = useState(1);
@@ -192,9 +193,24 @@ export default function MealLayout({ initialData, initialDate }: MealLayoutProps
     }
   };
 
+  const filterSimpleMeals = (items: string[], mealType: string) => {
+    if (!simpleMealToggle) return items;
+
+    const count = mealType === "아침" ? 5 : 3;
+    const recentItems = items.slice(-count);
+
+    const keywordList = ["샌드위치", "샐러드", "죽", "닭가슴살", "선식"];
+    return recentItems.filter(item =>
+      keywordList.some(keyword => item.includes(keyword))
+    );
+  };
+
   const breakfastItems = data ? parseMenu(data.breakfast) : [];
   const lunchItems = data ? parseMenu(data.lunch) : [];
   const dinnerItems = data ? parseMenu(data.dinner) : [];
+
+  const filteredBreakfastItems = filterSimpleMeals(breakfastItems, "아침");
+  const filteredDinnerItems = filterSimpleMeals(dinnerItems, "저녁");
 
   function getInitialOpacity() {
     const now = new Date();
@@ -234,6 +250,7 @@ export default function MealLayout({ initialData, initialDate }: MealLayoutProps
               objectPosition: '50% 90%'
             }}
             priority
+            draggable={false}
           />
         </div>
 
@@ -253,6 +270,7 @@ export default function MealLayout({ initialData, initialDate }: MealLayoutProps
               objectPosition: '50% 90%'
             }}
             priority
+            draggable={false}
           />
         </div>
 
@@ -272,6 +290,7 @@ export default function MealLayout({ initialData, initialDate }: MealLayoutProps
               objectPosition: '50% 90%'
             }}
             priority
+            draggable={false}
           />
         </div>
       </div>
@@ -293,17 +312,50 @@ export default function MealLayout({ initialData, initialDate }: MealLayoutProps
               objectPosition: '50% 90%'
             }}
             priority
+            draggable={false}
           />
         </div>
+      </div>
+
+      <div className="fixed top-8 right-8 z-20 md:hidden">
+        <Glass
+          className={`active:scale-95 active:opacity-50 duration-100 shrink-0 w-[54px] h-[54px] flex justify-center items-center cursor-pointer ${simpleMealToggle ? 'bg-opacity-80' : 'bg-opacity-40'}`}
+          onClick={() => setSimpleMealToggle(!simpleMealToggle)}
+        >
+          <div className="relative w-6 h-6">
+            <div className={`absolute inset-0 flex items-center justify-center transition-opacity duration-200 ${simpleMealToggle ? 'opacity-100' : 'opacity-0'}`}>
+              <Image src="/icon/utensils.svg" alt="utensils" width={24} height={24} draggable={false}/>
+            </div>
+            <div className={`absolute inset-0 flex items-center justify-center transition-opacity duration-200 ${simpleMealToggle ? 'opacity-0' : 'opacity-100'}`}>
+              <Image src="/icon/apple.svg" alt="apple" width={24} height={24} draggable={false}/>
+            </div>
+          </div>
+          <span className="absolute -bottom-6 text-xs font-medium">간편식</span>
+        </Glass>
       </div>
 
       <div className="flex flex-col-reverse md:flex-col max-w-[1500px] md:px-4 w-full max-h-[900px] h-full gap-4 z-10">
         <div className="flex flex-row gap-4 px-4 md:px-0">
           <Glass
+            className="active:scale-95 active:opacity-50 duration-100 shrink-0 w-[54px] h-[54px] hidden md:flex justify-center items-center cursor-pointer order-0"
+            onClick={() => setSimpleMealToggle(!simpleMealToggle)}
+          >
+            <div className="relative w-6 h-6">
+              <div className={`absolute inset-0 flex items-center justify-center transition-opacity duration-200 ${simpleMealToggle ? 'opacity-100' : 'opacity-0'}`}>
+                <Image src="/icon/utensils.svg" alt="utensils" width={24} height={24} draggable={false}/>
+              </div>
+              <div className={`absolute inset-0 flex items-center justify-center transition-opacity duration-200 ${simpleMealToggle ? 'opacity-0' : 'opacity-100'}`}>
+                <Image src="/icon/apple.svg" alt="apple" width={24} height={24} draggable={false}/>
+              </div>
+            </div>
+            <span className="absolute -bottom-6 text-xs font-medium">간편식</span>
+          </Glass>
+
+          <Glass
             className="active:scale-95 active:opacity-50 duration-100 shrink-0 w-[54px] h-[54px] flex justify-center items-center cursor-pointer order-1 md:order-2"
             onClick={handlePrevDay}
           >
-            <Image src="/icon/arrow-left.svg" alt="arrow-left" width={32} height={32}/>
+            <Image src="/icon/arrow-left.svg" alt="arrow-left" width={32} height={32} draggable={false}/>
           </Glass>
 
           <Glass
@@ -322,7 +374,7 @@ export default function MealLayout({ initialData, initialDate }: MealLayoutProps
             className="active:scale-95 active:opacity-50 duration-100 shrink-0 w-[54px] h-[54px] flex justify-center items-center cursor-pointer order-3 md:order-3"
             onClick={handleNextDay}
           >
-            <Image src="/icon/arrow-right.svg" alt="arrow-right" width={32} height={32}/>
+            <Image src="/icon/arrow-right.svg" alt="arrow-right" width={32} height={32} draggable={false}/>
           </Glass>
         </div>
 
@@ -339,12 +391,13 @@ export default function MealLayout({ initialData, initialDate }: MealLayoutProps
           <MealSection
             icon="/icon/breakfast.svg"
             title="아침"
-            items={breakfastItems}
+            items={simpleMealToggle ? filteredBreakfastItems : breakfastItems}
             imageUrl={data?.images?.breakfast || ""}
             isLoading={isLoading}
             isError={isError}
             id="breakfast"
             showContent={showMealContent}
+            isSimpleMealMode={simpleMealToggle}
           />
 
           <MealSection
@@ -356,17 +409,19 @@ export default function MealLayout({ initialData, initialDate }: MealLayoutProps
             isError={isError}
             id="lunch"
             showContent={showMealContent}
+            isSimpleMealMode={false}
           />
 
           <MealSection
             icon="/icon/dinner.svg"
             title="저녁"
-            items={dinnerItems}
+            items={simpleMealToggle ? filteredDinnerItems : dinnerItems}
             imageUrl={data?.images?.dinner || ""}
             isLoading={isLoading}
             isError={isError}
             id="dinner"
             showContent={showMealContent}
+            isSimpleMealMode={simpleMealToggle}
           />
         </div>
       </div>
@@ -374,7 +429,20 @@ export default function MealLayout({ initialData, initialDate }: MealLayoutProps
   );
 }
 
-function MealSection({icon, title, items, imageUrl, isLoading, isError = false, id, showContent}: MealSectionProps & { showContent: boolean }) {
+function MealSection({
+                       icon,
+                       title,
+                       items,
+                       imageUrl,
+                       isLoading,
+                       isError = false,
+                       id,
+                       showContent,
+                       isSimpleMealMode = false
+                     }: MealSectionProps & {
+  showContent: boolean;
+  isSimpleMealMode?: boolean;
+}) {
   return (
     <Glass
       className="flex-shrink-0 w-full md:flex-1 snap-center snap-always p-4 flex flex-col gap-4 overflow-y-auto"
@@ -383,8 +451,13 @@ function MealSection({icon, title, items, imageUrl, isLoading, isError = false, 
       {showContent && (
         <>
           <div className="flex flex-row gap-2 items-center h-8">
-            <Image className="filter-drop-shadow" src={icon} alt={title} width={32} height={32} style={{filter: "drop-shadow(0 0 12px rgba(0, 0, 0, 0.2))"}}/>
-            <p className="text-[32px] font-extrabold tracking-tight">{title}</p>
+            <Image className="filter-drop-shadow" src={icon} alt={title} width={32} height={32} style={{filter: "drop-shadow(0 0 12px rgba(0, 0, 0, 0.2))"}} draggable={false}/>
+            <p className="text-[32px] font-extrabold tracking-tight">
+              {title}
+              {isSimpleMealMode && (
+                <span className="text-sm font-medium ml-2">(간편식)</span>
+              )}
+            </p>
           </div>
 
           <div className="flex flex-col gap-2 pr-2">
@@ -417,6 +490,11 @@ function MealSection({icon, title, items, imageUrl, isLoading, isError = false, 
                   <Link className="active:scale-95 active:opacity-50 duration-100" rel="noreferrer noopener" href={`https://search.naver.com/search.naver?ssc=tab.image.all&where=image&sm=tab_jum&query=${item}`}><p className="text-[20px] font-bold break-words">{item}</p></Link>
                 </div>
               ))
+            ) : isSimpleMealMode ? (
+              <div className="flex flex-row gap-2">
+                <p className="text-[20px] font-bold">-</p>
+                <p className="text-[20px] font-bold">간편식 메뉴가 없습니다</p>
+              </div>
             ) : (
               <div className="flex flex-row gap-2">
                 <p className="text-[20px] font-bold">-</p>
