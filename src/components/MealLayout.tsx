@@ -193,24 +193,37 @@ export default function MealLayout({ initialData, initialDate }: MealLayoutProps
     }
   };
 
-  const filterSimpleMeals = (items: string[], mealType: string) => {
-    if (!simpleMealToggle) return items;
+  const processMealItems = (items: string[], mealType: string) => {
+    const keywordList = ["샌드위치", "샐러드", "죽", "닭가슴살", "선식"];
 
     const count = mealType === "아침" ? 5 : 3;
-    const recentItems = items.slice(-count);
 
-    const keywordList = ["샌드위치", "샐러드", "죽", "닭가슴살", "선식"];
-    return recentItems.filter(item =>
+    const allItemsCount = items.length;
+    const recentItems = items.slice(Math.max(0, allItemsCount - count));
+    const nonRecentItems = items.slice(0, Math.max(0, allItemsCount - count));
+
+    const simpleMeals = recentItems.filter(item =>
       keywordList.some(keyword => item.includes(keyword))
     );
+
+    const regularRecentItems = recentItems.filter(item =>
+      !keywordList.some(keyword => item.includes(keyword))
+    );
+
+    const regularMeals = [...nonRecentItems, ...regularRecentItems];
+
+    return {
+      simpleMeals,
+      regularMeals
+    };
   };
 
   const breakfastItems = data ? parseMenu(data.breakfast) : [];
   const lunchItems = data ? parseMenu(data.lunch) : [];
   const dinnerItems = data ? parseMenu(data.dinner) : [];
 
-  const filteredBreakfastItems = filterSimpleMeals(breakfastItems, "아침");
-  const filteredDinnerItems = filterSimpleMeals(dinnerItems, "저녁");
+  const processedBreakfast = processMealItems(breakfastItems, "아침");
+  const processedDinner = processMealItems(dinnerItems, "저녁");
 
   function getInitialOpacity() {
     const now = new Date();
@@ -391,7 +404,8 @@ export default function MealLayout({ initialData, initialDate }: MealLayoutProps
           <MealSection
             icon="/icon/breakfast.svg"
             title="아침"
-            items={simpleMealToggle ? filteredBreakfastItems : breakfastItems}
+            regularItems={processedBreakfast.regularMeals}
+            simpleMealItems={processedBreakfast.simpleMeals}
             imageUrl={data?.images?.breakfast || ""}
             isLoading={isLoading}
             isError={isError}
@@ -403,7 +417,8 @@ export default function MealLayout({ initialData, initialDate }: MealLayoutProps
           <MealSection
             icon="/icon/lunch.svg"
             title="점심"
-            items={lunchItems}
+            regularItems={lunchItems}
+            simpleMealItems={[]}
             imageUrl={data?.images?.lunch || ""}
             isLoading={isLoading}
             isError={isError}
@@ -415,7 +430,8 @@ export default function MealLayout({ initialData, initialDate }: MealLayoutProps
           <MealSection
             icon="/icon/dinner.svg"
             title="저녁"
-            items={simpleMealToggle ? filteredDinnerItems : dinnerItems}
+            regularItems={processedDinner.regularMeals}
+            simpleMealItems={processedDinner.simpleMeals}
             imageUrl={data?.images?.dinner || ""}
             isLoading={isLoading}
             isError={isError}
@@ -432,17 +448,28 @@ export default function MealLayout({ initialData, initialDate }: MealLayoutProps
 function MealSection({
                        icon,
                        title,
-                       items,
+                       regularItems,
+                       simpleMealItems,
                        imageUrl,
                        isLoading,
                        isError = false,
                        id,
                        showContent,
                        isSimpleMealMode = false
-                     }: MealSectionProps & {
+                     }: {
+  icon: string;
+  title: string;
+  regularItems: string[];
+  simpleMealItems: string[];
+  imageUrl?: string;
+  isLoading: boolean;
+  isError?: boolean;
+  id: string;
   showContent: boolean;
   isSimpleMealMode?: boolean;
 }) {
+  const displayItems = isSimpleMealMode ? simpleMealItems : regularItems;
+
   return (
     <Glass
       className="flex-shrink-0 w-full md:flex-1 snap-center snap-always p-4 flex flex-col gap-4 overflow-y-auto"
@@ -454,9 +481,7 @@ function MealSection({
             <Image className="filter-drop-shadow" src={icon} alt={title} width={32} height={32} style={{filter: "drop-shadow(0 0 12px rgba(0, 0, 0, 0.2))"}} draggable={false}/>
             <p className="text-[32px] font-extrabold tracking-tight">
               {title}
-              {isSimpleMealMode && (
-                <span className="text-sm font-medium ml-2">(간편식)</span>
-              )}
+
             </p>
           </div>
 
@@ -483,8 +508,8 @@ function MealSection({
                 <p className="text-[20px] font-bold">-</p>
                 <p className="text-[20px] font-bold">메뉴 정보가 없습니다</p>
               </div>
-            ) : items.length > 0 ? (
-              items.map((item, index) => (
+            ) : displayItems.length > 0 ? (
+              displayItems.map((item, index) => (
                 <div key={`${title.toLowerCase()}-${index}`} className="flex flex-row gap-2">
                   <p className="text-[20px] font-bold">-</p>
                   <Link className="active:scale-95 active:opacity-50 duration-100" rel="noreferrer noopener" href={`https://search.naver.com/search.naver?ssc=tab.image.all&where=image&sm=tab_jum&query=${item}`}><p className="text-[20px] font-bold break-words">{item}</p></Link>
