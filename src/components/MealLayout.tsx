@@ -506,7 +506,7 @@ function MealSection({
             ) : isError ? (
               <div className="flex flex-row gap-2">
                 <p className="text-[20px] font-bold">-</p>
-                <p className="text-[20px] font-bold">메뉴 정보가 없습니다</p>
+                <p className="text-[20px] font-bold">급식 정보가 없어요</p>
               </div>
             ) : displayItems.length > 0 ? (
               displayItems.map((item, index) => (
@@ -518,12 +518,12 @@ function MealSection({
             ) : isSimpleMealMode ? (
               <div className="flex flex-row gap-2">
                 <p className="text-[20px] font-bold">-</p>
-                <p className="text-[20px] font-bold">간편식 메뉴가 없습니다</p>
+                <p className="text-[20px] font-bold">간편식이 없어요</p>
               </div>
             ) : (
               <div className="flex flex-row gap-2">
                 <p className="text-[20px] font-bold">-</p>
-                <p className="text-[20px] font-bold">메뉴 정보가 없습니다</p>
+                <p className="text-[20px] font-bold">급식 정보가 없어요</p>
               </div>
             )}
           </div>
