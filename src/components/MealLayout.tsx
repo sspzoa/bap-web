@@ -345,7 +345,6 @@ export default function MealLayout({ initialData, initialDate }: MealLayoutProps
               <Image src="/icon/apple.svg" alt="apple" width={24} height={24} draggable={false}/>
             </div>
           </div>
-          <span className="absolute -bottom-6 text-xs font-medium">간편식</span>
         </Glass>
       </div>
 
@@ -363,7 +362,6 @@ export default function MealLayout({ initialData, initialDate }: MealLayoutProps
                 <Image src="/icon/apple.svg" alt="apple" width={24} height={24} draggable={false}/>
               </div>
             </div>
-            <span className="absolute -bottom-6 text-xs font-medium">간편식</span>
           </Glass>
 
           <Glass
