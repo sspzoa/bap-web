@@ -150,7 +150,7 @@ export default function Home() {
               setMealByTime();
             }}
           >
-            <p className="text-xl md:text-[22px] font-bold tracking-tight">
+            <p className="text-xl md:text-[22px] font-extrabold tracking-tight">
               {dateInitialized ? format(currentDate, "M월 d일 eeee", {locale: ko}) : ""}
             </p>
           </Glass>
@@ -221,7 +221,7 @@ function MealSection({icon, title, items, imageUrl, isLoading, isError = false, 
         <>
           <div className="flex flex-row gap-2 items-center h-8">
             <Image className="filter-drop-shadow" src={icon} alt={title} width={32} height={32} style={{filter: "drop-shadow(0 0 12px rgba(0, 0, 0, 0.2))"}}/>
-            <p className="text-[32px] font-bold tracking-tight">{title}</p>
+            <p className="text-[32px] font-extrabold tracking-tight">{title}</p>
           </div>
 
           <div className="flex flex-col gap-2 pr-2">
