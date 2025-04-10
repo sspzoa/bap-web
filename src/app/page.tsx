@@ -53,7 +53,7 @@ export default function Home() {
   const showMealContent = dateInitialized || !initialLoad;
 
   return (
-    <div className="h-[100dvh] flex items-center justify-center py-4 md:py-8 md:px-8 overflow-hidden relative">
+    <div className="h-[100dvh] flex items-center justify-center py-4 md:py-8 md:px-4 overflow-hidden relative">
       <div className="fixed inset-0 w-full h-full md:hidden">
         <div
           className="absolute inset-0 w-full h-full"
@@ -134,7 +134,7 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="flex flex-col-reverse md:flex-col max-w-[1500px] w-full max-h-[900px] h-full gap-4 z-10">
+      <div className="flex flex-col-reverse md:flex-col max-w-[1500px] md:px-4 w-full max-h-[900px] h-full gap-4 z-10">
         <div className="flex flex-row gap-4 px-4 md:px-0">
           <Glass
             className="active:scale-95 active:opacity-50 duration-100 shrink-0 w-[54px] h-[54px] flex justify-center items-center cursor-pointer order-1 md:order-2"
