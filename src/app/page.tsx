@@ -6,6 +6,7 @@ import {addHours, format} from "date-fns";
 import {ko} from "date-fns/locale";
 import {parseMenu, useMealData} from "@/hooks/useMealData";
 import {MealSectionProps} from "@/types";
+import Link from "next/link";
 
 export default function Home() {
   const {
@@ -15,6 +16,7 @@ export default function Home() {
     isError,
     handlePrevDay,
     handleNextDay,
+    resetToToday,
     scrollContainerRef,
     breakfastOpacity,
     lunchOpacity,
@@ -133,20 +135,23 @@ export default function Home() {
       <div className="flex flex-col-reverse md:flex-col max-w-[1500px] w-full max-h-[900px] h-full gap-4 z-10">
         <div className="flex flex-row gap-4 px-4 md:px-0">
           <Glass
-            className="active:scale-105 active:opacity-50 duration-100 shrink-0 w-[54px] h-[54px] flex justify-center items-center cursor-pointer order-1 md:order-2"
+            className="active:scale-95 active:opacity-50 duration-100 shrink-0 w-[54px] h-[54px] flex justify-center items-center cursor-pointer order-1 md:order-2"
             onClick={handlePrevDay}
           >
             <Image src="/icon/arrow-left.svg" alt="arrow-left" width={32} height={32}/>
           </Glass>
 
-          <Glass className="flex justify-center items-center w-full order-2 md:order-1">
+          <Glass
+            className="flex justify-center items-center w-full h-full cursor-pointer active:scale-95 active:opacity-50 duration-100 order-2 md:order-1"
+            onClick={resetToToday}
+          >
             <p className="text-xl md:text-[22px] font-extrabold tracking-tight">
               {dateInitialized ? format(currentDate, "M월 d일 eeee", {locale: ko}) : ""}
             </p>
           </Glass>
 
           <Glass
-            className="active:scale-105 active:opacity-50 duration-100 shrink-0 w-[54px] h-[54px] flex justify-center items-center cursor-pointer order-3 md:order-3"
+            className="active:scale-95 active:opacity-50 duration-100 shrink-0 w-[54px] h-[54px] flex justify-center items-center cursor-pointer order-3 md:order-3"
             onClick={handleNextDay}
           >
             <Image src="/icon/arrow-right.svg" alt="arrow-right" width={32} height={32}/>
@@ -210,7 +215,7 @@ function MealSection({icon, title, items, imageUrl, isLoading, isError = false, 
       {showContent && (
         <>
           <div className="flex flex-row gap-2 items-center h-8">
-            <Image src={icon} alt={title} width={32} height={32}/>
+            <Image className="filter-drop-shadow" src={icon} alt={title} width={32} height={32} style={{filter: "drop-shadow(0 0 12px rgba(0, 0, 0, 0.2))"}}/>
             <p className="text-[32px] font-extrabold tracking-tight">{title}</p>
           </div>
 
@@ -218,14 +223,14 @@ function MealSection({icon, title, items, imageUrl, isLoading, isError = false, 
             {!isLoading && imageUrl && !isError && (
               <div className="flex flex-row gap-2">
                 <p className="text-[20px] font-bold">-</p>
-                <a
+                <Link
                   href={imageUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[20px] font-bold underline active:opacity-50 duration-100"
+                  className="text-[20px] font-bold underline active:scale-95 active:opacity-50 duration-100"
                 >
                   사진 보기
-                </a>
+                </Link>
               </div>
             )}
 
@@ -241,7 +246,7 @@ function MealSection({icon, title, items, imageUrl, isLoading, isError = false, 
               items.map((item, index) => (
                 <div key={`${title.toLowerCase()}-${index}`} className="flex flex-row gap-2">
                   <p className="text-[20px] font-bold">-</p>
-                  <p className="text-[20px] font-bold break-words">{item}</p>
+                  <Link className="active:scale-95 active:opacity-50 duration-100" rel="noreferrer noopener" href={`https://search.naver.com/search.naver?ssc=tab.image.all&where=image&sm=tab_jum&query=${item}`}><p className="text-[20px] font-bold break-words">{item}</p></Link>
                 </div>
               ))
             ) : (
