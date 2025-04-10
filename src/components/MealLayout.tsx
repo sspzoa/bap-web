@@ -1,36 +1,14 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import {useState, useEffect, useRef} from "react";
 import Image from "next/image";
 import Glass from "@/components/Glass";
-import { addHours, format, addDays, subDays } from "date-fns";
-import { ko } from "date-fns/locale";
+import {format, addDays, subDays} from "date-fns";
+import {ko} from "date-fns/locale";
 import Link from "next/link";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import {useQuery, useQueryClient} from "@tanstack/react-query";
 import LoadingSpinner from "@/components/LoadingSpiner";
-
-interface MealItem {
-  regular: string[];
-  simple: string[];
-}
-
-interface MealData {
-  meals: {
-    breakfast: MealItem;
-    lunch: MealItem;
-    dinner: MealItem;
-  };
-  images: {
-    breakfast: string;
-    lunch: string;
-    dinner: string;
-  };
-}
-
-interface MealLayoutProps {
-  initialData: MealData | null;
-  initialDate: Date;
-}
+import {MealData, MealLayoutProps, MealSectionProps} from "@/types";
 
 const fetchMealData = async (date: string): Promise<MealData> => {
   const response = await fetch(`https://api.xn--rh3b.net/${date}`);
@@ -40,7 +18,7 @@ const fetchMealData = async (date: string): Promise<MealData> => {
   return response.json();
 };
 
-export default function MealLayout({ initialData, initialDate }: MealLayoutProps) {
+export default function MealLayout({initialData, initialDate}: MealLayoutProps) {
   const queryClient = useQueryClient();
   const [currentDate, setCurrentDate] = useState<Date>(initialDate);
   const formattedDate = format(currentDate, "yyyy-MM-dd");
@@ -63,7 +41,7 @@ export default function MealLayout({ initialData, initialDate }: MealLayoutProps
     setDateInitialized(true);
   }, [initialData, initialDate, queryClient]);
 
-  const { data, isLoading, isError } = useQuery({
+  const {data, isLoading, isError} = useQuery({
     queryKey: ["mealData", formattedDate],
     queryFn: () => fetchMealData(formattedDate),
     staleTime: 1000 * 60 * 5,
@@ -110,25 +88,25 @@ export default function MealLayout({ initialData, initialDate }: MealLayoutProps
     if (!scrollContainerRef.current) return;
 
     const now = new Date();
-    const koreaTime = new Date(now.getTime() + (9 - (-now.getTimezoneOffset() / 60)) * 60 * 60 * 1000);
-    const currentTime = koreaTime.toTimeString().slice(0, 8);
+    const currentHour = now.getHours();
+    const currentMinute = now.getMinutes();
     const scrollContainer = scrollContainerRef.current;
     const scrollWidth = scrollContainer.scrollWidth / 3;
 
-    if (currentTime >= "19:30:00" || currentTime < "08:00:00") {
-      if (currentTime >= "19:30:00") {
+    if ((currentHour >= 19 && currentMinute >= 30) || currentHour < 8) {
+      if (currentHour >= 19 && currentMinute >= 30) {
         setCurrentDate(addDays(new Date(), 1));
       }
       scrollContainer.scrollLeft = 0;
       setBreakfastOpacity(1);
       setLunchOpacity(0);
       setDinnerOpacity(0);
-    } else if (currentTime >= "14:00:00") {
+    } else if (currentHour >= 14) {
       scrollContainer.scrollLeft = scrollWidth * 2;
       setBreakfastOpacity(0);
       setLunchOpacity(0);
       setDinnerOpacity(1);
-    } else if (currentTime >= "08:00:00") {
+    } else if (currentHour >= 8) {
       scrollContainer.scrollLeft = scrollWidth;
       setBreakfastOpacity(0);
       setLunchOpacity(1);
@@ -208,17 +186,17 @@ export default function MealLayout({ initialData, initialDate }: MealLayoutProps
 
   function getInitialOpacity() {
     const now = new Date();
-    const koreaTime = addHours(now, 9 - (-now.getTimezoneOffset() / 60));
-    const currentTime = koreaTime.toTimeString().slice(0, 8);
+    const currentHour = now.getHours();
+    const currentMinute = now.getMinutes();
 
-    if (currentTime >= "19:30:00" || currentTime < "08:00:00") {
-      return { breakfast: 1, lunch: 0, dinner: 0 };
-    } else if (currentTime >= "14:00:00") {
-      return { breakfast: 0, lunch: 0, dinner: 1 };
-    } else if (currentTime >= "08:00:00") {
-      return { breakfast: 0, lunch: 1, dinner: 0 };
+    if ((currentHour >= 19 && currentMinute >= 30) || currentHour < 8) {
+      return {breakfast: 1, lunch: 0, dinner: 0};
+    } else if (currentHour >= 14) {
+      return {breakfast: 0, lunch: 0, dinner: 1};
+    } else if (currentHour >= 8) {
+      return {breakfast: 0, lunch: 1, dinner: 0};
     } else {
-      return { breakfast: 1, lunch: 0, dinner: 0 };
+      return {breakfast: 1, lunch: 0, dinner: 0};
     }
   }
 
@@ -317,10 +295,12 @@ export default function MealLayout({ initialData, initialDate }: MealLayoutProps
           onClick={() => setSimpleMealToggle(!simpleMealToggle)}
         >
           <div className="relative w-6 h-6">
-            <div className={`absolute inset-0 flex items-center justify-center transition-opacity duration-200 ${simpleMealToggle ? 'opacity-100' : 'opacity-0'}`}>
+            <div
+              className={`absolute inset-0 flex items-center justify-center transition-opacity duration-200 ${simpleMealToggle ? 'opacity-100' : 'opacity-0'}`}>
               <Image src="/icon/utensils.svg" alt="utensils" width={24} height={24} draggable={false}/>
             </div>
-            <div className={`absolute inset-0 flex items-center justify-center transition-opacity duration-200 ${simpleMealToggle ? 'opacity-0' : 'opacity-100'}`}>
+            <div
+              className={`absolute inset-0 flex items-center justify-center transition-opacity duration-200 ${simpleMealToggle ? 'opacity-0' : 'opacity-100'}`}>
               <Image src="/icon/apple.svg" alt="apple" width={24} height={24} draggable={false}/>
             </div>
           </div>
@@ -334,10 +314,12 @@ export default function MealLayout({ initialData, initialDate }: MealLayoutProps
             onClick={() => setSimpleMealToggle(!simpleMealToggle)}
           >
             <div className="relative w-6 h-6">
-              <div className={`absolute inset-0 flex items-center justify-center transition-opacity duration-200 ${simpleMealToggle ? 'opacity-100' : 'opacity-0'}`}>
+              <div
+                className={`absolute inset-0 flex items-center justify-center transition-opacity duration-200 ${simpleMealToggle ? 'opacity-100' : 'opacity-0'}`}>
                 <Image src="/icon/utensils.svg" alt="utensils" width={24} height={24} draggable={false}/>
               </div>
-              <div className={`absolute inset-0 flex items-center justify-center transition-opacity duration-200 ${simpleMealToggle ? 'opacity-0' : 'opacity-100'}`}>
+              <div
+                className={`absolute inset-0 flex items-center justify-center transition-opacity duration-200 ${simpleMealToggle ? 'opacity-0' : 'opacity-100'}`}>
                 <Image src="/icon/apple.svg" alt="apple" width={24} height={24} draggable={false}/>
               </div>
             </div>
@@ -372,7 +354,7 @@ export default function MealLayout({ initialData, initialDate }: MealLayoutProps
 
         {isLoading && (
           <div className="absolute inset-0 flex justify-center items-center z-20 pointer-events-none">
-            <LoadingSpinner />
+            <LoadingSpinner/>
           </div>
         )}
 
@@ -435,18 +417,8 @@ function MealSection({
                        id,
                        showContent,
                        isSimpleMealMode = false
-                     }: {
-  icon: string;
-  title: string;
-  regularItems: string[];
-  simpleMealItems: string[];
-  imageUrl?: string;
-  isLoading: boolean;
-  isError?: boolean;
-  id: string;
-  showContent: boolean;
-  isSimpleMealMode?: boolean;
-}) {
+                     }: MealSectionProps
+) {
   const displayItems = id === "lunch" ? regularItems : (isSimpleMealMode ? simpleMealItems : regularItems);
 
   return (
@@ -457,7 +429,8 @@ function MealSection({
       {showContent && (
         <>
           <div className="flex flex-row gap-2 items-center h-8">
-            <Image className="filter-drop-shadow" src={icon} alt={title} width={32} height={32} style={{filter: "drop-shadow(0 0 12px rgba(0, 0, 0, 0.2))"}} draggable={false}/>
+            <Image className="filter-drop-shadow" src={icon} alt={title} width={32} height={32}
+                   style={{filter: "drop-shadow(0 0 12px rgba(0, 0, 0, 0.2))"}} draggable={false}/>
             <p className="text-[32px] font-extrabold tracking-tight">
               {title}
             </p>
@@ -490,7 +463,9 @@ function MealSection({
               displayItems.map((item, index) => (
                 <div key={`${title.toLowerCase()}-${index}`} className="flex flex-row gap-2">
                   <p className="text-[20px] font-bold">-</p>
-                  <Link className="active:scale-95 active:opacity-50 duration-100" rel="noreferrer noopener" href={`https://search.naver.com/search.naver?ssc=tab.image.all&where=image&sm=tab_jum&query=${item}`}><p className="text-[20px] font-bold break-words">{item}</p></Link>
+                  <Link className="active:scale-95 active:opacity-50 duration-100" rel="noreferrer noopener"
+                        href={`https://search.naver.com/search.naver?ssc=tab.image.all&where=image&sm=tab_jum&query=${item}`}>
+                    <p className="text-[20px] font-bold break-words">{item}</p></Link>
                 </div>
               ))
             ) : isSimpleMealMode && id !== "lunch" ? (

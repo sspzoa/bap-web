@@ -1,6 +1,5 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { format, subDays, addDays } from "date-fns";
-import { toZonedTime } from "date-fns-tz";
 import { useEffect, useState, useRef } from "react";
 import { useAtom } from "jotai";
 import { MealData } from "@/types";
@@ -65,9 +64,7 @@ export const useMealData = () => {
   };
 
   const resetToToday = () => {
-    const now = new Date();
-    const koreaTime = toZonedTime(now, 'Asia/Seoul');
-    setCurrentDate(koreaTime);
+    setCurrentDate(new Date());
     setDateInitialized(true);
   };
 
@@ -75,13 +72,13 @@ export const useMealData = () => {
     if (!scrollContainerRef.current) return;
 
     const now = new Date();
-    const koreaTime = new Date(now.getTime() + (9 - (-now.getTimezoneOffset() / 60)) * 60 * 60 * 1000);
-    const currentTime = koreaTime.toTimeString().slice(0, 8);
+    const currentHour = now.getHours();
+    const currentMinute = now.getMinutes();
     const scrollContainer = scrollContainerRef.current;
     const scrollWidth = scrollContainer.scrollWidth / 3;
 
-    if (currentTime >= "19:30:00" || currentTime < "08:00:00") {
-      if (currentTime >= "19:30:00") {
+    if (currentHour >= 19 && currentMinute >= 30 || currentHour < 8) {
+      if (currentHour >= 19 && currentMinute >= 30) {
         const tomorrow = addDays(new Date(), 1);
         setCurrentDate(tomorrow);
 
@@ -103,12 +100,12 @@ export const useMealData = () => {
         setLunchOpacity(0);
         setDinnerOpacity(0);
       }
-    } else if (currentTime >= "14:00:00") {
+    } else if (currentHour >= 14) {
       scrollContainer.scrollLeft = scrollWidth * 2;
       setBreakfastOpacity(0);
       setLunchOpacity(0);
       setDinnerOpacity(1);
-    } else if (currentTime >= "08:00:00") {
+    } else if (currentHour >= 8) {
       scrollContainer.scrollLeft = scrollWidth;
       setBreakfastOpacity(0);
       setLunchOpacity(1);
@@ -154,7 +151,7 @@ export const useMealData = () => {
         setInitialLoad(false);
       }, 100);
     }
-  }, [initialLoad, setMealByTime, queryClient]);
+  }, [initialLoad]);
 
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
     if (!isMobile) return;

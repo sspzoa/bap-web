@@ -28,3 +28,8 @@ export interface MealSectionProps {
   showContent: boolean;
   isSimpleMealMode?: boolean;
 }
+
+export interface MealLayoutProps {
+  initialData: MealData | null;
+  initialDate: Date;
+}
