@@ -73,12 +73,11 @@ export const useMealData = () => {
 
     const now = new Date();
     const currentHour = now.getHours();
-    const currentMinute = now.getMinutes();
     const scrollContainer = scrollContainerRef.current;
     const scrollWidth = scrollContainer.scrollWidth / 3;
 
-    if (currentHour >= 19 && currentMinute >= 30 || currentHour < 8) {
-      if (currentHour >= 19 && currentMinute >= 30) {
+    if (currentHour >= 20 || currentHour < 8) {
+      if (currentHour >= 20) {
         const tomorrow = addDays(new Date(), 1);
         setCurrentDate(tomorrow);
 

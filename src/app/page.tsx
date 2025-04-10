@@ -22,7 +22,7 @@ async function getMealData(date: string): Promise<MealData | null> {
 function getDateToFetch() {
   const now = new Date();
 
-  if (now.getHours() >= 19 && now.getMinutes() >= 30) {
+  if (now.getHours() >= 20) {
     const tomorrow = new Date(now);
     tomorrow.setDate(now.getDate() + 1);
     return tomorrow;
