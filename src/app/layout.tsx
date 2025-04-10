@@ -2,18 +2,6 @@ import type {Metadata} from "next";
 import "./globals.css";
 import React from "react";
 import Providers from "@/app/providers";
-import localFont from 'next/font/local';
-
-const suitFont = localFont({
-  src: [
-    {
-      path: './fonts/SUIT-Variable.woff2',
-      style: 'normal',
-    },
-  ],
-  variable: '--font-suit',
-  display: 'swap',
-});
 
 export const metadata: Metadata = {
   title: "밥",
