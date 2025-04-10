@@ -194,7 +194,7 @@ export default function MealLayout({ initialData, initialDate }: MealLayoutProps
   };
 
   const processMealItems = (items: string[], mealType: string) => {
-    const keywordList = ["샌드위치", "샐러드", "죽", "닭가슴살", "선식"];
+    const keywordList = ["샌드위치", "죽", "닭가슴살", "선식"];
 
     const count = mealType === "아침" ? 5 : 3;
 
@@ -203,11 +203,13 @@ export default function MealLayout({ initialData, initialDate }: MealLayoutProps
     const nonRecentItems = items.slice(0, Math.max(0, allItemsCount - count));
 
     const simpleMeals = recentItems.filter(item =>
-      keywordList.some(keyword => item.includes(keyword))
+      keywordList.some(keyword => item.includes(keyword)) ||
+      (item.includes("샐러드") && !item.includes("샐러드바"))
     );
 
     const regularRecentItems = recentItems.filter(item =>
-      !keywordList.some(keyword => item.includes(keyword))
+      !(keywordList.some(keyword => item.includes(keyword)) ||
+        (item.includes("샐러드") && !item.includes("샐러드바")))
     );
 
     const regularMeals = [...nonRecentItems, ...regularRecentItems];
