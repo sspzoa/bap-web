@@ -28,6 +28,7 @@ function getDateToFetch() {
   if (currentTime >= "19:30:00") {
     const tomorrow = new Date(koreaTime);
     tomorrow.setDate(koreaTime.getDate() + 1);
+
     return tomorrow;
   }
 
@@ -38,6 +39,8 @@ export default async function Page() {
   const initialDate = getDateToFetch();
   const formattedDate = format(initialDate, "yyyy-MM-dd");
   const initialData = await getMealData(formattedDate);
+
+  console.log(`Fetching data for date: ${formattedDate}`);
 
   return <MealLayout initialData={initialData} initialDate={initialDate} />;
 }
