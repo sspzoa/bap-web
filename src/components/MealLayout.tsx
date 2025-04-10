@@ -465,7 +465,7 @@ function MealSection({
               displayItems.map((item, index) => (
                 <div key={`${title.toLowerCase()}-${index}`} className="flex flex-row gap-2">
                   <p className="text-[20px] font-bold">-</p>
-                  <Link className="active:scale-95 active:opacity-50 duration-100" rel="noreferrer noopener"
+                  <Link className="active:scale-95 active:opacity-50 duration-100" target="_blank" rel="noreferrer noopener"
                         href={`https://search.naver.com/search.naver?ssc=tab.image.all&where=image&sm=tab_jum&query=${item}`}>
                     <p className="text-[20px] font-bold break-words">{item}</p></Link>
                 </div>
