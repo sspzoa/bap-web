@@ -1,6 +1,6 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { format, subDays, addDays } from "date-fns";
-import {toZonedTime } from "date-fns-tz";
+import { toZonedTime } from "date-fns-tz";
 import { useEffect, useState, useRef } from "react";
 import { useAtom } from "jotai";
 import { MealData } from "@/types";
@@ -12,10 +12,6 @@ const fetchMealData = async (date: string): Promise<MealData> => {
     throw new Error("Failed to fetch meal data");
   }
   return response.json();
-};
-
-export const parseMenu = (menuStr: string) => {
-  return menuStr ? menuStr.split(/\/(?![^()]*\))/) : [];
 };
 
 export const useMealData = () => {
@@ -196,4 +192,4 @@ export const useMealData = () => {
     dateInitialized,
     initialLoad
   };
-};
+}

@@ -6,18 +6,31 @@ import Glass from "@/components/Glass";
 import { addHours, format, addDays, subDays } from "date-fns";
 import { ko } from "date-fns/locale";
 import Link from "next/link";
-import { MealData, MealSectionProps } from "@/types";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import LoadingSpinner from "@/components/LoadingSpiner";
+
+interface MealItem {
+  regular: string[];
+  simple: string[];
+}
+
+interface MealData {
+  meals: {
+    breakfast: MealItem;
+    lunch: MealItem;
+    dinner: MealItem;
+  };
+  images: {
+    breakfast: string;
+    lunch: string;
+    dinner: string;
+  };
+}
 
 interface MealLayoutProps {
   initialData: MealData | null;
   initialDate: Date;
 }
-
-const parseMenu = (menuStr: string) => {
-  return menuStr ? menuStr.split(/\/(?![^()]*\))/) : [];
-};
 
 const fetchMealData = async (date: string): Promise<MealData> => {
   const response = await fetch(`https://api.xn--rh3b.net/${date}`);
@@ -192,40 +205,6 @@ export default function MealLayout({ initialData, initialDate }: MealLayoutProps
       setDinnerOpacity(1);
     }
   };
-
-  const processMealItems = (items: string[], mealType: string) => {
-    const keywordList = ["샌드위치", "죽", "닭가슴살", "선식"];
-
-    const count = mealType === "아침" ? 5 : 3;
-
-    const allItemsCount = items.length;
-    const recentItems = items.slice(Math.max(0, allItemsCount - count));
-    const nonRecentItems = items.slice(0, Math.max(0, allItemsCount - count));
-
-    const simpleMeals = recentItems.filter(item =>
-      keywordList.some(keyword => item.includes(keyword)) ||
-      (item.includes("샐러드") && !item.includes("샐러드바"))
-    );
-
-    const regularRecentItems = recentItems.filter(item =>
-      !(keywordList.some(keyword => item.includes(keyword)) ||
-        (item.includes("샐러드") && !item.includes("샐러드바")))
-    );
-
-    const regularMeals = [...nonRecentItems, ...regularRecentItems];
-
-    return {
-      simpleMeals,
-      regularMeals
-    };
-  };
-
-  const breakfastItems = data ? parseMenu(data.breakfast) : [];
-  const lunchItems = data ? parseMenu(data.lunch) : [];
-  const dinnerItems = data ? parseMenu(data.dinner) : [];
-
-  const processedBreakfast = processMealItems(breakfastItems, "아침");
-  const processedDinner = processMealItems(dinnerItems, "저녁");
 
   function getInitialOpacity() {
     const now = new Date();
@@ -404,8 +383,8 @@ export default function MealLayout({ initialData, initialDate }: MealLayoutProps
           <MealSection
             icon="/icon/breakfast.svg"
             title="아침"
-            regularItems={processedBreakfast.regularMeals}
-            simpleMealItems={processedBreakfast.simpleMeals}
+            regularItems={data?.meals?.breakfast?.regular || []}
+            simpleMealItems={data?.meals?.breakfast?.simple || []}
             imageUrl={data?.images?.breakfast || ""}
             isLoading={isLoading}
             isError={isError}
@@ -417,21 +396,21 @@ export default function MealLayout({ initialData, initialDate }: MealLayoutProps
           <MealSection
             icon="/icon/lunch.svg"
             title="점심"
-            regularItems={lunchItems}
-            simpleMealItems={[]}
+            regularItems={data?.meals?.lunch?.regular || []}
+            simpleMealItems={data?.meals?.lunch?.simple || []}
             imageUrl={data?.images?.lunch || ""}
             isLoading={isLoading}
             isError={isError}
             id="lunch"
             showContent={showMealContent}
-            isSimpleMealMode={false}
+            isSimpleMealMode={simpleMealToggle}
           />
 
           <MealSection
             icon="/icon/dinner.svg"
             title="저녁"
-            regularItems={processedDinner.regularMeals}
-            simpleMealItems={processedDinner.simpleMeals}
+            regularItems={data?.meals?.dinner?.regular || []}
+            simpleMealItems={data?.meals?.dinner?.simple || []}
             imageUrl={data?.images?.dinner || ""}
             isLoading={isLoading}
             isError={isError}
@@ -468,7 +447,7 @@ function MealSection({
   showContent: boolean;
   isSimpleMealMode?: boolean;
 }) {
-  const displayItems = isSimpleMealMode ? simpleMealItems : regularItems;
+  const displayItems = id === "lunch" ? regularItems : (isSimpleMealMode ? simpleMealItems : regularItems);
 
   return (
     <Glass
@@ -481,7 +460,6 @@ function MealSection({
             <Image className="filter-drop-shadow" src={icon} alt={title} width={32} height={32} style={{filter: "drop-shadow(0 0 12px rgba(0, 0, 0, 0.2))"}} draggable={false}/>
             <p className="text-[32px] font-extrabold tracking-tight">
               {title}
-
             </p>
           </div>
 
@@ -515,7 +493,7 @@ function MealSection({
                   <Link className="active:scale-95 active:opacity-50 duration-100" rel="noreferrer noopener" href={`https://search.naver.com/search.naver?ssc=tab.image.all&where=image&sm=tab_jum&query=${item}`}><p className="text-[20px] font-bold break-words">{item}</p></Link>
                 </div>
               ))
-            ) : isSimpleMealMode ? (
+            ) : isSimpleMealMode && id !== "lunch" ? (
               <div className="flex flex-row gap-2">
                 <p className="text-[20px] font-bold">-</p>
                 <p className="text-[20px] font-bold">간편식이 없어요</p>

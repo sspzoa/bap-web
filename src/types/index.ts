@@ -1,7 +1,14 @@
+export interface MealItem {
+  regular: string[];
+  simple: string[];
+}
+
 export interface MealData {
-  breakfast: string;
-  lunch: string;
-  dinner: string;
+  meals: {
+    breakfast: MealItem;
+    lunch: MealItem;
+    dinner: MealItem;
+  };
   images: {
     breakfast: string;
     lunch: string;
@@ -12,9 +19,12 @@ export interface MealData {
 export interface MealSectionProps {
   icon: string;
   title: string;
-  items: string[];
+  regularItems: string[];
+  simpleMealItems: string[];
   imageUrl: string;
   isLoading: boolean;
   isError?: boolean;
   id?: string;
+  showContent: boolean;
+  isSimpleMealMode?: boolean;
 }
