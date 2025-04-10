@@ -95,7 +95,7 @@ export default function MealLayout({initialData, initialDate}: MealLayoutProps) 
 
     console.log(`Current time: ${currentHour}:${currentMinute}`);
 
-    if (currentHour >= 19 && currentMinute >= 30) {
+    if (currentHour >= 20) {
       setCurrentDate(addDays(new Date(), 1));
       scrollContainer.scrollLeft = 0;
       setBreakfastOpacity(1);
@@ -191,7 +191,7 @@ export default function MealLayout({initialData, initialDate}: MealLayoutProps) 
 
     console.log(`Initial opacity check - Current time: ${currentHour}:${currentMinute}`);
 
-    if (currentHour >= 19 && currentMinute >= 30) {
+    if (currentHour >= 20) {
       return {breakfast: 1, lunch: 0, dinner: 0};
     } else if (currentHour < 8) {
       return {breakfast: 1, lunch: 0, dinner: 0};
