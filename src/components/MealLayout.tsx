@@ -93,10 +93,15 @@ export default function MealLayout({initialData, initialDate}: MealLayoutProps) 
     const scrollContainer = scrollContainerRef.current;
     const scrollWidth = scrollContainer.scrollWidth / 3;
 
-    if ((currentHour >= 19 && currentMinute >= 30) || currentHour < 8) {
-      if (currentHour >= 19 && currentMinute >= 30) {
-        setCurrentDate(addDays(new Date(), 1));
-      }
+    console.log(`Current time: ${currentHour}:${currentMinute}`);
+
+    if (currentHour >= 19 && currentMinute >= 30) {
+      setCurrentDate(addDays(new Date(), 1));
+      scrollContainer.scrollLeft = 0;
+      setBreakfastOpacity(1);
+      setLunchOpacity(0);
+      setDinnerOpacity(0);
+    } else if (currentHour < 8) {
       scrollContainer.scrollLeft = 0;
       setBreakfastOpacity(1);
       setLunchOpacity(0);
@@ -106,15 +111,10 @@ export default function MealLayout({initialData, initialDate}: MealLayoutProps) 
       setBreakfastOpacity(0);
       setLunchOpacity(0);
       setDinnerOpacity(1);
-    } else if (currentHour >= 8) {
+    } else {
       scrollContainer.scrollLeft = scrollWidth;
       setBreakfastOpacity(0);
       setLunchOpacity(1);
-      setDinnerOpacity(0);
-    } else {
-      scrollContainer.scrollLeft = 0;
-      setBreakfastOpacity(1);
-      setLunchOpacity(0);
       setDinnerOpacity(0);
     }
 
@@ -189,14 +189,16 @@ export default function MealLayout({initialData, initialDate}: MealLayoutProps) 
     const currentHour = now.getHours();
     const currentMinute = now.getMinutes();
 
-    if ((currentHour >= 19 && currentMinute >= 30) || currentHour < 8) {
+    console.log(`Initial opacity check - Current time: ${currentHour}:${currentMinute}`);
+
+    if (currentHour >= 19 && currentMinute >= 30) {
+      return {breakfast: 1, lunch: 0, dinner: 0};
+    } else if (currentHour < 8) {
       return {breakfast: 1, lunch: 0, dinner: 0};
     } else if (currentHour >= 14) {
       return {breakfast: 0, lunch: 0, dinner: 1};
-    } else if (currentHour >= 8) {
-      return {breakfast: 0, lunch: 1, dinner: 0};
     } else {
-      return {breakfast: 1, lunch: 0, dinner: 0};
+      return {breakfast: 0, lunch: 1, dinner: 0};
     }
   }
 
