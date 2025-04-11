@@ -1,36 +1,36 @@
-@import url('https://static.toss.im/tps/main.css');
-@import url('https://static.toss.im/tps/others.css');
+@import url("https://static.toss.im/tps/main.css");
+@import url("https://static.toss.im/tps/others.css");
 
 @import "tailwindcss";
 
 * {
-    font-family: 'Toss Product Sans', sans-serif;
+  font-family: "Toss Product Sans", sans-serif;
 }
 
 body {
-    line-height: 1.6;
-    text-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
-    font-family: 'Toss Product San', sans-serif;
-    user-select: none;
-    -ms-overflow-style: none;
-    background: var(--background);
-    color: white;
+  line-height: 1.6;
+  text-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
+  font-family: "Toss Product San", sans-serif;
+  user-select: none;
+  -ms-overflow-style: none;
+  background: var(--background);
+  color: white;
 }
 
 ::-webkit-scrollbar {
-    display: none;
+  display: none;
 }
 
 :root {
-    --background: #ffffff;
+  --background: #ffffff;
 }
 
 @theme inline {
-    --color-background: var(--background);
+  --color-background: var(--background);
 }
 
 @media (prefers-color-scheme: dark) {
-    :root {
-        --background: #0a0a0a;
-    }
+  :root {
+    --background: #0a0a0a;
+  }
 }
