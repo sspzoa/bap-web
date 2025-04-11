@@ -24,6 +24,7 @@ export interface MealSectionProps {
   imageUrl: string;
   isLoading: boolean;
   isError?: boolean;
+  errorMessage?: string;
   id?: string;
   showContent: boolean;
   isSimpleMealMode?: boolean;
