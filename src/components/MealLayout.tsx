@@ -159,11 +159,13 @@ export default function MealLayout({ initialData, initialDate }: MealLayoutProps
             <div className="relative w-6 h-6">
               <div
                 className={`absolute inset-0 flex items-center justify-center transition-opacity duration-200 ${simpleMealToggle ? 'opacity-100' : 'opacity-0'}`}>
-                <Image src="/icon/utensils.svg" alt="utensils" width={24} height={24} draggable={false} />
+                <Image src="/icon/utensils.svg" alt="utensils" width={24} height={24} draggable={false}
+                       style={{ filter: 'drop-shadow(0 0 12px rgba(0, 0, 0, 0.2))' }} />
               </div>
               <div
                 className={`absolute inset-0 flex items-center justify-center transition-opacity duration-200 ${simpleMealToggle ? 'opacity-0' : 'opacity-100'}`}>
-                <Image src="/icon/apple.svg" alt="apple" width={24} height={24} draggable={false} />
+                <Image src="/icon/apple.svg" alt="apple" width={24} height={24} draggable={false}
+                       style={{ filter: 'drop-shadow(0 0 12px rgba(0, 0, 0, 0.2))' }} />
               </div>
             </div>
           </Glass>
