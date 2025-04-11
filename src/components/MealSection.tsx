@@ -4,18 +4,18 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 export function MealSection({
-  icon,
-  title,
-  regularItems,
-  simpleMealItems,
-  imageUrl,
-  isLoading,
-  isError = false,
-  errorMessage,
-  id,
-  showContent,
-  isSimpleMealMode = false,
-}: MealSectionProps & { errorMessage?: string }) {
+                              icon,
+                              title,
+                              regularItems,
+                              simpleMealItems,
+                              imageUrl,
+                              isLoading,
+                              isError = false,
+                              errorMessage,
+                              id,
+                              showContent,
+                              isSimpleMealMode = false,
+                            }: MealSectionProps & { errorMessage?: string }) {
   const displayItems = id === 'lunch' ? regularItems : isSimpleMealMode ? simpleMealItems : regularItems;
 
   const isMealOperationEmpty =
@@ -76,13 +76,13 @@ export function MealSection({
                   </Link>
                 </div>
               ))
-            ) : isSimpleMealMode && id !== 'lunch' ? (
-              <div className="flex flex-row gap-2">
-                <p className="text-[20px] font-bold">간편식이 없어요</p>
-              </div>
             ) : isMealOperationEmpty ? (
               <div className="flex flex-row gap-2">
                 <p className="text-[20px] font-bold">급식 운영이 없어요</p>
+              </div>
+            ) : isSimpleMealMode && id !== 'lunch' ? (
+              <div className="flex flex-row gap-2">
+                <p className="text-[20px] font-bold">간편식이 없어요</p>
               </div>
             ) : (
               <div className="flex flex-row gap-2">
