@@ -6,11 +6,10 @@ import { MealSection } from '@/components/MealSection';
 import { useMealData } from '@/hooks/useMealData';
 import type { MealLayoutProps } from '@/types';
 import { getCurrentMealTiming } from '@/utils/mealTimingUtils';
-import { useQueryClient } from '@tanstack/react-query';
 import { format } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 export default function MealLayout({ initialData, initialDate }: MealLayoutProps) {
   const {
@@ -27,21 +26,12 @@ export default function MealLayout({ initialData, initialDate }: MealLayoutProps
     breakfastOpacity,
     lunchOpacity,
     dinnerOpacity,
-    isMobile,
     handleScroll,
     dateInitialized,
     initialLoad,
-  } = useMealData();
+  } = useMealData(initialData, initialDate);
 
   const [simpleMealToggle, setSimpleMealToggle] = useState(false);
-  const queryClient = useQueryClient();
-
-  useEffect(() => {
-    if (initialData) {
-      const formattedInitialDate = format(initialDate, 'yyyy-MM-dd');
-      queryClient.setQueryData(['mealData', formattedInitialDate], initialData);
-    }
-  }, [initialData, initialDate, queryClient]);
 
   function getInitialOpacity() {
     const { opacity } = getCurrentMealTiming();
@@ -159,13 +149,25 @@ export default function MealLayout({ initialData, initialDate }: MealLayoutProps
             <div className="relative w-6 h-6">
               <div
                 className={`absolute inset-0 flex items-center justify-center transition-opacity duration-200 ${simpleMealToggle ? 'opacity-100' : 'opacity-0'}`}>
-                <Image src="/icon/utensils.svg" alt="utensils" width={24} height={24} draggable={false}
-                       style={{ filter: 'drop-shadow(0 0 12px rgba(0, 0, 0, 0.2))' }} />
+                <Image
+                  src="/icon/utensils.svg"
+                  alt="utensils"
+                  width={24}
+                  height={24}
+                  draggable={false}
+                  style={{ filter: 'drop-shadow(0 0 12px rgba(0, 0, 0, 0.2))' }}
+                />
               </div>
               <div
                 className={`absolute inset-0 flex items-center justify-center transition-opacity duration-200 ${simpleMealToggle ? 'opacity-0' : 'opacity-100'}`}>
-                <Image src="/icon/apple.svg" alt="apple" width={24} height={24} draggable={false}
-                       style={{ filter: 'drop-shadow(0 0 12px rgba(0, 0, 0, 0.2))' }} />
+                <Image
+                  src="/icon/apple.svg"
+                  alt="apple"
+                  width={24}
+                  height={24}
+                  draggable={false}
+                  style={{ filter: 'drop-shadow(0 0 12px rgba(0, 0, 0, 0.2))' }}
+                />
               </div>
             </div>
           </Glass>
