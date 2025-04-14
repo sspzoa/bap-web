@@ -3,13 +3,12 @@ import { useResponsiveness } from '@/hooks/useResponsiveness';
 import { useScrollOpacity } from '@/hooks/useScrollOpacity';
 import { fetchMealData } from '@/services/mealService';
 import { currentDateAtom } from '@/store/atoms';
-import type { MealData } from '@/types';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { addDays, format, subDays } from 'date-fns';
 import { useAtom } from 'jotai';
 import { useEffect } from 'react';
 
-export const useMealData = (initialData?: MealData | null, initialDate?: Date) => {
+export const useMealData = () => {
   const [currentDate, setCurrentDate] = useAtom(currentDateAtom);
   const formattedDate = format(currentDate, 'yyyy-MM-dd');
   const queryClient = useQueryClient();
@@ -25,19 +24,11 @@ export const useMealData = (initialData?: MealData | null, initialDate?: Date) =
     setCurrentDate,
   );
 
-  useEffect(() => {
-    if (initialData && initialDate) {
-      const formattedInitialDate = format(initialDate, 'yyyy-MM-dd');
-      queryClient.setQueryData(['mealData', formattedInitialDate], initialData);
-    }
-  }, [initialData, initialDate, queryClient]);
-
   const { data, isLoading, error } = useQuery({
     queryKey: ['mealData', formattedDate],
     queryFn: () => fetchMealData(formattedDate),
     staleTime: 1000 * 60 * 5,
     retry: false,
-    initialData: initialDate && format(initialDate, 'yyyy-MM-dd') === formattedDate ? initialData : undefined,
   });
 
   const isError = !!error;
