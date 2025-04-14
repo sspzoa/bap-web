@@ -6,10 +6,11 @@ import { MealSection } from '@/components/MealSection';
 import { useMealData } from '@/hooks/useMealData';
 import type { MealLayoutProps } from '@/types';
 import { getCurrentMealTiming } from '@/utils/mealTimingUtils';
+import { useQueryClient } from '@tanstack/react-query';
 import { format } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function MealLayout({ initialData, initialDate }: MealLayoutProps) {
   const {
@@ -26,12 +27,21 @@ export default function MealLayout({ initialData, initialDate }: MealLayoutProps
     breakfastOpacity,
     lunchOpacity,
     dinnerOpacity,
+    isMobile,
     handleScroll,
     dateInitialized,
     initialLoad,
-  } = useMealData(initialData, initialDate);
+  } = useMealData();
 
   const [simpleMealToggle, setSimpleMealToggle] = useState(false);
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+    if (initialData) {
+      const formattedInitialDate = format(initialDate, 'yyyy-MM-dd');
+      queryClient.setQueryData(['mealData', formattedInitialDate], initialData);
+    }
+  }, [initialData, initialDate, queryClient]);
 
   function getInitialOpacity() {
     const { opacity } = getCurrentMealTiming();
