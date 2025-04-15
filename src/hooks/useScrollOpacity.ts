@@ -10,9 +10,19 @@ export const useScrollOpacity = () => {
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
     const scrollContainer = e.currentTarget;
     const scrollPosition = scrollContainer.scrollLeft;
-    const totalWidth = scrollContainer.scrollWidth;
+    const totalWidth = scrollContainer.scrollWidth - scrollContainer.clientWidth;
 
-    const { breakfast, lunch, dinner } = calculateOpacityFromScroll(scrollPosition, totalWidth);
+    const visibleSections = 3;
+    const adjustedTotalWidth = (totalWidth / (visibleSections - 1)) * visibleSections;
+
+    if (Math.abs(scrollPosition - totalWidth) < 1) {
+      setBreakfastOpacity(0);
+      setLunchOpacity(0);
+      setDinnerOpacity(1);
+      return;
+    }
+
+    const { breakfast, lunch, dinner } = calculateOpacityFromScroll(scrollPosition, adjustedTotalWidth);
 
     setBreakfastOpacity(breakfast);
     setLunchOpacity(lunch);
