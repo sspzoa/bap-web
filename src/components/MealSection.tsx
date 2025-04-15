@@ -40,7 +40,7 @@ export function MealSection({
               style={{ filter: 'drop-shadow(0 0 12px rgba(0, 0, 0, 0.2))' }}
               draggable={false}
             />
-            <p className="text-[32px] font-extrabold tracking-tight">{title}</p>
+            <p className="text-[32px] font-bold tracking-tight">{title}</p>
           </div>
 
           <div className="flex flex-col gap-2 pr-2">

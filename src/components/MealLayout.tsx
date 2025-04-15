@@ -194,7 +194,7 @@ export default function MealLayout({ initialData, initialDate }: MealLayoutProps
               resetToToday();
               setMealByTime();
             }}>
-            <p className="text-xl md:text-[22px] font-extrabold tracking-tight">
+            <p className="text-xl md:text-[22px] font-bold tracking-tight">
               {dateInitialized ? format(currentDate, 'M월 d일 eeee', { locale: ko }) : ''}
             </p>
           </Glass>
