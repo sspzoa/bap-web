@@ -10,7 +10,6 @@
 body {
   line-height: 1.6;
   text-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
-  font-family: "Toss Product San", sans-serif;
   user-select: none;
   -ms-overflow-style: none;
   background: var(--background);
