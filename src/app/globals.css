@@ -1,9 +1,10 @@
-@import url("https://cdn.jsdelivr.net/npm/font-applesdgothicneo@1.0.3/css/all.min.css");
+@import url("https://cdn.jsdelivr.net/gh/wanteddev/wanted-sans@v1.0.3/packages/wanted-sans/fonts/webfonts/variable/split/WantedSansVariable.min.css");
 
 @import "tailwindcss";
 
 * {
-  font-family: "Apple Sandoll Gothic Neo", sans-serif;
+  font-family:
+    "Wanted Sans Variable", "Wanted Sans", -apple-system, BlinkMacSystemFont, system-ui, "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
 }
 
 body {
