@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 import './globals.css';
 import QueryProvider from '@/providers/QueryProvider';
+import { Analytics } from '@vercel/analytics/react';
 
 export const metadata: Metadata = {
   title: '밥',
@@ -56,6 +57,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
         <meta name="google-site-verification" content="Autqjgf5q34Q-Bi4JnRwIuiJW-WzwkCU6Y4wlGU0IVU" />
       </head>
       <body className="antialiased">
+        <Analytics />
         <QueryProvider>{children}</QueryProvider>
       </body>
     </html>
