@@ -3,14 +3,15 @@ import { useResponsiveness } from '@/hooks/useResponsiveness';
 import { useScrollOpacity } from '@/hooks/useScrollOpacity';
 import { fetchMealData } from '@/services/mealService';
 import { currentDateAtom } from '@/store/atoms';
+import { formatToKoreanDateString, getCurrentKoreanTime } from '@/utils/timeZoneUtils';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { addDays, format, subDays } from 'date-fns';
+import { addDays, subDays } from 'date-fns';
 import { useAtom } from 'jotai';
 import { useEffect } from 'react';
 
 export const useMealData = () => {
   const [currentDate, setCurrentDate] = useAtom(currentDateAtom);
-  const formattedDate = format(currentDate, 'yyyy-MM-dd');
+  const formattedDate = formatToKoreanDateString(currentDate);
   const queryClient = useQueryClient();
 
   const { scrollContainerRef, breakfastOpacity, lunchOpacity, dinnerOpacity, handleScroll, setOpacity } =
@@ -36,7 +37,7 @@ export const useMealData = () => {
 
   useEffect(() => {
     const prevDate = subDays(currentDate, 1);
-    const prevFormattedDate = format(prevDate, 'yyyy-MM-dd');
+    const prevFormattedDate = formatToKoreanDateString(prevDate);
     queryClient.prefetchQuery({
       queryKey: ['mealData', prevFormattedDate],
       queryFn: () => fetchMealData(prevFormattedDate),
@@ -45,7 +46,7 @@ export const useMealData = () => {
     });
 
     const nextDate = addDays(currentDate, 1);
-    const nextFormattedDate = format(nextDate, 'yyyy-MM-dd');
+    const nextFormattedDate = formatToKoreanDateString(nextDate);
     queryClient.prefetchQuery({
       queryKey: ['mealData', nextFormattedDate],
       queryFn: () => fetchMealData(nextFormattedDate),
@@ -65,7 +66,7 @@ export const useMealData = () => {
   };
 
   const resetToToday = () => {
-    setCurrentDate(new Date());
+    setCurrentDate(getCurrentKoreanTime());
     setDateInitialized(true);
   };
 

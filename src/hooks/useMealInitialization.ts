@@ -1,5 +1,6 @@
 import { fetchMealData } from '@/services/mealService';
 import { getCurrentMealTiming } from '@/utils/mealTimingUtils';
+import { formatToKoreanDateString, getCurrentKoreanTime, getKoreanHours } from '@/utils/timeZoneUtils';
 import { useQueryClient } from '@tanstack/react-query';
 import { addDays, format } from 'date-fns';
 import { useEffect, useState } from 'react';
@@ -16,8 +17,8 @@ export const useMealInitialization = (
   const setMealByTime = () => {
     if (!scrollContainerRef?.current) return;
 
-    const now = new Date();
-    const currentHour = now.getHours();
+    const now = getCurrentKoreanTime();
+    const currentHour = getKoreanHours();
     const scrollContainer = scrollContainerRef.current;
     const scrollWidth = scrollContainer.scrollWidth / 3;
 
@@ -25,13 +26,13 @@ export const useMealInitialization = (
     let shouldUpdateDate = false;
 
     if (currentHour >= 20) {
-      newDate = addDays(new Date(), 1);
+      newDate = addDays(now, 1);
       shouldUpdateDate = true;
 
       scrollContainer.scrollLeft = 0;
       setOpacity(1, 0, 0);
 
-      const tomorrowFormatted = format(newDate, 'yyyy-MM-dd');
+      const tomorrowFormatted = formatToKoreanDateString(newDate);
       queryClient.prefetchQuery({
         queryKey: ['mealData', tomorrowFormatted],
         queryFn: () => fetchMealData(tomorrowFormatted),
