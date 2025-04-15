@@ -1,10 +1,9 @@
-@import url("https://static.toss.im/tps/main.css");
-@import url("https://static.toss.im/tps/others.css");
+@import url("https://cdn.jsdelivr.net/npm/font-applesdgothicneo@1.0.3/css/all.min.css");
 
 @import "tailwindcss";
 
 * {
-  font-family: "Toss Product Sans", sans-serif;
+  font-family: "Apple Sandoll Gothic Neo", sans-serif;
 }
 
 body {
