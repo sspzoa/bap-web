@@ -182,12 +182,6 @@ export default function MealLayout({ initialData, initialDate }: MealLayoutProps
             </div>
           </Glass>
 
-          {/*<Link href="/api-guide" className="md:block hidden">*/}
-          {/*  <Glass className="active:scale-95 active:opacity-50 duration-100 shrink-0 w-[54px] h-[54px] flex justify-center items-center cursor-pointer order-1 md:order-2">*/}
-          {/*    <p className="font-bold text-lg">API</p>*/}
-          {/*  </Glass>*/}
-          {/*</Link>*/}
-
           <Glass
             className="active:scale-95 active:opacity-50 duration-100 shrink-0 w-[54px] h-[54px] flex justify-center items-center cursor-pointer order-1 md:order-2"
             onClick={handlePrevDay}>
