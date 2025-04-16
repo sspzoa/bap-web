@@ -1,19 +1,13 @@
 export interface MealItem {
   regular: string[];
   simple: string[];
+  image: string;
 }
 
 export interface MealData {
-  meals: {
-    breakfast: MealItem;
-    lunch: MealItem;
-    dinner: MealItem;
-  };
-  images: {
-    breakfast: string;
-    lunch: string;
-    dinner: string;
-  };
+  breakfast: MealItem;
+  lunch: MealItem;
+  dinner: MealItem;
 }
 
 export interface MealSectionProps {
