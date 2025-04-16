@@ -10,6 +10,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { format } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
 export default function MealLayout({ initialData, initialDate }: MealLayoutProps) {
@@ -27,7 +28,6 @@ export default function MealLayout({ initialData, initialDate }: MealLayoutProps
     breakfastOpacity,
     lunchOpacity,
     dinnerOpacity,
-    isMobile,
     handleScroll,
     dateInitialized,
     initialLoad,
@@ -182,6 +182,12 @@ export default function MealLayout({ initialData, initialDate }: MealLayoutProps
             </div>
           </Glass>
 
+          {/*<Link href="/api-guide" className="md:block hidden">*/}
+          {/*  <Glass className="active:scale-95 active:opacity-50 duration-100 shrink-0 w-[54px] h-[54px] flex justify-center items-center cursor-pointer order-1 md:order-2">*/}
+          {/*    <p className="font-bold text-lg">API</p>*/}
+          {/*  </Glass>*/}
+          {/*</Link>*/}
+
           <Glass
             className="active:scale-95 active:opacity-50 duration-100 shrink-0 w-[54px] h-[54px] flex justify-center items-center cursor-pointer order-1 md:order-2"
             onClick={handlePrevDay}>
@@ -219,9 +225,9 @@ export default function MealLayout({ initialData, initialDate }: MealLayoutProps
           <MealSection
             icon="/icon/breakfast.svg"
             title="아침"
-            regularItems={data?.meals?.breakfast?.regular || []}
-            simpleMealItems={data?.meals?.breakfast?.simple || []}
-            imageUrl={data?.images?.breakfast || ''}
+            regularItems={data?.breakfast?.regular || []}
+            simpleMealItems={data?.breakfast?.simple || []}
+            imageUrl={data?.breakfast?.image || ''}
             isLoading={isLoading}
             isError={isError}
             errorMessage={errorMessage}
@@ -233,9 +239,9 @@ export default function MealLayout({ initialData, initialDate }: MealLayoutProps
           <MealSection
             icon="/icon/lunch.svg"
             title="점심"
-            regularItems={data?.meals?.lunch?.regular || []}
-            simpleMealItems={data?.meals?.lunch?.simple || []}
-            imageUrl={data?.images?.lunch || ''}
+            regularItems={data?.lunch?.regular || []}
+            simpleMealItems={data?.lunch?.simple || []}
+            imageUrl={data?.lunch?.image || ''}
             isLoading={isLoading}
             isError={isError}
             errorMessage={errorMessage}
@@ -247,9 +253,9 @@ export default function MealLayout({ initialData, initialDate }: MealLayoutProps
           <MealSection
             icon="/icon/dinner.svg"
             title="저녁"
-            regularItems={data?.meals?.dinner?.regular || []}
-            simpleMealItems={data?.meals?.dinner?.simple || []}
-            imageUrl={data?.images?.dinner || ''}
+            regularItems={data?.dinner?.regular || []}
+            simpleMealItems={data?.dinner?.simple || []}
+            imageUrl={data?.dinner?.image || ''}
             isLoading={isLoading}
             isError={isError}
             errorMessage={errorMessage}
