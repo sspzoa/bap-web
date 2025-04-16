@@ -33,7 +33,7 @@ export const calculateOpacityFromScroll = (scrollPosition: number, totalWidth: n
   if (scrollPosition < sectionWidth) {
     const progress = scrollPosition / sectionWidth;
     return {
-      breakfast: 1 - progress,
+      breakfast: 1,
       lunch: progress,
       dinner: 0,
     };
@@ -42,7 +42,7 @@ export const calculateOpacityFromScroll = (scrollPosition: number, totalWidth: n
     const progress = (scrollPosition - sectionWidth) / sectionWidth;
     return {
       breakfast: 0,
-      lunch: 1 - progress,
+      lunch: 1,
       dinner: progress,
     };
   }
