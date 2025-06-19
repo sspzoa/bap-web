@@ -2,8 +2,8 @@ import type { MetadataRoute } from 'next';
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: '밥넷',
-    short_name: '밥넷',
+    name: '밥.net',
+    short_name: '밥.net',
     description: '한국디지털미디어고등학교 급식 API',
     start_url: '/',
     display: 'fullscreen',
