@@ -3,6 +3,7 @@ import type { ReactNode } from 'react';
 import './globals.css';
 import QueryProvider from '@/providers/QueryProvider';
 import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 export const metadata: Metadata = {
   title: '밥.net',
@@ -58,6 +59,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
       </head>
       <body className="antialiased">
         <Analytics />
+        <SpeedInsights />
         <QueryProvider>{children}</QueryProvider>
       </body>
     </html>
