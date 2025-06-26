@@ -57,12 +57,14 @@ export default function RootLayout({ children }: RootLayoutProps) {
     <head>
       <meta name="google-site-verification" content="Autqjgf5q34Q-Bi4JnRwIuiJW-WzwkCU6Y4wlGU0IVU"/>
       <meta name="google-adsense-account" content="ca-pub-2186209581588169"/>
+      <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2186209581588169"
+              crossOrigin="anonymous" />
     </head>
     <body className="antialiased">
     <Analytics/>
-    <SpeedInsights />
-        <QueryProvider>{children}</QueryProvider>
-      </body>
+    <SpeedInsights/>
+    <QueryProvider>{children}</QueryProvider>
+    </body>
     </html>
   );
 }
