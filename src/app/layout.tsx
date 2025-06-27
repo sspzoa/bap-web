@@ -6,7 +6,7 @@ import { Analytics } from '@vercel/analytics/next';
 import { SpeedInsights } from "@vercel/speed-insights/next"
 
 export const metadata: Metadata = {
-  title: '밥.net',
+  title: '디미고급식의 2세대 서비스! - 밥.net',
   description: '한국디지털미디어고등학교 급식 API',
   keywords: '디미고,급식,디미급식,디미고 급식,밥,밥넷,밥.net,한국디지털미디어고',
   authors: [{ name: 'sspzoa' }],
