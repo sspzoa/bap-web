@@ -1,24 +1,24 @@
-import type { Metadata } from 'next';
-import type { ReactNode } from 'react';
+import type {Metadata} from 'next';
+import type {ReactNode} from 'react';
 import './globals.css';
 import QueryProvider from '@/providers/QueryProvider';
-import { Analytics } from '@vercel/analytics/next';
-import { SpeedInsights } from "@vercel/speed-insights/next"
+import {Analytics} from '@vercel/analytics/next';
+import {SpeedInsights} from "@vercel/speed-insights/next"
 
 export const metadata: Metadata = {
   title: '디미고 급식의 2세대 서비스 - 밥.net',
   description: '한국디지털미디어고등학교 급식 API',
   keywords: '디미고,급식,디미급식,디미고 급식,밥,밥넷,밥.net,한국디지털미디어고',
-  authors: [{ name: 'sspzoa' }],
+  authors: [{name: 'sspzoa'}],
   creator: 'sspzoa',
   publisher: 'sspzoa',
   icons: {
     icon: [
-      { url: './logo/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
-      { url: './logo/android-chrome-512x512.png', sizes: '512x512', type: 'image/png' },
+      {url: './logo/favicon-32x32.png', sizes: '32x32', type: 'image/png'},
+      {url: './logo/android-chrome-512x512.png', sizes: '512x512', type: 'image/png'},
     ],
-    apple: [{ url: './logo/apple-icon.png', sizes: '180x180', type: 'image/png' }],
-    shortcut: [{ url: './favicon.ico' }],
+    apple: [{url: './logo/apple-icon.png', sizes: '180x180', type: 'image/png'}],
+    shortcut: [{url: './favicon.ico'}],
   },
   appleWebApp: {
     statusBarStyle: 'black-translucent',
@@ -51,14 +51,27 @@ interface RootLayoutProps {
   children: ReactNode;
 }
 
-export default function RootLayout({ children }: RootLayoutProps) {
+export default function RootLayout({children}: RootLayoutProps) {
   return (
     <html lang="ko">
     <head>
+      <script
+        dangerouslySetInnerHTML={{
+          __html: `
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(function(registrations) {
+          for(let registration of registrations) {
+            registration.unregister();
+          }
+        });
+      }
+    `,
+        }}
+      />
       <meta name="google-site-verification" content="Autqjgf5q34Q-Bi4JnRwIuiJW-WzwkCU6Y4wlGU0IVU"/>
       <meta name="google-adsense-account" content="ca-pub-2186209581588169"/>
       <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2186209581588169"
-              crossOrigin="anonymous" />
+              crossOrigin="anonymous"/>
     </head>
     <body className="antialiased">
     <Analytics/>
