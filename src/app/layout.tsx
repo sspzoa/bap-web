@@ -55,21 +55,54 @@ export default function RootLayout({children}: RootLayoutProps) {
   return (
     <html lang="ko">
     <head>
+      <meta name="google-site-verification" content="Autqjgf5q34Q-Bi4JnRwIuiJW-WzwkCU6Y4wlGU0IVU"/>
+      <meta name="google-adsense-account" content="ca-pub-2186209581588169"/>
+
+      {/* 캐시 무효화 헤더들 */}
+      <meta httpEquiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+      <meta httpEquiv="Pragma" content="no-cache"/>
+      <meta httpEquiv="Expires" content="0"/>
+
+      {/* 즉시 캐시 클리어 스크립트 */}
       <script
         dangerouslySetInnerHTML={{
           __html: `
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.getRegistrations().then(function(registrations) {
-          for(let registration of registrations) {
-            registration.unregister();
-          }
-        });
-      }
-    `,
+              (function() {
+                var VERSION = '${Date.now()}';
+                var STORED_VERSION = localStorage.getItem('site_version');
+                
+                if (STORED_VERSION !== VERSION) {
+                  // 서비스워커 정리
+                  if ('serviceWorker' in navigator) {
+                    navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                      registrations.forEach(function(registration) {
+                        registration.unregister();
+                      });
+                    });
+                  }
+                  
+                  // 캐시 정리
+                  if ('caches' in window) {
+                    caches.keys().then(function(cacheNames) {
+                      cacheNames.forEach(function(cacheName) {
+                        caches.delete(cacheName);
+                      });
+                    });
+                  }
+                  
+                  localStorage.setItem('site_version', VERSION);
+                  
+                  // 현재 URL에 캐시 무효화 파라미터 추가
+                  if (!window.location.search.includes('_v=')) {
+                    window.location.href = window.location.href + 
+                      (window.location.search ? '&' : '?') + '_v=' + VERSION;
+                  }
+                }
+              })();
+            `,
         }}
       />
-      <meta name="google-site-verification" content="Autqjgf5q34Q-Bi4JnRwIuiJW-WzwkCU6Y4wlGU0IVU"/>
-      <meta name="google-adsense-account" content="ca-pub-2186209581588169"/>
+
       <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2186209581588169"
               crossOrigin="anonymous"/>
     </head>
