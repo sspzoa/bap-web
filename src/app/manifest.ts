@@ -7,7 +7,7 @@ export default function manifest(): MetadataRoute.Manifest {
     description: '한국디지털미디어고등학교 급식 API',
     start_url: '/',
     display: 'fullscreen',
-    orientation: 'any',
+    orientation: 'portrait-primary,
     theme_color: '#000000',
     background_color: '#ffffff',
     icons: [
