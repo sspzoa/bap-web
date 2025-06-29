@@ -37,3 +37,16 @@ export const getFormattedPreviousDay = (date: Date): string => {
 export const getFormattedNextDay = (date: Date): string => {
   return formatDate(getNextDay(date));
 };
+
+export const getInitialDateForServer = (): Date => {
+  const koreanHour = getKoreanHours();
+  const now = getCurrentKoreanTime();
+
+  if (koreanHour >= 20) {
+    return addDays(now, 1);
+  }
+
+  return now;
+};
+
+

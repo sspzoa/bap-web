@@ -1,10 +1,10 @@
 import MealLayout from '@/components/MealLayout';
 import { getMealDataServerSide } from '@/services/mealService';
-import { getDateToFetch } from '@/utils/dateUtils';
+import { getInitialDateForServer } from '@/utils/dateUtils';
 import { formatToKoreanDateString } from '@/utils/timeZoneUtils';
 
 export default async function Page() {
-  const initialDate = getDateToFetch();
+  const initialDate = getInitialDateForServer();
   const formattedDate = formatToKoreanDateString(initialDate);
   const initialData = await getMealDataServerSide(formattedDate);
 
