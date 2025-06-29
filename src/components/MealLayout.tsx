@@ -219,7 +219,7 @@ export default function MealLayout({ initialData, initialDate }: MealLayoutProps
           </Glass>
         </div>
 
-        {isLoading && (
+        {isLoading && !initialLoad && (
           <div className="absolute inset-0 flex justify-center items-center z-20 pointer-events-none">
             <LoadingSpinner />
           </div>
@@ -275,3 +275,5 @@ export default function MealLayout({ initialData, initialDate }: MealLayoutProps
     </div>
   );
 }
+
+
