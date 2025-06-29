@@ -13,7 +13,8 @@ export const fetchMealData = async (date: string): Promise<MealData> => {
 
       throw new Error(errorMessage);
     }
-    return response.json();
+    const responseData = await response.json();
+    return responseData.data;
   } catch (error) {
     if (error instanceof Error) {
       throw error;
@@ -39,7 +40,8 @@ export const getMealDataServerSide = async (date: string): Promise<MealData | nu
       throw new Error(errorMessage);
     }
 
-    return response.json();
+    const responseData = await response.json();
+    return responseData.data;
   } catch (error) {
     console.error('Error fetching initial meal data:', error);
     return null;
