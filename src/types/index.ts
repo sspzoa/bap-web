@@ -10,6 +10,19 @@ export interface MealData {
   dinner: MealItem;
 }
 
+export interface ApiResponse {
+  requestId: string;
+  requestedDate: string;
+  timestamp: string;
+  data: MealData;
+}
+
+export interface ApiErrorResponse {
+  requestId: string;
+  timestamp: string;
+  error: string;
+}
+
 export interface MealSectionProps {
   icon: string;
   title: string;
