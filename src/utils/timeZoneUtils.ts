@@ -4,10 +4,6 @@ import { toZonedTime } from 'date-fns-tz';
 const KOREA_TIMEZONE = 'Asia/Seoul';
 
 export const formatToDateString = (date: Date): string => {
-  return format(date, 'yyyy-MM-dd');
-};
-
-export const formatUTCToKoreanDateString = (date: Date): string => {
   const koreanTime = toZonedTime(date, KOREA_TIMEZONE);
   return format(koreanTime, 'yyyy-MM-dd');
 };

@@ -3,7 +3,7 @@ import { useResponsiveness } from '@/hooks/useResponsiveness';
 import { useScrollOpacity } from '@/hooks/useScrollOpacity';
 import { fetchMealData } from '@/services/mealService';
 import { currentDateAtom } from '@/store/atoms';
-import { formatToDateString } from '@/utils/timeZoneUtils';
+import { formatToDateString, toKoreanTime } from '@/utils/timeZoneUtils';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { addDays, subDays } from 'date-fns';
 import { useAtom } from 'jotai';
@@ -36,7 +36,9 @@ export const useMealData = () => {
   const errorMessage = error instanceof Error ? error.message : '급식 정보가 없어요';
 
   useEffect(() => {
-    const prevDate = subDays(currentDate, 1);
+    const koreanCurrentDate = toKoreanTime(currentDate);
+
+    const prevDate = subDays(koreanCurrentDate, 1);
     const prevFormattedDate = formatToDateString(prevDate);
     queryClient.prefetchQuery({
       queryKey: ['mealData', prevFormattedDate],
@@ -45,7 +47,7 @@ export const useMealData = () => {
       retry: false,
     });
 
-    const nextDate = addDays(currentDate, 1);
+    const nextDate = addDays(koreanCurrentDate, 1);
     const nextFormattedDate = formatToDateString(nextDate);
     queryClient.prefetchQuery({
       queryKey: ['mealData', nextFormattedDate],
@@ -57,21 +59,22 @@ export const useMealData = () => {
 
   const handlePrevDay = () => {
     setCurrentDate((prevDate) => {
-      return subDays(prevDate, 1);
+      const koreanPrevDate = toKoreanTime(prevDate);
+      return subDays(koreanPrevDate, 1);
     });
     setDateInitialized(true);
   };
 
   const handleNextDay = () => {
     setCurrentDate((prevDate) => {
-      return addDays(prevDate, 1);
+      const koreanPrevDate = toKoreanTime(prevDate);
+      return addDays(koreanPrevDate, 1);
     });
     setDateInitialized(true);
   };
 
   const resetToToday = () => {
-    // 현재 한국 시간으로 리셋
-    const koreanTime = new Date(); // 클라이언트에서는 로컬 시간 사용
+    const koreanTime = toKoreanTime(new Date());
     setCurrentDate(koreanTime);
     setDateInitialized(true);
   };
