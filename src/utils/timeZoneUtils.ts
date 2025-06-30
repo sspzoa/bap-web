@@ -14,7 +14,15 @@ export const getKoreanHours = (): number => {
 };
 
 export const getKoreanTime = (): Date => {
-  return toZonedTime(new Date(), KOREA_TIMEZONE);
+  const now = new Date();
+  const koreanTime = toZonedTime(now, KOREA_TIMEZONE);
+
+  if (typeof window === 'undefined') {
+    console.log(`UTC Time: ${now.toISOString()}`);
+    console.log(`Korean Time: ${koreanTime.toISOString()}`);
+  }
+
+  return koreanTime;
 };
 
 export const toKoreanTime = (date: Date): Date => {
