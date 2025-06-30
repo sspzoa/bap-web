@@ -48,5 +48,3 @@ export const getInitialDateForServer = (): Date => {
 
   return now;
 };
-
-
