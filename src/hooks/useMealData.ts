@@ -3,9 +3,9 @@ import { useResponsiveness } from '@/hooks/useResponsiveness';
 import { useScrollOpacity } from '@/hooks/useScrollOpacity';
 import { fetchMealData } from '@/services/mealService';
 import { currentDateAtom } from '@/store/atoms';
-import { formatToDateString, toKoreanTime } from '@/utils/timeZoneUtils';
+import { formatToDateString } from '@/utils/timeZoneUtils';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { addDays, subDays } from 'date-fns';
+import { addDays, subDays, format } from 'date-fns';
 import { useAtom } from 'jotai';
 import { useEffect } from 'react';
 
@@ -36,9 +36,7 @@ export const useMealData = () => {
   const errorMessage = error instanceof Error ? error.message : '급식 정보가 없어요';
 
   useEffect(() => {
-    const koreanCurrentDate = toKoreanTime(currentDate);
-
-    const prevDate = subDays(koreanCurrentDate, 1);
+    const prevDate = subDays(currentDate, 1);
     const prevFormattedDate = formatToDateString(prevDate);
     queryClient.prefetchQuery({
       queryKey: ['mealData', prevFormattedDate],
@@ -47,7 +45,7 @@ export const useMealData = () => {
       retry: false,
     });
 
-    const nextDate = addDays(koreanCurrentDate, 1);
+    const nextDate = addDays(currentDate, 1);
     const nextFormattedDate = formatToDateString(nextDate);
     queryClient.prefetchQuery({
       queryKey: ['mealData', nextFormattedDate],
@@ -58,24 +56,17 @@ export const useMealData = () => {
   }, [currentDate, queryClient]);
 
   const handlePrevDay = () => {
-    setCurrentDate((prevDate) => {
-      const koreanPrevDate = toKoreanTime(prevDate);
-      return subDays(koreanPrevDate, 1);
-    });
+    setCurrentDate((prevDate) => subDays(prevDate, 1));
     setDateInitialized(true);
   };
 
   const handleNextDay = () => {
-    setCurrentDate((prevDate) => {
-      const koreanPrevDate = toKoreanTime(prevDate);
-      return addDays(koreanPrevDate, 1);
-    });
+    setCurrentDate((prevDate) => addDays(prevDate, 1));
     setDateInitialized(true);
   };
 
   const resetToToday = () => {
-    const koreanTime = toKoreanTime(new Date());
-    setCurrentDate(koreanTime);
+    setCurrentDate(new Date());
     setDateInitialized(true);
   };
 
