@@ -3,11 +3,11 @@ import { useResponsiveness } from '@/hooks/useResponsiveness';
 import { useScrollOpacity } from '@/hooks/useScrollOpacity';
 import { fetchMealData } from '@/services/mealService';
 import { currentDateAtom } from '@/store/atoms';
-import { formatToDateString } from '@/utils/timeZoneUtils';
+import { formatToDateString, getKoreanTime } from '@/utils/timeZoneUtils';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { addDays, subDays } from 'date-fns';
 import { useAtom } from 'jotai';
-import { useEffect } from 'react';
+import { useEffect, useCallback } from 'react';
 
 export const useMealData = () => {
   const [currentDate, setCurrentDate] = useAtom(currentDateAtom);
@@ -25,6 +25,13 @@ export const useMealData = () => {
     setCurrentDate,
   );
 
+  // 서버에서 계산한 날짜로 클라이언트 상태를 동기화하는 함수
+  const initializeWithServerDate = useCallback((serverDate: Date) => {
+    console.log(`Syncing client date with server date: ${serverDate.toISOString()}`);
+    setCurrentDate(serverDate);
+    setDateInitialized(true);
+  }, [setCurrentDate, setDateInitialized]);
+
   const { data, isLoading, error } = useQuery({
     queryKey: ['mealData', formattedDate],
     queryFn: () => fetchMealData(formattedDate),
@@ -36,6 +43,7 @@ export const useMealData = () => {
   const errorMessage = error instanceof Error ? error.message : '급식 정보가 없어요';
 
   useEffect(() => {
+    // 이미 한국 시간으로 계산된 currentDate를 그대로 사용
     const prevDate = subDays(currentDate, 1);
     const prevFormattedDate = formatToDateString(prevDate);
     queryClient.prefetchQuery({
@@ -57,6 +65,7 @@ export const useMealData = () => {
 
   const handlePrevDay = () => {
     setCurrentDate((prevDate) => {
+      // 이미 한국 시간으로 계산된 날짜를 그대로 사용
       return subDays(prevDate, 1);
     });
     setDateInitialized(true);
@@ -64,14 +73,15 @@ export const useMealData = () => {
 
   const handleNextDay = () => {
     setCurrentDate((prevDate) => {
+      // 이미 한국 시간으로 계산된 날짜를 그대로 사용
       return addDays(prevDate, 1);
     });
     setDateInitialized(true);
   };
 
   const resetToToday = () => {
-    // 현재 한국 시간으로 리셋
-    const koreanTime = new Date(); // 클라이언트에서는 로컬 시간 사용
+    // 클라이언트에서 한국 시간으로 리셋
+    const koreanTime = getKoreanTime();
     setCurrentDate(koreanTime);
     setDateInitialized(true);
   };
@@ -103,5 +113,6 @@ export const useMealData = () => {
     handleScroll,
     dateInitialized,
     initialLoad,
+    initializeWithServerDate, // 새로 추가된 함수
   };
 };
