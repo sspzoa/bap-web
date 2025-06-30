@@ -31,28 +31,17 @@ export default function MealLayout({ initialData, initialDate }: MealLayoutProps
     handleScroll,
     dateInitialized,
     initialLoad,
-    initializeWithServerDate,
   } = useMealData();
 
   const [simpleMealToggle, setSimpleMealToggle] = useState(false);
-  const [serverDateSynced, setServerDateSynced] = useState(false);
   const queryClient = useQueryClient();
 
   useEffect(() => {
-    if (initialData && !serverDateSynced) {
+    if (initialData) {
       const formattedInitialDate = format(initialDate, 'yyyy-MM-dd');
-
-      console.log(`Setting initial data for date: ${formattedInitialDate}`);
-      console.log(`Server initial date: ${initialDate.toISOString()}`);
-
-      // React Query 캐시에 초기 데이터 설정
       queryClient.setQueryData(['mealData', formattedInitialDate], initialData);
-
-      // 서버에서 계산한 날짜로 클라이언트 상태를 동기화
-      initializeWithServerDate(initialDate);
-      setServerDateSynced(true);
     }
-  }, [initialData, initialDate, queryClient, initializeWithServerDate, serverDateSynced]);
+  }, [initialData, initialDate, queryClient]);
 
   function getInitialOpacity() {
     const { opacity } = getCurrentMealTiming();
@@ -286,3 +275,5 @@ export default function MealLayout({ initialData, initialDate }: MealLayoutProps
     </div>
   );
 }
+
+
