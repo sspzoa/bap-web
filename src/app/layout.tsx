@@ -3,7 +3,7 @@ import type { ReactNode } from 'react';
 import './globals.css';
 import QueryProvider from '@/providers/QueryProvider';
 import { Analytics } from '@vercel/analytics/next';
-import { SpeedInsights } from "@vercel/speed-insights/next"
+import { SpeedInsights } from '@vercel/speed-insights/next';
 
 export const metadata: Metadata = {
   title: '디미고 급식의 2세대 서비스 - 밥.net',
@@ -54,17 +54,20 @@ interface RootLayoutProps {
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="ko">
-    <head>
-      <meta name="google-site-verification" content="Autqjgf5q34Q-Bi4JnRwIuiJW-WzwkCU6Y4wlGU0IVU"/>
-      <meta name="google-adsense-account" content="ca-pub-2186209581588169"/>
-      <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2186209581588169"
-              crossOrigin="anonymous" />
-    </head>
-    <body className="antialiased">
-    <Analytics/>
-    <SpeedInsights/>
-    <QueryProvider>{children}</QueryProvider>
-    </body>
+      <head>
+        <meta name="google-site-verification" content="Autqjgf5q34Q-Bi4JnRwIuiJW-WzwkCU6Y4wlGU0IVU" />
+        <meta name="google-adsense-account" content="ca-pub-2186209581588169" />
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2186209581588169"
+          crossOrigin="anonymous"
+        />
+      </head>
+      <body className="antialiased">
+        <Analytics />
+        <SpeedInsights />
+        <QueryProvider>{children}</QueryProvider>
+      </body>
     </html>
   );
 }

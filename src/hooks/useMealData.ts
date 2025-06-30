@@ -3,9 +3,9 @@ import { useResponsiveness } from '@/hooks/useResponsiveness';
 import { useScrollOpacity } from '@/hooks/useScrollOpacity';
 import { fetchMealData } from '@/services/mealService';
 import { currentDateAtom } from '@/store/atoms';
-import { formatToDateString } from '@/utils/timeZoneUtils';
+import { formatToDateString, getKoreanDate } from '@/utils/timeZoneUtils';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { addDays, subDays, format } from 'date-fns';
+import { addDays, format, subDays } from 'date-fns';
 import { useAtom } from 'jotai';
 import { useEffect } from 'react';
 
@@ -66,7 +66,7 @@ export const useMealData = () => {
   };
 
   const resetToToday = () => {
-    setCurrentDate(new Date());
+    setCurrentDate(getKoreanDate());
     setDateInitialized(true);
   };
 
