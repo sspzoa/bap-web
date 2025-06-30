@@ -1,9 +1,12 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 import './globals.css';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
+import { PerformanceProvider } from '@/providers/PerformanceProvider';
 import QueryProvider from '@/providers/QueryProvider';
+import { logger } from '@/utils/logger';
 import { Analytics } from '@vercel/analytics/next';
-import { SpeedInsights } from "@vercel/speed-insights/next"
+import { SpeedInsights } from '@vercel/speed-insights/next';
 
 export const metadata: Metadata = {
   title: '디미고 급식의 2세대 서비스 - 밥.net',
@@ -51,20 +54,70 @@ interface RootLayoutProps {
   children: ReactNode;
 }
 
+if (typeof window !== 'undefined') {
+  logger.info('Application initialized', {
+    version: process.env.NEXT_PUBLIC_APP_VERSION || '1.0.0',
+    environment: process.env.NODE_ENV,
+    userAgent: navigator.userAgent,
+    viewport: {
+      width: window.innerWidth,
+      height: window.innerHeight,
+    },
+  });
+
+  window.addEventListener('error', (event) => {
+    logger.error('Unhandled error', {
+      message: event.message,
+      filename: event.filename,
+      lineno: event.lineno,
+      colno: event.colno,
+      error: event.error,
+    });
+  });
+
+  window.addEventListener('unhandledrejection', (event) => {
+    logger.error('Unhandled promise rejection', {
+      reason: event.reason,
+    });
+  });
+
+  document.addEventListener('visibilitychange', () => {
+    logger.info('Page visibility changed', {
+      hidden: document.hidden,
+      visibilityState: document.visibilityState,
+    });
+  });
+
+  window.addEventListener('beforeunload', () => {
+    logger.info('Page unloading', {
+      metrics: logger.getMetrics(),
+    });
+  });
+}
+
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="ko">
-    <head>
-      <meta name="google-site-verification" content="Autqjgf5q34Q-Bi4JnRwIuiJW-WzwkCU6Y4wlGU0IVU"/>
-      <meta name="google-adsense-account" content="ca-pub-2186209581588169"/>
-      <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2186209581588169"
-              crossOrigin="anonymous" />
-    </head>
-    <body className="antialiased">
-    <Analytics/>
-    <SpeedInsights/>
-    <QueryProvider>{children}</QueryProvider>
-    </body>
+      <head>
+        <meta name="google-site-verification" content="Autqjgf5q34Q-Bi4JnRwIuiJW-WzwkCU6Y4wlGU0IVU" />
+        <meta name="google-adsense-account" content="ca-pub-2186209581588169" />
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2186209581588169"
+          crossOrigin="anonymous"
+        />
+      </head>
+      <body className="antialiased">
+        <ErrorBoundary>
+          <PerformanceProvider>
+            <QueryProvider>
+              <Analytics />
+              <SpeedInsights />
+              {children}
+            </QueryProvider>
+          </PerformanceProvider>
+        </ErrorBoundary>
+      </body>
     </html>
   );
 }
