@@ -1,25 +1,26 @@
 import MealLayout from '@/components/MealLayout';
 import { getMealDataServerSide } from '@/services/mealService';
-import { getKoreanTime } from '@/utils/timeZoneUtils';
 import { format } from 'date-fns';
+import { toZonedTime } from 'date-fns-tz';
 
 export default async function Page() {
-  const koreanTime = getKoreanTime();
+  const now = new Date();
+  const koreanTime = toZonedTime(now, 'Asia/Seoul');
   const koreanHour = koreanTime.getHours();
 
-  console.log(`Server Korean time: ${koreanTime.toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' })}, Hour: ${koreanHour}`);
+  console.log(`Server local time: ${now.toISOString()}`);
+  console.log(`Korean time: ${koreanTime.toISOString()}, Hour: ${koreanHour}`);
 
-  let initialDate = koreanTime;
+  let targetDate = koreanTime;
   if (koreanHour >= 20) {
-    const tomorrow = new Date(koreanTime);
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    initialDate = tomorrow;
+    targetDate = new Date(koreanTime.getTime() + 24 * 60 * 60 * 1000);
   }
 
-  const formattedDate = format(initialDate, 'yyyy-MM-dd');
+  const formattedDate = format(targetDate, 'yyyy-MM-dd');
+
+  console.log(`Target date: ${targetDate.toISOString()}, Formatted: ${formattedDate}`);
+
   const initialData = await getMealDataServerSide(formattedDate);
 
-  console.log(`Initial date: ${initialDate.toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' })}, Formatted: ${formattedDate}`);
-
-  return <MealLayout initialData={initialData} initialDate={initialDate} />;
+  return <MealLayout initialData={initialData} initialDate={targetDate} />;
 }
