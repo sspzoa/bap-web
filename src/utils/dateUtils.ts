@@ -1,26 +1,30 @@
 import { addDays, format, subDays } from 'date-fns';
+import { toKoreanTime, getKoreanTime } from './timeZoneUtils';
 
 export const formatDate = (date: Date): string => {
-  return format(date, 'yyyy-MM-dd');
+  const koreanTime = toKoreanTime(date);
+  return format(koreanTime, 'yyyy-MM-dd');
 };
 
 export const getPreviousDay = (date: Date): Date => {
-  return subDays(date, 1);
+  const koreanTime = toKoreanTime(date);
+  return subDays(koreanTime, 1);
 };
 
 export const getNextDay = (date: Date): Date => {
-  return addDays(date, 1);
+  const koreanTime = toKoreanTime(date);
+  return addDays(koreanTime, 1);
 };
 
 export const getDateToFetch = (): Date => {
-  const hour = new Date().getHours();
-  const now = new Date();
+  const koreanTime = getKoreanTime();
+  const hour = koreanTime.getHours();
 
   if (hour >= 20) {
-    return addDays(now, 1);
+    return addDays(koreanTime, 1);
   }
 
-  return now;
+  return koreanTime;
 };
 
 export const getFormattedPreviousDay = (date: Date): string => {
@@ -32,12 +36,12 @@ export const getFormattedNextDay = (date: Date): string => {
 };
 
 export const getInitialDateForServer = (): Date => {
-  const hour = new Date().getHours();
-  const now = new Date();
+  const koreanTime = getKoreanTime();
+  const hour = koreanTime.getHours();
 
   if (hour >= 20) {
-    return addDays(now, 1);
+    return addDays(koreanTime, 1);
   }
 
-  return now;
+  return koreanTime;
 };
