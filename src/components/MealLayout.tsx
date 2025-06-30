@@ -275,5 +275,3 @@ export default function MealLayout({ initialData, initialDate }: MealLayoutProps
     </div>
   );
 }
-
-

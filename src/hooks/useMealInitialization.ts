@@ -1,6 +1,6 @@
 import { fetchMealData } from '@/services/mealService';
 import { getCurrentMealTiming } from '@/utils/mealTimingUtils';
-import { formatToDateString, getKoreanHours } from '@/utils/timeZoneUtils';
+import { formatToDateString, getKoreanDate, getKoreanHours } from '@/utils/timeZoneUtils';
 import { useQueryClient } from '@tanstack/react-query';
 import { addDays, format } from 'date-fns';
 import { useEffect, useState } from 'react';
@@ -17,8 +17,8 @@ export const useMealInitialization = (
   const setMealByTime = () => {
     if (!scrollContainerRef?.current) return;
 
-    const now = new Date();
-    const koreanHour = getKoreanHours(); // 배경 설정용으로 한국시간 사용
+    const now = getKoreanDate();
+    const koreanHour = getKoreanHours();
     const scrollContainer = scrollContainerRef.current;
     const scrollWidth = scrollContainer.scrollWidth / 3;
 
