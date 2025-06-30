@@ -60,7 +60,7 @@ export default function MealLayout({ initialData, initialDate }: MealLayoutProps
             opacity: initialLoad ? initialOpacity.breakfast : breakfastOpacity,
             zIndex: 1,
           }}>
-          <Image
+          <img
             src="/img/breakfast.svg"
             alt="아침 배경"
             fill
@@ -79,7 +79,7 @@ export default function MealLayout({ initialData, initialDate }: MealLayoutProps
             opacity: initialLoad ? initialOpacity.lunch : lunchOpacity,
             zIndex: 2,
           }}>
-          <Image
+          <img
             src="/img/lunch.svg"
             alt="점심 배경"
             fill
@@ -98,7 +98,7 @@ export default function MealLayout({ initialData, initialDate }: MealLayoutProps
             opacity: initialLoad ? initialOpacity.dinner : dinnerOpacity,
             zIndex: 3,
           }}>
-          <Image
+          <img
             src="/img/dinner.svg"
             alt="저녁 배경"
             fill
