@@ -1,13 +1,10 @@
 import MealLayout from '@/components/MealLayout';
 import { getMealDataServerSide } from '@/services/mealService';
-import { getKoreanTime } from '@/utils/timeZoneUtils';
-import { format } from 'date-fns';
+import { getKoreanTime, formatToDateString } from '@/utils/timeZoneUtils';
 
 export default async function Page() {
   const koreanTime = getKoreanTime();
   const koreanHour = koreanTime.getHours();
-
-  console.log(`Server Korean time: ${koreanTime.toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' })}, Hour: ${koreanHour}`);
 
   let initialDate = koreanTime;
   if (koreanHour >= 20) {
@@ -16,10 +13,10 @@ export default async function Page() {
     initialDate = tomorrow;
   }
 
-  const formattedDate = format(initialDate, 'yyyy-MM-dd');
+  const formattedDate = formatToDateString(initialDate);
   const initialData = await getMealDataServerSide(formattedDate);
 
-  console.log(`Initial date: ${initialDate.toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' })}, Formatted: ${formattedDate}`);
+  console.log(`Korean time: ${koreanTime.toISOString()}, Hour: ${koreanHour}, Fetching data for date: ${formattedDate}`);
 
   return <MealLayout initialData={initialData} initialDate={initialDate} />;
 }
