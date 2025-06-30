@@ -6,7 +6,6 @@ import { MealSection } from '@/components/MealSection';
 import { useMealData } from '@/hooks/useMealData';
 import type { MealLayoutProps } from '@/types';
 import { getCurrentMealTiming } from '@/utils/mealTimingUtils';
-import { toKoreanTime } from '@/utils/timeZoneUtils';
 import { useQueryClient } from '@tanstack/react-query';
 import { format } from 'date-fns';
 import { ko } from 'date-fns/locale';
@@ -39,8 +38,7 @@ export default function MealLayout({ initialData, initialDate }: MealLayoutProps
 
   useEffect(() => {
     if (initialData) {
-      const koreanInitialDate = toKoreanTime(initialDate);
-      const formattedInitialDate = format(koreanInitialDate, 'yyyy-MM-dd');
+      const formattedInitialDate = format(initialDate, 'yyyy-MM-dd');
       queryClient.setQueryData(['mealData', formattedInitialDate], initialData);
     }
   }, [initialData, initialDate, queryClient]);
@@ -210,7 +208,7 @@ export default function MealLayout({ initialData, initialDate }: MealLayoutProps
               setMealByTime();
             }}>
             <p className="text-xl md:text-[22px] font-bold tracking-tight">
-              {dateInitialized ? format(toKoreanTime(currentDate), 'M월 d일 eeee', { locale: ko }) : ''}
+              {dateInitialized ? format(currentDate, 'M월 d일 eeee', { locale: ko }) : ''}
             </p>
           </Glass>
 
@@ -277,3 +275,5 @@ export default function MealLayout({ initialData, initialDate }: MealLayoutProps
     </div>
   );
 }
+
+
