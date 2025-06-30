@@ -8,7 +8,7 @@ export default async function Page() {
   const formattedDate = formatToDateString(initialDate);
   const initialData = await getMealDataServerSide(formattedDate);
 
-  console.log(`date: ${new Date()}`);
+  console.log(new Date());
   console.log(`Fetching data for date: ${formattedDate}`);
 
   return <MealLayout initialData={initialData} initialDate={initialDate} />;
