@@ -40,9 +40,7 @@ export const getInitialDateForServer = (): Date => {
   const hour = koreanTime.getHours();
 
   if (hour >= 20) {
-    const tomorrow = new Date(koreanTime);
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    return tomorrow;
+    return addDays(koreanTime, 1);
   }
 
   return koreanTime;
