@@ -46,9 +46,10 @@ class ApiService {
         const response = await this.fetchWithTimeout(url, fetchOptions, timeout);
 
         const responseData = await this.parseResponse<T>(response);
+        const duration = timer();
 
-        const duration = (timer as unknown as () => number) ? (timer as unknown as () => number)() : undefined;
         apiLogger.api(method, endpoint, response.status, duration);
+
         if (!response.ok) {
           throw ApiError.fromResponse(response, responseData);
         }
