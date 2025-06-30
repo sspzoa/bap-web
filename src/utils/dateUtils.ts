@@ -1,29 +1,22 @@
 import { addDays, format, subDays } from 'date-fns';
-import {
-  formatToKoreanDateString,
-  getCurrentKoreanTime,
-  getKoreanHours,
-  getKoreanNextDay,
-  getKoreanPreviousDay,
-} from './timeZoneUtils';
 
 export const formatDate = (date: Date): string => {
-  return formatToKoreanDateString(date);
+  return format(date, 'yyyy-MM-dd');
 };
 
 export const getPreviousDay = (date: Date): Date => {
-  return getKoreanPreviousDay(date);
+  return subDays(date, 1);
 };
 
 export const getNextDay = (date: Date): Date => {
-  return getKoreanNextDay(date);
+  return addDays(date, 1);
 };
 
 export const getDateToFetch = (): Date => {
-  const koreanHour = getKoreanHours();
-  const now = getCurrentKoreanTime();
+  const hour = new Date().getHours();
+  const now = new Date();
 
-  if (koreanHour >= 20) {
+  if (hour >= 20) {
     return addDays(now, 1);
   }
 
@@ -39,14 +32,12 @@ export const getFormattedNextDay = (date: Date): string => {
 };
 
 export const getInitialDateForServer = (): Date => {
-  const koreanHour = getKoreanHours();
-  const now = getCurrentKoreanTime();
+  const hour = new Date().getHours();
+  const now = new Date();
 
-  if (koreanHour >= 20) {
+  if (hour >= 20) {
     return addDays(now, 1);
   }
 
   return now;
 };
-
-

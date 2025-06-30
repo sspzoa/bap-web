@@ -1,5 +1,3 @@
-import { getKoreanHours } from './timeZoneUtils';
-
 export const getMealTimingByHour = (hour: number) => {
   if (hour >= 20 || hour < 8) {
     return {
@@ -23,7 +21,7 @@ export const getMealTimingByHour = (hour: number) => {
 };
 
 export const getCurrentMealTiming = () => {
-  const currentHour = getKoreanHours();
+  const currentHour = new Date().getHours();
   return getMealTimingByHour(currentHour);
 };
 
