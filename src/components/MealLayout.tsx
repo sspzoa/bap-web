@@ -60,13 +60,15 @@ export default function MealLayout({ initialData, initialDate }: MealLayoutProps
             opacity: initialLoad ? initialOpacity.breakfast : breakfastOpacity,
             zIndex: 1,
           }}>
-          <img
+          <Image
             src="/img/breakfast.svg"
             alt="아침 배경"
-            className="object-cover w-full h-full absolute inset-0"
+            fill
+            className="object-cover "
             style={{
               objectPosition: '50% 90%',
             }}
+            priority
             draggable={false}
           />
         </div>
@@ -77,13 +79,15 @@ export default function MealLayout({ initialData, initialDate }: MealLayoutProps
             opacity: initialLoad ? initialOpacity.lunch : lunchOpacity,
             zIndex: 2,
           }}>
-          <img
+          <Image
             src="/img/lunch.svg"
             alt="점심 배경"
-            className="object-cover w-full h-full absolute inset-0"
+            fill
+            className="object-cover "
             style={{
               objectPosition: '50% 90%',
             }}
+            priority
             draggable={false}
           />
         </div>
@@ -94,13 +98,15 @@ export default function MealLayout({ initialData, initialDate }: MealLayoutProps
             opacity: initialLoad ? initialOpacity.dinner : dinnerOpacity,
             zIndex: 3,
           }}>
-          <img
+          <Image
             src="/img/dinner.svg"
             alt="저녁 배경"
-            className="object-cover w-full h-full absolute inset-0"
+            fill
+            className="object-cover "
             style={{
               objectPosition: '50% 90%',
             }}
+            priority
             draggable={false}
           />
         </div>
@@ -113,13 +119,15 @@ export default function MealLayout({ initialData, initialDate }: MealLayoutProps
             opacity: 1,
             zIndex: 3,
           }}>
-          <img
+          <Image
             src="/img/dinner.svg"
             alt="저녁 배경"
-            className="object-cover w-full h-full absolute inset-0"
+            fill
+            className="object-cover "
             style={{
               objectPosition: '50% 90%',
             }}
+            priority
             draggable={false}
           />
         </div>
