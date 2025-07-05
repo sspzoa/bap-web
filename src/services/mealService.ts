@@ -1,29 +1,43 @@
-import type { MealData } from '@/types';
+import type { MealData, MealResponse } from '@/types';
 
-export const fetchMealData = async (date: string): Promise<MealData> => {
+export const fetchMealData = async (date: string): Promise<MealResponse> => {
   try {
     const response = await fetch(`https://api.xn--rh3b.net/${date}`);
+
     if (!response.ok) {
       let errorMessage = '급식 정보가 없어요';
 
-      const errorData = await response.json();
-      if (errorData?.error) {
-        errorMessage = errorData.error;
-      }
+      try {
+        const errorData = await response.json();
+        if (errorData?.error) {
+          errorMessage = errorData.error;
+        }
+      } catch {}
 
-      throw new Error(errorMessage);
+      return {
+        data: null,
+        error: errorMessage,
+        isError: true,
+      };
     }
+
     const responseData = await response.json();
-    return responseData.data;
+    return {
+      data: responseData.data,
+      error: null,
+      isError: false,
+    };
   } catch (error) {
-    if (error instanceof Error) {
-      throw error;
-    }
-    throw new Error('급식 정보가 없어요');
+    const errorMessage = error instanceof Error ? error.message : '급식 정보가 없어요';
+    return {
+      data: null,
+      error: errorMessage,
+      isError: true,
+    };
   }
 };
 
-export const getMealDataServerSide = async (date: string): Promise<MealData | null> => {
+export const getMealDataServerSide = async (date: string): Promise<MealResponse | null> => {
   try {
     const response = await fetch(`https://api.xn--rh3b.net/${date}`, {
       cache: 'no-store',
@@ -32,18 +46,33 @@ export const getMealDataServerSide = async (date: string): Promise<MealData | nu
     if (!response.ok) {
       let errorMessage = '급식 정보가 없어요';
 
-      const errorData = await response.json();
-      if (errorData?.error) {
-        errorMessage = errorData.error;
-      }
+      try {
+        const errorData = await response.json();
+        if (errorData?.error) {
+          errorMessage = errorData.error;
+        }
+      } catch {}
 
-      throw new Error(errorMessage);
+      return {
+        data: null,
+        error: errorMessage,
+        isError: true,
+      };
     }
 
     const responseData = await response.json();
-    return responseData.data;
+    return {
+      data: responseData.data,
+      error: null,
+      isError: false,
+    };
   } catch (error) {
     console.error('Error fetching initial meal data:', error);
-    return null;
+    const errorMessage = error instanceof Error ? error.message : '급식 정보가 없어요';
+    return {
+      data: null,
+      error: errorMessage,
+      isError: true,
+    };
   }
 };
