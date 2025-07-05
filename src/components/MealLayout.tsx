@@ -64,10 +64,7 @@ export default function MealLayout({ initialData, initialDate }: MealLayoutProps
             src="/img/breakfast.svg"
             alt="아침 배경"
             fill
-            style={{
-              objectFit: 'cover',
-              objectPosition: '50% 90%',
-            }}
+            className="bg-image-cover"
             priority
             draggable={false}
           />
@@ -83,10 +80,7 @@ export default function MealLayout({ initialData, initialDate }: MealLayoutProps
             src="/img/lunch.svg"
             alt="점심 배경"
             fill
-            style={{
-              objectFit: 'cover',
-              objectPosition: '50% 90%',
-            }}
+            className="bg-image-cover"
             priority
             draggable={false}
           />
@@ -102,10 +96,7 @@ export default function MealLayout({ initialData, initialDate }: MealLayoutProps
             src="/img/dinner.svg"
             alt="저녁 배경"
             fill
-            style={{
-              objectFit: 'cover',
-              objectPosition: '50% 90%',
-            }}
+            className="bg-image-cover"
             priority
             draggable={false}
           />
@@ -123,10 +114,7 @@ export default function MealLayout({ initialData, initialDate }: MealLayoutProps
             src="/img/dinner.svg"
             alt="저녁 배경"
             fill
-            style={{
-              objectFit: 'cover',
-              objectPosition: '50% 90%',
-            }}
+            className="bg-image-cover"
             priority
             draggable={false}
           />
