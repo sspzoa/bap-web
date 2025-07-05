@@ -25,15 +25,16 @@ export const useMealData = () => {
     setCurrentDate,
   );
 
-  const { data, isLoading, error } = useQuery({
+  const { data: responseData, isLoading } = useQuery({
     queryKey: ['mealData', formattedDate],
     queryFn: () => fetchMealData(formattedDate),
     staleTime: 1000 * 60 * 5,
     retry: false,
   });
 
-  const isError = !!error;
-  const errorMessage = error instanceof Error ? error.message : '급식 정보가 없어요';
+  const data = responseData?.data || null;
+  const isError = responseData?.isError || false;
+  const errorMessage = responseData?.error || '급식 정보가 없어요';
 
   useEffect(() => {
     const prevDate = subDays(currentDate, 1);

@@ -10,6 +10,12 @@ export interface MealData {
   dinner: MealItem;
 }
 
+export interface MealResponse {
+  data: MealData | null;
+  error: string | null;
+  isError: boolean;
+}
+
 export interface MealSectionProps {
   icon: string;
   title: string;
@@ -25,6 +31,6 @@ export interface MealSectionProps {
 }
 
 export interface MealLayoutProps {
-  initialData: MealData | null;
+  initialData: MealResponse | null;
   initialDate: Date;
 }
