@@ -30,7 +30,14 @@ export interface MealSectionProps {
   isSimpleMealMode?: boolean;
 }
 
+export interface InitialOpacity {
+  breakfast: number;
+  lunch: number;
+  dinner: number;
+}
+
 export interface MealLayoutProps {
   initialData: MealResponse | null;
   initialDate: Date;
+  initialOpacity: InitialOpacity;
 }
