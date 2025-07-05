@@ -64,7 +64,7 @@ export const useMealInitialization = (
       setTimeout(() => {
         setMealByTime();
         setInitialLoad(false);
-      }, 100);
+      });
     }
   }, [initialLoad]);
 

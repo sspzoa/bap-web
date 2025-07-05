@@ -13,7 +13,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
-export default function MealLayout({ initialData, initialDate }: MealLayoutProps) {
+export default function MealLayout({ initialData, initialDate, initialOpacity }: MealLayoutProps) {
   const {
     currentDate,
     data,
@@ -43,12 +43,6 @@ export default function MealLayout({ initialData, initialDate }: MealLayoutProps
     }
   }, [initialData, initialDate, queryClient]);
 
-  function getInitialOpacity() {
-    const { opacity } = getCurrentMealTiming();
-    return opacity;
-  }
-
-  const initialOpacity = getInitialOpacity();
   const showMealContent = dateInitialized || !initialLoad;
 
   return (
