@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type {Metadata, Viewport} from 'next';
 import type { ReactNode } from 'react';
 import './globals.css';
 import QueryProvider from '@/providers/QueryProvider';
@@ -45,6 +45,14 @@ export const metadata: Metadata = {
     locale: 'ko_KR',
     type: 'website',
   },
+};
+
+export const viewport: Viewport = {
+  themeColor: '#000000',
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
 };
 
 interface RootLayoutProps {
