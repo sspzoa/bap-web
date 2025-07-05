@@ -33,8 +33,3 @@ body {
     --background: #0a0a0a;
   }
 }
-
-.bg-image-cover {
-  object-fit: cover;
-  object-position: 50% 90%;
-}
