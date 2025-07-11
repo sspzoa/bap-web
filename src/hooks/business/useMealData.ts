@@ -1,9 +1,8 @@
-import { useMealInitialization } from '@/hooks/useMealInitialization';
-import { useResponsiveness } from '@/hooks/useResponsiveness';
-import { useScrollOpacity } from '@/hooks/useScrollOpacity';
+import { useMealInitialization } from '@/hooks/business/useMealInitialization';
+import { useResponsiveness, useScrollOpacity } from '@/hooks/ui';
 import { fetchMealData } from '@/services/mealService';
 import { currentDateAtom } from '@/store/atoms';
-import { formatToDateString, getKoreanDate } from '@/utils/timeZoneUtils';
+import { formatToDateString, getKoreanDate } from '@/utils/date';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { addDays, format, subDays } from 'date-fns';
 import { useAtom } from 'jotai';

@@ -1,4 +1,5 @@
-import { getKoreanHours } from './timeZoneUtils';
+import { CACHE_SETTINGS, MEAL_TIME_THRESHOLDS, UI_CONSTANTS } from '@/constants';
+import { getKoreanHours } from '@/utils/date';
 
 type MealTiming = {
   meal: 'breakfast' | 'lunch' | 'dinner';
@@ -16,13 +17,13 @@ export const getMealTimingByHour = (hour: number): MealTiming => {
 
   let result: MealTiming;
 
-  if (hour >= 20 || hour < 8) {
+  if (hour >= MEAL_TIME_THRESHOLDS.DINNER_START || hour < MEAL_TIME_THRESHOLDS.BREAKFAST_END) {
     result = {
       meal: 'breakfast',
       scrollPosition: 0,
       opacity: { breakfast: 1, lunch: 0, dinner: 0 },
     };
-  } else if (hour >= 14) {
+  } else if (hour >= MEAL_TIME_THRESHOLDS.LUNCH_END) {
     result = {
       meal: 'dinner',
       scrollPosition: 2,
@@ -55,7 +56,7 @@ export const calculateOpacityFromScroll = (scrollPosition: number, totalWidth: n
     return cached;
   }
 
-  const sectionWidth = totalWidth / 3;
+  const sectionWidth = totalWidth / UI_CONSTANTS.SCROLL_SECTIONS;
   let result: { breakfast: number; lunch: number; dinner: number };
 
   if (scrollPosition < sectionWidth) {
@@ -80,7 +81,7 @@ export const calculateOpacityFromScroll = (scrollPosition: number, totalWidth: n
     };
   }
 
-  if (opacityCache.size > 100) {
+  if (opacityCache.size > CACHE_SETTINGS.OPACITY_CACHE_MAX_SIZE) {
     opacityCache.clear();
   }
 

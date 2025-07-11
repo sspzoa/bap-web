@@ -1,6 +1,6 @@
 import { fetchMealData } from '@/services/mealService';
-import { getCurrentMealTiming } from '@/utils/mealTimingUtils';
-import { formatToDateString, getKoreanDate, getKoreanHours } from '@/utils/timeZoneUtils';
+import { formatToDateString, getKoreanDate, getKoreanHours } from '@/utils/date';
+import { getCurrentMealTiming } from '@/utils/meal';
 import { useQueryClient } from '@tanstack/react-query';
 import { addDays, format } from 'date-fns';
 import { useCallback, useEffect, useState } from 'react';

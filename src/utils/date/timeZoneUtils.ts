@@ -1,15 +1,15 @@
+import { CACHE_SETTINGS } from '@/constants';
 import { format } from 'date-fns';
 import { toZonedTime } from 'date-fns-tz';
 
 const KOREA_TIMEZONE = 'Asia/Seoul';
 
 let cachedKoreanTime: { date: Date; hours: number; cacheTime: number } | null = null;
-const CACHE_DURATION = 60000;
 
 const getKoreanTimeCache = () => {
   const now = Date.now();
 
-  if (cachedKoreanTime && now - cachedKoreanTime.cacheTime < CACHE_DURATION) {
+  if (cachedKoreanTime && now - cachedKoreanTime.cacheTime < CACHE_SETTINGS.KOREAN_TIME_DURATION) {
     return cachedKoreanTime;
   }
 

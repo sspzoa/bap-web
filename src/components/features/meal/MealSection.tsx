@@ -1,4 +1,5 @@
-import Glass from '@/components/Glass';
+import { Glass } from '@/components/ui';
+import { ERROR_MESSAGES } from '@/constants';
 import type { MealSectionProps } from '@/types';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -38,7 +39,7 @@ export const MealSection = memo(function MealSection({
     if (isError) {
       return (
         <div className="flex flex-row gap-2">
-          <p className="text-[20px] font-semibold">{errorMessage || '급식 정보가 없어요'}</p>
+          <p className="text-[20px] font-semibold">{errorMessage || ERROR_MESSAGES.NO_MEAL_DATA}</p>
         </div>
       );
     }
@@ -61,7 +62,7 @@ export const MealSection = memo(function MealSection({
     if (isMealOperationEmpty) {
       return (
         <div className="flex flex-row gap-2">
-          <p className="text-[20px] font-semibold">급식 운영이 없어요</p>
+          <p className="text-[20px] font-semibold">{ERROR_MESSAGES.NO_MEAL_OPERATION}</p>
         </div>
       );
     }
@@ -69,14 +70,14 @@ export const MealSection = memo(function MealSection({
     if (isSimpleMealMode && id !== 'lunch') {
       return (
         <div className="flex flex-row gap-2">
-          <p className="text-[20px] font-semibold">간편식이 없어요</p>
+          <p className="text-[20px] font-semibold">{ERROR_MESSAGES.NO_SIMPLE_MEAL}</p>
         </div>
       );
     }
 
     return (
       <div className="flex flex-row gap-2">
-        <p className="text-[20px] font-semibold">급식 정보가 없어요</p>
+        <p className="text-[20px] font-semibold">{ERROR_MESSAGES.NO_MEAL_DATA}</p>
       </div>
     );
   }, [displayItems, isLoading, isError, errorMessage, title, isMealOperationEmpty, isSimpleMealMode, id]);

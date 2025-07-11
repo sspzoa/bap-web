@@ -1,6 +1,7 @@
+import { BREAKPOINTS, UI_CONSTANTS } from '@/constants';
 import { useCallback, useEffect, useState } from 'react';
 
-export const useResponsiveness = (mobileBreakpoint = 768) => {
+export const useResponsiveness = (mobileBreakpoint = BREAKPOINTS.MOBILE) => {
   const [isMobile, setIsMobile] = useState(false);
 
   const checkIfMobile = useCallback(() => {
@@ -14,7 +15,7 @@ export const useResponsiveness = (mobileBreakpoint = 768) => {
     let timeoutId: NodeJS.Timeout;
     const debouncedCheckIfMobile = () => {
       clearTimeout(timeoutId);
-      timeoutId = setTimeout(checkIfMobile, 100);
+      timeoutId = setTimeout(checkIfMobile, UI_CONSTANTS.DEBOUNCE_DELAY);
     };
 
     window.addEventListener('resize', debouncedCheckIfMobile);
