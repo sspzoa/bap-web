@@ -1,26 +1,29 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 export const useResponsiveness = (mobileBreakpoint = 768) => {
   const [isMobile, setIsMobile] = useState(false);
 
+  const checkIfMobile = useCallback(() => {
+    const newIsMobile = window.innerWidth < mobileBreakpoint;
+    setIsMobile(newIsMobile);
+  }, [mobileBreakpoint]);
+
   useEffect(() => {
-    const checkIfMobile = () => {
-      const wasMobile = isMobile;
-      const newIsMobile = window.innerWidth < mobileBreakpoint;
+    checkIfMobile();
 
-      setIsMobile(newIsMobile);
-
-      return { wasMobile, isMobile: newIsMobile };
+    let timeoutId: NodeJS.Timeout;
+    const debouncedCheckIfMobile = () => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(checkIfMobile, 100);
     };
 
-    const result = checkIfMobile();
-
-    window.addEventListener('resize', checkIfMobile);
+    window.addEventListener('resize', debouncedCheckIfMobile);
 
     return () => {
-      window.removeEventListener('resize', checkIfMobile);
+      clearTimeout(timeoutId);
+      window.removeEventListener('resize', debouncedCheckIfMobile);
     };
-  }, [isMobile, mobileBreakpoint]);
+  }, [checkIfMobile]);
 
   return { isMobile };
 };

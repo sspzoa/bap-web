@@ -7,7 +7,7 @@ import { formatToDateString, getKoreanDate } from '@/utils/timeZoneUtils';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { addDays, format, subDays } from 'date-fns';
 import { useAtom } from 'jotai';
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 
 export const useMealData = () => {
   const [currentDate, setCurrentDate] = useAtom(currentDateAtom);
@@ -56,20 +56,20 @@ export const useMealData = () => {
     });
   }, [currentDate, queryClient]);
 
-  const handlePrevDay = () => {
+  const handlePrevDay = useCallback(() => {
     setCurrentDate((prevDate) => subDays(prevDate, 1));
     setDateInitialized(true);
-  };
+  }, [setCurrentDate, setDateInitialized]);
 
-  const handleNextDay = () => {
+  const handleNextDay = useCallback(() => {
     setCurrentDate((prevDate) => addDays(prevDate, 1));
     setDateInitialized(true);
-  };
+  }, [setCurrentDate, setDateInitialized]);
 
-  const resetToToday = () => {
+  const resetToToday = useCallback(() => {
     setCurrentDate(getKoreanDate());
     setDateInitialized(true);
-  };
+  }, [setCurrentDate, setDateInitialized]);
 
   useEffect(() => {
     if (isMobile) {

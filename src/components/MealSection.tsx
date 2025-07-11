@@ -2,8 +2,9 @@ import Glass from '@/components/Glass';
 import type { MealSectionProps } from '@/types';
 import Image from 'next/image';
 import Link from 'next/link';
+import { memo, useMemo } from 'react';
 
-export function MealSection({
+export const MealSection = memo(function MealSection({
   icon,
   title,
   regularItems,
@@ -16,13 +17,69 @@ export function MealSection({
   showContent,
   isSimpleMealMode = false,
 }: MealSectionProps & { errorMessage?: string }) {
-  const displayItems = id === 'lunch' ? regularItems : isSimpleMealMode ? simpleMealItems : regularItems;
+  const displayItems = useMemo(() => {
+    return id === 'lunch' ? regularItems : isSimpleMealMode ? simpleMealItems : regularItems;
+  }, [id, regularItems, simpleMealItems, isSimpleMealMode]);
 
-  const isMealOperationEmpty =
-    Array.isArray(regularItems) &&
-    Array.isArray(simpleMealItems) &&
-    regularItems.length === 0 &&
-    simpleMealItems.length === 0;
+  const isMealOperationEmpty = useMemo(() => {
+    return (
+      Array.isArray(regularItems) &&
+      Array.isArray(simpleMealItems) &&
+      regularItems.length === 0 &&
+      simpleMealItems.length === 0
+    );
+  }, [regularItems, simpleMealItems]);
+
+  const mealItemsContent = useMemo(() => {
+    if (isLoading) {
+      return <div className="flex flex-row gap-2" />;
+    }
+
+    if (isError) {
+      return (
+        <div className="flex flex-row gap-2">
+          <p className="text-[20px] font-semibold">{errorMessage || '급식 정보가 없어요'}</p>
+        </div>
+      );
+    }
+
+    if (displayItems.length > 0) {
+      return displayItems.map((item, index) => (
+        <div key={`${title.toLowerCase()}-${index}`} className="flex flex-row gap-2">
+          <p className="text-[20px] font-semibold">-</p>
+          <Link
+            className="active:scale-95 active:opacity-50 duration-100"
+            target="_blank"
+            rel="noreferrer noopener"
+            href={`https://search.naver.com/search.naver?ssc=tab.image.all&where=image&sm=tab_jum&query=${item}`}>
+            <p className="text-[20px] font-semibold break-words">{item}</p>
+          </Link>
+        </div>
+      ));
+    }
+
+    if (isMealOperationEmpty) {
+      return (
+        <div className="flex flex-row gap-2">
+          <p className="text-[20px] font-semibold">급식 운영이 없어요</p>
+        </div>
+      );
+    }
+
+    if (isSimpleMealMode && id !== 'lunch') {
+      return (
+        <div className="flex flex-row gap-2">
+          <p className="text-[20px] font-semibold">간편식이 없어요</p>
+        </div>
+      );
+    }
+
+    return (
+      <div className="flex flex-row gap-2">
+        <p className="text-[20px] font-semibold">급식 정보가 없어요</p>
+      </div>
+    );
+  }, [displayItems, isLoading, isError, errorMessage, title, isMealOperationEmpty, isSimpleMealMode, id]);
 
   return (
     <Glass
@@ -57,41 +114,10 @@ export function MealSection({
               </div>
             )}
 
-            {isLoading ? (
-              <div className="flex flex-row gap-2" />
-            ) : isError ? (
-              <div className="flex flex-row gap-2">
-                <p className="text-[20px] font-semibold">{errorMessage || '급식 정보가 없어요'}</p>
-              </div>
-            ) : displayItems.length > 0 ? (
-              displayItems.map((item, index) => (
-                <div key={`${title.toLowerCase()}-${index}`} className="flex flex-row gap-2">
-                  <p className="text-[20px] font-semibold">-</p>
-                  <Link
-                    className="active:scale-95 active:opacity-50 duration-100"
-                    target="_blank"
-                    rel="noreferrer noopener"
-                    href={`https://search.naver.com/search.naver?ssc=tab.image.all&where=image&sm=tab_jum&query=${item}`}>
-                    <p className="text-[20px] font-semibold break-words">{item}</p>
-                  </Link>
-                </div>
-              ))
-            ) : isMealOperationEmpty ? (
-              <div className="flex flex-row gap-2">
-                <p className="text-[20px] font-semibold">급식 운영이 없어요</p>
-              </div>
-            ) : isSimpleMealMode && id !== 'lunch' ? (
-              <div className="flex flex-row gap-2">
-                <p className="text-[20px] font-semibold">간편식이 없어요</p>
-              </div>
-            ) : (
-              <div className="flex flex-row gap-2">
-                <p className="text-[20px] font-semibold">급식 정보가 없어요</p>
-              </div>
-            )}
+            {mealItemsContent}
           </div>
         </>
       )}
     </Glass>
   );
-}
+});
