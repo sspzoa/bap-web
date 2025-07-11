@@ -11,7 +11,7 @@ import { format } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 export default function MealLayout({ initialData, initialDate, initialOpacity }: MealLayoutProps) {
   const {
@@ -43,7 +43,31 @@ export default function MealLayout({ initialData, initialDate, initialOpacity }:
     }
   }, [initialData, initialDate, queryClient]);
 
-  const showMealContent = dateInitialized || !initialLoad;
+  const showMealContent = useMemo(() => {
+    return dateInitialized || !initialLoad;
+  }, [dateInitialized, initialLoad]);
+
+  const backgroundOpacities = useMemo(
+    () => ({
+      breakfast: initialLoad ? initialOpacity.breakfast : breakfastOpacity,
+      lunch: initialLoad ? initialOpacity.lunch : lunchOpacity,
+      dinner: initialLoad ? initialOpacity.dinner : dinnerOpacity,
+    }),
+    [initialLoad, initialOpacity, breakfastOpacity, lunchOpacity, dinnerOpacity],
+  );
+
+  const handleToggleSimpleMeal = useCallback(() => {
+    setSimpleMealToggle((prev) => !prev);
+  }, []);
+
+  const handleResetToToday = useCallback(() => {
+    resetToToday();
+    setMealByTime();
+  }, [resetToToday, setMealByTime]);
+
+  const formattedCurrentDate = useMemo(() => {
+    return dateInitialized ? format(currentDate, 'M월 d일 eeee', { locale: ko }) : '';
+  }, [dateInitialized, currentDate]);
 
   return (
     <div className="h-[100dvh] flex items-center justify-center py-4 md:py-8 md:px-4 overflow-hidden relative">
@@ -51,7 +75,7 @@ export default function MealLayout({ initialData, initialDate, initialOpacity }:
         <div
           className="absolute inset-0 w-full h-full"
           style={{
-            opacity: initialLoad ? initialOpacity.breakfast : breakfastOpacity,
+            opacity: backgroundOpacities.breakfast,
             zIndex: 1,
           }}>
           <Image
@@ -70,7 +94,7 @@ export default function MealLayout({ initialData, initialDate, initialOpacity }:
         <div
           className="absolute inset-0 w-full h-full"
           style={{
-            opacity: initialLoad ? initialOpacity.lunch : lunchOpacity,
+            opacity: backgroundOpacities.lunch,
             zIndex: 2,
           }}>
           <Image
@@ -89,7 +113,7 @@ export default function MealLayout({ initialData, initialDate, initialOpacity }:
         <div
           className="absolute inset-0 w-full h-full"
           style={{
-            opacity: initialLoad ? initialOpacity.dinner : dinnerOpacity,
+            opacity: backgroundOpacities.dinner,
             zIndex: 3,
           }}>
           <Image
@@ -130,7 +154,7 @@ export default function MealLayout({ initialData, initialDate, initialOpacity }:
       <div className="fixed top-8 right-8 z-20 md:hidden">
         <Glass
           className={`active:scale-95 active:opacity-50 duration-100 shrink-0 w-[54px] h-[54px] flex justify-center items-center cursor-pointer ${simpleMealToggle ? 'bg-opacity-80' : 'bg-opacity-40'}`}
-          onClick={() => setSimpleMealToggle(!simpleMealToggle)}>
+          onClick={handleToggleSimpleMeal}>
           <div className="relative w-6 h-6">
             <div
               className={`absolute inset-0 flex items-center justify-center transition-opacity duration-200 ${simpleMealToggle ? 'opacity-100' : 'opacity-0'}`}>
@@ -162,7 +186,7 @@ export default function MealLayout({ initialData, initialDate, initialOpacity }:
         <div className="flex flex-row gap-4 px-4 md:px-0">
           <Glass
             className="active:scale-95 active:opacity-50 duration-100 shrink-0 w-[54px] h-[54px] hidden md:flex justify-center items-center cursor-pointer order-0"
-            onClick={() => setSimpleMealToggle(!simpleMealToggle)}>
+            onClick={handleToggleSimpleMeal}>
             <div className="relative w-6 h-6">
               <div
                 className={`absolute inset-0 flex items-center justify-center transition-opacity duration-200 ${simpleMealToggle ? 'opacity-100' : 'opacity-0'}`}>
@@ -197,13 +221,8 @@ export default function MealLayout({ initialData, initialDate, initialOpacity }:
 
           <Glass
             className="flex justify-center items-center w-full h-full cursor-pointer active:scale-95 active:opacity-50 duration-100 order-2 md:order-1"
-            onClick={() => {
-              resetToToday();
-              setMealByTime();
-            }}>
-            <p className="text-xl md:text-[22px] font-bold tracking-tight">
-              {dateInitialized ? format(currentDate, 'M월 d일 eeee', { locale: ko }) : ''}
-            </p>
+            onClick={handleResetToToday}>
+            <p className="text-xl md:text-[22px] font-bold tracking-tight">{formattedCurrentDate}</p>
           </Glass>
 
           <Glass

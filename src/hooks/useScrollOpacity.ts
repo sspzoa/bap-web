@@ -1,5 +1,5 @@
 import { calculateOpacityFromScroll } from '@/utils/mealTimingUtils';
-import { useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 
 export const useScrollOpacity = () => {
   const scrollContainerRef = useRef<HTMLDivElement | null>(null);
@@ -7,7 +7,7 @@ export const useScrollOpacity = () => {
   const [lunchOpacity, setLunchOpacity] = useState(0);
   const [dinnerOpacity, setDinnerOpacity] = useState(0);
 
-  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+  const handleScroll = useCallback((e: React.UIEvent<HTMLDivElement>) => {
     const scrollContainer = e.currentTarget;
     const scrollPosition = scrollContainer.scrollLeft;
     const totalWidth = scrollContainer.scrollWidth - scrollContainer.clientWidth;
@@ -27,13 +27,13 @@ export const useScrollOpacity = () => {
     setBreakfastOpacity(breakfast);
     setLunchOpacity(lunch);
     setDinnerOpacity(dinner);
-  };
+  }, []);
 
-  const setOpacity = (breakfast: number, lunch: number, dinner: number) => {
+  const setOpacity = useCallback((breakfast: number, lunch: number, dinner: number) => {
     setBreakfastOpacity(breakfast);
     setLunchOpacity(lunch);
     setDinnerOpacity(dinner);
-  };
+  }, []);
 
   return {
     scrollContainerRef,
