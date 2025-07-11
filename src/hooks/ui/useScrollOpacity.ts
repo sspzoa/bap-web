@@ -1,4 +1,5 @@
-import { calculateOpacityFromScroll } from '@/utils/mealTimingUtils';
+import { UI_CONSTANTS } from '@/constants';
+import { calculateOpacityFromScroll } from '@/utils/meal';
 import { useCallback, useRef, useState } from 'react';
 
 export const useScrollOpacity = () => {
@@ -12,7 +13,7 @@ export const useScrollOpacity = () => {
     const scrollPosition = scrollContainer.scrollLeft;
     const totalWidth = scrollContainer.scrollWidth - scrollContainer.clientWidth;
 
-    const visibleSections = 3;
+    const visibleSections = UI_CONSTANTS.SCROLL_SECTIONS;
     const adjustedTotalWidth = (totalWidth / (visibleSections - 1)) * visibleSections;
 
     if (Math.abs(scrollPosition - totalWidth) < 1) {
