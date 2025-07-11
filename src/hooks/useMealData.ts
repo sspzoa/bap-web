@@ -77,7 +77,7 @@ export const useMealData = () => {
     } else {
       setOpacity(0, 0, 1);
     }
-  }, [isMobile]);
+  }, [isMobile, setMealByTime, setOpacity]);
 
   return {
     currentDate,

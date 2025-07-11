@@ -3,7 +3,7 @@ import { getCurrentMealTiming } from '@/utils/mealTimingUtils';
 import { formatToDateString, getKoreanDate, getKoreanHours } from '@/utils/timeZoneUtils';
 import { useQueryClient } from '@tanstack/react-query';
 import { addDays, format } from 'date-fns';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 export const useMealInitialization = (
   scrollContainerRef: React.RefObject<HTMLDivElement | null>,
@@ -14,7 +14,7 @@ export const useMealInitialization = (
   const [dateInitialized, setDateInitialized] = useState(false);
   const queryClient = useQueryClient();
 
-  const setMealByTime = () => {
+  const setMealByTime = useCallback(() => {
     if (!scrollContainerRef?.current) return;
 
     const now = getKoreanDate();
@@ -55,7 +55,7 @@ export const useMealInitialization = (
     if (shouldUpdateDate && updateCurrentDate) {
       updateCurrentDate(newDate);
     }
-  };
+  }, [scrollContainerRef, setOpacity, queryClient, updateCurrentDate]);
 
   useEffect(() => {
     if (!initialLoad) return;
@@ -66,7 +66,7 @@ export const useMealInitialization = (
         setInitialLoad(false);
       });
     }
-  }, [initialLoad]);
+  }, [initialLoad, setMealByTime]);
 
   return {
     initialLoad,
