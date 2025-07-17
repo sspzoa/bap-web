@@ -9,9 +9,9 @@ import { getCurrentMealTiming } from '@/utils/meal';
 import { useQueryClient } from '@tanstack/react-query';
 import { format } from 'date-fns';
 import { ko } from 'date-fns/locale';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 
-export default function MealLayout({ initialData, initialDate, initialOpacity }: MealLayoutProps) {
+const MealLayout = memo(function MealLayout({ initialData, initialDate, initialOpacity }: MealLayoutProps) {
   const {
     currentDate,
     data,
@@ -67,6 +67,47 @@ export default function MealLayout({ initialData, initialDate, initialOpacity }:
     return dateInitialized ? format(currentDate, 'M월 d일 eeee', { locale: ko }) : '';
   }, [dateInitialized, currentDate]);
 
+  const mealSectionProps = useMemo(
+    () => ({
+      breakfast: {
+        icon: '/icon/breakfast.svg',
+        title: '아침',
+        regularItems: data?.breakfast?.regular || [],
+        simpleMealItems: data?.breakfast?.simple || [],
+        imageUrl: data?.breakfast?.image || '',
+        id: 'breakfast',
+      },
+      lunch: {
+        icon: '/icon/lunch.svg',
+        title: '점심',
+        regularItems: data?.lunch?.regular || [],
+        simpleMealItems: data?.lunch?.simple || [],
+        imageUrl: data?.lunch?.image || '',
+        id: 'lunch',
+      },
+      dinner: {
+        icon: '/icon/dinner.svg',
+        title: '저녁',
+        regularItems: data?.dinner?.regular || [],
+        simpleMealItems: data?.dinner?.simple || [],
+        imageUrl: data?.dinner?.image || '',
+        id: 'dinner',
+      },
+    }),
+    [data],
+  );
+
+  const commonMealProps = useMemo(
+    () => ({
+      isLoading,
+      isError,
+      errorMessage,
+      showContent: showMealContent,
+      isSimpleMealMode: simpleMealToggle,
+    }),
+    [isLoading, isError, errorMessage, showMealContent, simpleMealToggle],
+  );
+
   return (
     <div className="h-[100dvh] flex items-center justify-center py-4 md:py-8 md:px-4 overflow-hidden relative">
       <MealBackgroundImages backgroundOpacities={backgroundOpacities} />
@@ -96,49 +137,15 @@ export default function MealLayout({ initialData, initialDate, initialOpacity }:
           ref={scrollContainerRef}
           onScroll={handleScroll}
           className="flex flex-row gap-4 w-full flex-1 overflow-x-auto snap-x snap-mandatory md:snap-none px-4 md:px-0">
-          <MealSection
-            icon="/icon/breakfast.svg"
-            title="아침"
-            regularItems={data?.breakfast?.regular || []}
-            simpleMealItems={data?.breakfast?.simple || []}
-            imageUrl={data?.breakfast?.image || ''}
-            isLoading={isLoading}
-            isError={isError}
-            errorMessage={errorMessage}
-            id="breakfast"
-            showContent={showMealContent}
-            isSimpleMealMode={simpleMealToggle}
-          />
+          <MealSection {...mealSectionProps.breakfast} {...commonMealProps} />
 
-          <MealSection
-            icon="/icon/lunch.svg"
-            title="점심"
-            regularItems={data?.lunch?.regular || []}
-            simpleMealItems={data?.lunch?.simple || []}
-            imageUrl={data?.lunch?.image || ''}
-            isLoading={isLoading}
-            isError={isError}
-            errorMessage={errorMessage}
-            id="lunch"
-            showContent={showMealContent}
-            isSimpleMealMode={simpleMealToggle}
-          />
+          <MealSection {...mealSectionProps.lunch} {...commonMealProps} />
 
-          <MealSection
-            icon="/icon/dinner.svg"
-            title="저녁"
-            regularItems={data?.dinner?.regular || []}
-            simpleMealItems={data?.dinner?.simple || []}
-            imageUrl={data?.dinner?.image || ''}
-            isLoading={isLoading}
-            isError={isError}
-            errorMessage={errorMessage}
-            id="dinner"
-            showContent={showMealContent}
-            isSimpleMealMode={simpleMealToggle}
-          />
+          <MealSection {...mealSectionProps.dinner} {...commonMealProps} />
         </div>
       </div>
     </div>
   );
-}
+});
+
+export default MealLayout;

@@ -1,5 +1,5 @@
 import { BREAKPOINTS, UI_CONSTANTS } from '@/constants';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 export const useResponsiveness = (mobileBreakpoint = BREAKPOINTS.MOBILE) => {
   const [isMobile, setIsMobile] = useState(false);
@@ -9,22 +9,23 @@ export const useResponsiveness = (mobileBreakpoint = BREAKPOINTS.MOBILE) => {
     setIsMobile(newIsMobile);
   }, [mobileBreakpoint]);
 
-  useEffect(() => {
-    checkIfMobile();
-
+  const debouncedCheckIfMobile = useMemo(() => {
     let timeoutId: NodeJS.Timeout;
-    const debouncedCheckIfMobile = () => {
+    return () => {
       clearTimeout(timeoutId);
       timeoutId = setTimeout(checkIfMobile, UI_CONSTANTS.DEBOUNCE_DELAY);
     };
+  }, [checkIfMobile]);
+
+  useEffect(() => {
+    checkIfMobile();
 
     window.addEventListener('resize', debouncedCheckIfMobile);
 
     return () => {
-      clearTimeout(timeoutId);
       window.removeEventListener('resize', debouncedCheckIfMobile);
     };
-  }, [checkIfMobile]);
+  }, [checkIfMobile, debouncedCheckIfMobile]);
 
   return { isMobile };
 };

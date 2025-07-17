@@ -6,7 +6,7 @@ import { formatToDateString, getKoreanDate } from '@/utils/date';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { addDays, format, subDays } from 'date-fns';
 import { useAtom } from 'jotai';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 
 export const useMealData = () => {
   const [currentDate, setCurrentDate] = useAtom(currentDateAtom);
@@ -31,11 +31,11 @@ export const useMealData = () => {
     retry: false,
   });
 
-  const data = responseData?.data || null;
-  const isError = responseData?.isError || false;
-  const errorMessage = responseData?.error || '급식 정보가 없어요';
+  const data = useMemo(() => responseData?.data || null, [responseData?.data]);
+  const isError = useMemo(() => responseData?.isError || false, [responseData?.isError]);
+  const errorMessage = useMemo(() => responseData?.error || '급식 정보가 없어요', [responseData?.error]);
 
-  useEffect(() => {
+  const prefetchQueries = useCallback(() => {
     const prevDate = subDays(currentDate, 1);
     const prevFormattedDate = formatToDateString(prevDate);
     queryClient.prefetchQuery({
@@ -55,6 +55,10 @@ export const useMealData = () => {
     });
   }, [currentDate, queryClient]);
 
+  useEffect(() => {
+    prefetchQueries();
+  }, [prefetchQueries]);
+
   const handlePrevDay = useCallback(() => {
     setCurrentDate((prevDate) => subDays(prevDate, 1));
     setDateInitialized(true);
@@ -70,13 +74,17 @@ export const useMealData = () => {
     setDateInitialized(true);
   }, [setCurrentDate, setDateInitialized]);
 
-  useEffect(() => {
+  const handleMobileLayout = useCallback(() => {
     if (isMobile) {
       setMealByTime();
     } else {
       setOpacity(0, 0, 1);
     }
   }, [isMobile, setMealByTime, setOpacity]);
+
+  useEffect(() => {
+    handleMobileLayout();
+  }, [handleMobileLayout]);
 
   return {
     currentDate,
