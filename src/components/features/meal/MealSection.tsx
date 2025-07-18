@@ -52,7 +52,7 @@ export const MealSection = memo(function MealSection({
             className="active:scale-95 active:opacity-50 duration-100"
             target="_blank"
             rel="noreferrer noopener"
-            href={`https://search.naver.com/search.naver?ssc=tab.image.all&where=image&sm=tab_jum&query=${item}`}>
+            href={`https://search.naver.com/search.naver?ssc=tab.image.all&where=image&sm=tab_jum&query=${encodeURIComponent(item)}`}>
             <p className="text-[20px] font-semibold break-words">{item}</p>
           </Link>
         </div>
