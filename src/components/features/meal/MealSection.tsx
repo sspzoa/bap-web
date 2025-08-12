@@ -103,16 +103,21 @@ export const MealSection = memo(function MealSection({
 
           <div className="flex flex-col gap-2 pr-2">
             {!isLoading && imageUrl && !isError && (
-              <div className="flex flex-row gap-2">
-                <p className="text-[20px] font-semibold">-</p>
-                <Link
-                  href={imageUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-[20px] font-semibold underline active:scale-95 active:opacity-50 duration-100">
-                  사진 보기
-                </Link>
-              </div>
+              <Link
+                href={imageUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block active:scale-95 active:opacity-50 duration-100">
+                <Image
+                  src={imageUrl}
+                  alt={`${title} 급식 사진`}
+                  width={300}
+                  height={200}
+                  className="rounded-lg object-cover"
+                  style={{ filter: 'drop-shadow(0 0 12px rgba(0, 0, 0, 0.2))' }}
+                  draggable={false}
+                />
+              </Link>
             )}
 
             {mealItemsContent}
