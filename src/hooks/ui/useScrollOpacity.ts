@@ -1,3 +1,5 @@
+'use client';
+
 import { UI_CONSTANTS } from '@/constants';
 import { calculateOpacityFromScroll } from '@/utils/meal';
 import { useCallback, useRef, useState } from 'react';

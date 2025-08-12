@@ -1,3 +1,5 @@
+'use client';
+
 import { BREAKPOINTS, UI_CONSTANTS } from '@/constants';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
