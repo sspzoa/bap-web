@@ -114,7 +114,7 @@ const MealLayout = memo(function MealLayout({ initialData, initialDate, initialO
       <MealBackgroundImages backgroundOpacities={backgroundOpacities} />
       <MealDesktopBackground />
 
-      <div className="fixed top-8 right-8 z-20 md:hidden">
+      <div className="fixed top-4 right-4 z-20 md:hidden">
         <MealToggleButton simpleMealToggle={simpleMealToggle} onToggle={handleToggleSimpleMeal} />
       </div>
 
