@@ -1,6 +1,6 @@
 import { useMealInitialization } from '@/hooks/business/useMealInitialization';
 import { useResponsiveness, useScrollOpacity } from '@/hooks/ui';
-import { fetchMealData } from '@/services/mealService';
+import { fetchMealData, refreshMealData } from '@/services/mealService';
 import { currentDateAtom } from '@/store/atoms';
 import { formatToDateString, getKoreanDate } from '@/utils/date';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
@@ -74,6 +74,16 @@ export const useMealData = () => {
     setDateInitialized(true);
   }, [setCurrentDate, setDateInitialized]);
 
+  const handleRefresh = useCallback(async () => {
+    try {
+      const refreshedData = await refreshMealData(formattedDate);
+      queryClient.setQueryData(['mealData', formattedDate], refreshedData);
+      queryClient.invalidateQueries({ queryKey: ['mealData', formattedDate] });
+    } catch (error) {
+      console.error('Error refreshing meal data:', error);
+    }
+  }, [formattedDate, queryClient]);
+
   const handleMobileLayout = useCallback(() => {
     if (isMobile) {
       setMealByTime();
@@ -96,6 +106,7 @@ export const useMealData = () => {
     handlePrevDay,
     handleNextDay,
     resetToToday,
+    handleRefresh,
     setMealByTime,
     scrollContainerRef,
     breakfastOpacity,

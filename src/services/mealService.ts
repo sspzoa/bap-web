@@ -21,3 +21,14 @@ export const getMealDataServerSide = async (date: string): Promise<MealResponse 
     return handleMealError(error);
   }
 };
+
+export const refreshMealData = async (date: string): Promise<MealResponse> => {
+  try {
+    const response = await fetch(`https://api.xn--rh3b.net/refresh/${date}`, {
+      method: 'POST',
+    });
+    return await handleMealResponse(response);
+  } catch (error) {
+    return handleMealError(error);
+  }
+};

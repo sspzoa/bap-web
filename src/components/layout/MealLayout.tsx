@@ -21,6 +21,7 @@ const MealLayout = memo(function MealLayout({ initialData, initialDate, initialO
     handlePrevDay,
     handleNextDay,
     resetToToday,
+    handleRefresh,
     setMealByTime,
     scrollContainerRef,
     breakfastOpacity,
@@ -124,6 +125,7 @@ const MealLayout = memo(function MealLayout({ initialData, initialDate, initialO
           onPrevDay={handlePrevDay}
           onNextDay={handleNextDay}
           onResetToToday={handleResetToToday}
+          onRefresh={handleRefresh}
           formattedCurrentDate={formattedCurrentDate}
         />
 

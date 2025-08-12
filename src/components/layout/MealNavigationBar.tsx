@@ -1,4 +1,5 @@
 import { Glass } from '@/components/ui';
+import { useLongPress } from '@/hooks/ui';
 import Image from 'next/image';
 import { memo } from 'react';
 import { MealToggleButton } from './MealToggleButton';
@@ -9,6 +10,7 @@ interface MealNavigationBarProps {
   onPrevDay: () => void;
   onNextDay: () => void;
   onResetToToday: () => void;
+  onRefresh: () => void;
   formattedCurrentDate: string;
 }
 
@@ -18,8 +20,15 @@ export const MealNavigationBar = memo(function MealNavigationBar({
   onPrevDay,
   onNextDay,
   onResetToToday,
+  onRefresh,
   formattedCurrentDate,
 }: MealNavigationBarProps) {
+  const longPressProps = useLongPress({
+    onLongPress: onRefresh,
+    onClick: onResetToToday,
+    threshold: 1000,
+  });
+
   return (
     <div className="flex flex-row gap-4 px-4 md:px-0">
       <MealToggleButton
@@ -36,7 +45,7 @@ export const MealNavigationBar = memo(function MealNavigationBar({
 
       <Glass
         className="flex justify-center items-center w-full h-full cursor-pointer active:scale-95 active:opacity-50 duration-100 order-2 md:order-1"
-        onClick={onResetToToday}>
+        {...longPressProps}>
         <p className="text-xl md:text-[22px] font-bold tracking-tight">{formattedCurrentDate}</p>
       </Glass>
 
