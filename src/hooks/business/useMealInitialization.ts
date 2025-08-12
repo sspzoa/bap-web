@@ -22,6 +22,7 @@ export const useMealInitialization = (
     const scrollContainer = scrollContainerRef.current;
     const scrollWidth = scrollContainer.scrollWidth / 3;
 
+    const mealTiming = getCurrentMealTiming();
     let newDate = now;
     let shouldUpdateDate = false;
 
@@ -29,26 +30,17 @@ export const useMealInitialization = (
       newDate = addDays(now, 1);
       shouldUpdateDate = true;
 
-      scrollContainer.scrollLeft = 0;
-      setOpacity(1, 0, 0);
-
       const tomorrowFormatted = formatToDateString(newDate);
       queryClient.prefetchQuery({
         queryKey: ['mealData', tomorrowFormatted],
         queryFn: () => fetchMealData(tomorrowFormatted),
-        staleTime: 1000 * 60 * 5,
+        staleTime: 300000, // 5 minutes
         retry: false,
       });
-    } else if (koreanHour < 8) {
-      scrollContainer.scrollLeft = 0;
-      setOpacity(1, 0, 0);
-    } else if (koreanHour >= 14) {
-      scrollContainer.scrollLeft = scrollWidth * 2;
-      setOpacity(0, 0, 1);
-    } else {
-      scrollContainer.scrollLeft = scrollWidth;
-      setOpacity(0, 1, 0);
     }
+
+    scrollContainer.scrollLeft = mealTiming.scrollPosition * scrollWidth;
+    setOpacity(mealTiming.opacity.breakfast, mealTiming.opacity.lunch, mealTiming.opacity.dinner);
 
     setDateInitialized(true);
 

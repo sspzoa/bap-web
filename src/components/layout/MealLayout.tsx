@@ -7,8 +7,8 @@ import { useMealData } from '@/hooks/business';
 import type { MealLayoutProps } from '@/types';
 import { getCurrentMealTiming } from '@/utils/meal';
 import { useQueryClient } from '@tanstack/react-query';
-import { format } from 'date-fns';
-import { ko } from 'date-fns/locale';
+import { format } from 'date-fns/format';
+import { ko } from 'date-fns/locale/ko';
 import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 
 const MealLayout = memo(function MealLayout({ initialData, initialDate, initialOpacity }: MealLayoutProps) {
