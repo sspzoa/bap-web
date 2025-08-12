@@ -18,8 +18,7 @@
     "jotai": "^2.12.2",
     "next": "15.2.4",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "react-swipeable": "^7.0.2"
+    "react-dom": "^19.0.0"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",

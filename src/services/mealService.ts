@@ -17,7 +17,6 @@ export const getMealDataServerSide = async (date: string): Promise<MealResponse 
     });
     return await handleMealResponse(response);
   } catch (error) {
-    console.error('Error fetching initial meal data:', error);
     return handleMealError(error);
   }
 };

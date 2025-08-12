@@ -9,8 +9,6 @@ export const MEAL_TIME_THRESHOLDS = {
 export const CACHE_SETTINGS = {
   KOREAN_TIME_DURATION: 60000, // 1 minute
   OPACITY_CACHE_MAX_SIZE: 100,
-  QUERY_STALE_TIME: 1000 * 60 * 10, // 10 minutes
-  QUERY_GC_TIME: 1000 * 60 * 30, // 30 minutes
 } as const;
 
 // Responsive breakpoints

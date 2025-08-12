@@ -4,7 +4,7 @@ import { fetchMealData, refreshMealData } from '@/services/mealService';
 import { currentDateAtom } from '@/store/atoms';
 import { formatToDateString, getKoreanDate } from '@/utils/date';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { addDays, format, subDays } from 'date-fns';
+import { addDays, subDays } from 'date-fns';
 import { useAtom } from 'jotai';
 import { useCallback, useEffect, useMemo } from 'react';
 
@@ -27,7 +27,7 @@ export const useMealData = () => {
   const { data: responseData, isLoading } = useQuery({
     queryKey: ['mealData', formattedDate],
     queryFn: () => fetchMealData(formattedDate),
-    staleTime: 1000 * 60 * 5,
+    staleTime: 300000, // 5 minutes
     retry: false,
   });
 
@@ -41,7 +41,7 @@ export const useMealData = () => {
     queryClient.prefetchQuery({
       queryKey: ['mealData', prevFormattedDate],
       queryFn: () => fetchMealData(prevFormattedDate),
-      staleTime: 1000 * 60 * 5,
+      staleTime: 300000, // 5 minutes
       retry: false,
     });
 
@@ -50,7 +50,7 @@ export const useMealData = () => {
     queryClient.prefetchQuery({
       queryKey: ['mealData', nextFormattedDate],
       queryFn: () => fetchMealData(nextFormattedDate),
-      staleTime: 1000 * 60 * 5,
+      staleTime: 300000, // 5 minutes
       retry: false,
     });
   }, [currentDate, queryClient]);
@@ -78,9 +78,8 @@ export const useMealData = () => {
     try {
       const refreshedData = await refreshMealData(formattedDate);
       queryClient.setQueryData(['mealData', formattedDate], refreshedData);
-      queryClient.invalidateQueries({ queryKey: ['mealData', formattedDate] });
     } catch (error) {
-      console.error('Error refreshing meal data:', error);
+      // Silent error handling - error is handled by React Query
     }
   }, [formattedDate, queryClient]);
 
