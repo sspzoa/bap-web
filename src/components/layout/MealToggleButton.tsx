@@ -15,7 +15,7 @@ export const MealToggleButton = memo(function MealToggleButton({
 }: MealToggleButtonProps) {
   return (
     <Glass
-      className={`active:scale-95 active:opacity-50 duration-100 shrink-0 w-[54px] h-[54px] flex justify-center items-center cursor-pointer ${
+      className={`active:scale-95 active:opacity-50 duration-100 shrink-0 w-[54px] h-[54px] flex justify-center items-center cursor-pointer rounded-tl-none rounded-br-none rounded-bl-[15px] rounded-tr-[15px] md:rounded-[15px] ${
         simpleMealToggle ? 'bg-opacity-80' : 'bg-opacity-40'
       } ${className}`}
       onClick={onToggle}>
