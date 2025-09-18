@@ -8,42 +8,16 @@ import { SpeedInsights } from '@vercel/speed-insights/next';
 export const metadata: Metadata = {
   title: '밥.net',
   description: '한국디지털미디어고등학교 급식 API',
-  keywords: '디미고,급식,디미급식,디미고 급식,밥,밥넷,밥.net,한국디지털미디어고',
-  authors: [{ name: 'sspzoa' }],
-  creator: 'sspzoa',
-  publisher: 'sspzoa',
-  icons: {
-    icon: [
-      { url: './logo/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
-      { url: './logo/android-chrome-512x512.png', sizes: '512x512', type: 'image/png' },
-    ],
-    apple: [{ url: './logo/apple-icon.png', sizes: '180x180', type: 'image/png' }],
-    shortcut: [{ url: './favicon.ico' }],
-  },
+  keywords: '디미고,급식,디미고급식,디미고 급식,밥,밥넷,밥.net,한국디지털미디어고,한국디지털미디어고등학교',
   appleWebApp: {
     statusBarStyle: 'black-translucent',
   },
-  applicationName: '밥.net',
-  category: 'food',
-  metadataBase: new URL('https://밥.net'),
-  alternates: {
-    canonical: '/',
-  },
   openGraph: {
-    title: '밥.net',
-    description: '한국디지털미디어고등학교 급식 API',
-    url: 'https://밥.net',
-    siteName: '밥.net',
     images: [
       {
-        url: './logo/android-chrome-512x512.png',
-        width: 512,
-        height: 512,
-        alt: '밥.net 로고',
+        url: './logo/icon.png',
       },
     ],
-    locale: 'ko_KR',
-    type: 'website',
   },
 };
 
