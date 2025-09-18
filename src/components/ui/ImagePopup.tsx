@@ -85,7 +85,7 @@ export const ImagePopup = memo(function ImagePopup({ isOpen, onClose, data }: Im
             alt={data.foodName}
             width={400}
             height={300}
-            className="rounded-lg object-cover w-full scale-90"
+            className="rounded-lg object-cover w-full"
             style={{ filter: 'drop-shadow(0 0 12px rgba(0, 0, 0, 0.2))' }}
           />
           {!isTodayMealPhoto && (
