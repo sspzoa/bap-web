@@ -86,7 +86,7 @@ export const ImagePopup = memo(function ImagePopup({ isOpen, onClose, data }: Im
           </div>
 
           <div className="text-center">
-            <p className="font-bold text-white mb-2">
+            <p className="text-md font-bold text-white mb-2">
               {formatDate(data.date)} {getMealTypeKorean(data.mealType)}으로 나왔던 메뉴예요
             </p>
           </div>

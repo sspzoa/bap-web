@@ -1,7 +1,7 @@
 'use client';
 
 import { MealSection } from '@/components/features/meal';
-import { MealBackgroundImages, MealDesktopBackground, MealNavigationBar, MealToggleButton } from '@/components/layout';
+import { MealBackgroundImages, MealDesktopBackground, MealNavigationBar } from '@/components/layout';
 import { LoadingSpinner } from '@/components/ui';
 import { useMealData } from '@/hooks/business';
 import type { MealLayoutProps } from '@/types';
@@ -32,7 +32,6 @@ const MealLayout = memo(function MealLayout({ initialData, initialDate, initialO
     initialLoad,
   } = useMealData();
 
-  const [simpleMealToggle, setSimpleMealToggle] = useState(false);
   const queryClient = useQueryClient();
 
   useEffect(() => {
@@ -55,9 +54,6 @@ const MealLayout = memo(function MealLayout({ initialData, initialDate, initialO
     [initialLoad, initialOpacity, breakfastOpacity, lunchOpacity, dinnerOpacity],
   );
 
-  const handleToggleSimpleMeal = useCallback(() => {
-    setSimpleMealToggle((prev) => !prev);
-  }, []);
 
   const handleResetToToday = useCallback(() => {
     resetToToday();
@@ -104,11 +100,8 @@ const MealLayout = memo(function MealLayout({ initialData, initialDate, initialO
       isError,
       errorMessage,
       showContent: showMealContent,
-      isSimpleMealMode: simpleMealToggle,
-      simpleMealToggle,
-      onToggleSimpleMeal: handleToggleSimpleMeal,
     }),
-    [isLoading, isError, errorMessage, showMealContent, simpleMealToggle, handleToggleSimpleMeal],
+    [isLoading, isError, errorMessage, showMealContent],
   );
 
   return (
@@ -118,8 +111,6 @@ const MealLayout = memo(function MealLayout({ initialData, initialDate, initialO
 
       <div className="flex flex-col-reverse md:flex-col max-w-[1500px] md:px-4 w-full max-h-[900px] h-full gap-4 z-10">
         <MealNavigationBar
-          simpleMealToggle={simpleMealToggle}
-          onToggleSimpleMeal={handleToggleSimpleMeal}
           onPrevDay={handlePrevDay}
           onNextDay={handleNextDay}
           onResetToToday={handleResetToToday}

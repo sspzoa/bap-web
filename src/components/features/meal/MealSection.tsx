@@ -3,9 +3,7 @@ import { ERROR_MESSAGES } from '@/constants';
 import type { MealSectionProps, MealSearchResponse } from '@/types';
 import { searchFoodImage } from '@/services/mealService';
 import Image from 'next/image';
-import Link from 'next/link';
 import { memo, useMemo, useState } from 'react';
-import { MealToggleButton } from "@/components/layout";
 
 export const MealSection = memo(function MealSection({
   icon,
@@ -18,13 +16,8 @@ export const MealSection = memo(function MealSection({
   errorMessage,
   id,
   showContent,
-  isSimpleMealMode = false,
-  simpleMealToggle,
-  onToggleSimpleMeal,
 }: MealSectionProps & {
   errorMessage?: string;
-  simpleMealToggle?: boolean;
-  onToggleSimpleMeal?: () => void;
 }) {
   const [popupData, setPopupData] = useState<MealSearchResponse | null>(null);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -44,22 +37,29 @@ export const MealSection = memo(function MealSection({
     }
   };
 
+  const handlePhotoClick = () => {
+    if (imageUrl) {
+      setPopupData({
+        foodName: `${title}`,
+        image: imageUrl,
+        date: new Date().toISOString().split('T')[0],
+        mealType: title
+      });
+      setIsPopupOpen(true);
+    }
+  };
+
   const closePopup = () => {
     setIsPopupOpen(false);
     setPopupData(null);
   };
-  const displayItems = useMemo(() => {
-    return id === 'lunch' ? regularItems : isSimpleMealMode ? simpleMealItems : regularItems;
-  }, [id, regularItems, simpleMealItems, isSimpleMealMode]);
+  const allItems = useMemo(() => {
+    return [...regularItems, ...simpleMealItems];
+  }, [regularItems, simpleMealItems]);
 
   const isMealOperationEmpty = useMemo(() => {
-    return (
-      Array.isArray(regularItems) &&
-      Array.isArray(simpleMealItems) &&
-      regularItems.length === 0 &&
-      simpleMealItems.length === 0
-    );
-  }, [regularItems, simpleMealItems]);
+    return allItems.length === 0;
+  }, [allItems]);
 
   const mealItemsContent = useMemo(() => {
     if (isLoading) {
@@ -74,18 +74,22 @@ export const MealSection = memo(function MealSection({
       );
     }
 
-    if (displayItems.length > 0) {
-      return displayItems.map((item, index) => (
-        <div key={`${title.toLowerCase()}-${index}`} className="flex flex-row gap-2">
-          <p className="text-[20px] font-semibold">-</p>
-          <button
-            className="active:scale-95 active:opacity-50 duration-100 text-left"
-            onClick={() => handleFoodClick(item)}
-          >
-            <p className="text-[20px] font-semibold break-words">{item}</p>
-          </button>
-        </div>
-      ));
+    if (allItems.length > 0) {
+      return allItems.map((item, index) => {
+        const isSimpleItem = index >= regularItems.length;
+        const displayItem = isSimpleItem ? `<간편식>${item}` : item;
+        return (
+          <div key={`${title.toLowerCase()}-${index}`} className="flex flex-row gap-2">
+            <p className="text-[20px] font-semibold">-</p>
+            <button
+              className="active:scale-95 active:opacity-50 duration-100 text-left"
+              onClick={() => handleFoodClick(item)}
+            >
+              <p className="text-[20px] font-semibold break-words">{displayItem}</p>
+            </button>
+          </div>
+        );
+      });
     }
 
     if (isMealOperationEmpty) {
@@ -96,29 +100,19 @@ export const MealSection = memo(function MealSection({
       );
     }
 
-    if (isSimpleMealMode && id !== 'lunch') {
-      return (
-        <div className="flex flex-row gap-2">
-          <p className="text-[20px] font-semibold">{ERROR_MESSAGES.NO_SIMPLE_MEAL}</p>
-        </div>
-      );
-    }
 
     return (
       <div className="flex flex-row gap-2">
         <p className="text-[20px] font-semibold">{ERROR_MESSAGES.NO_MEAL_DATA}</p>
       </div>
     );
-  }, [displayItems, isLoading, isError, errorMessage, title, isMealOperationEmpty, isSimpleMealMode, id]);
+  }, [allItems, regularItems.length, isLoading, isError, errorMessage, title, isMealOperationEmpty]);
 
   return (
     <>
       <Glass
         className="flex-shrink-0 w-full md:flex-1 snap-center snap-always p-4 flex flex-col gap-4 overflow-y-auto"
         data-id={id}>
-        <div className="absolute top-0 right-0 z-10 md:hidden">
-          <MealToggleButton simpleMealToggle={simpleMealToggle || false} onToggle={onToggleSimpleMeal || (() => {})} />
-        </div>
         {showContent && (
           <>
             <div className="flex flex-row gap-2 items-center h-8">
@@ -136,19 +130,14 @@ export const MealSection = memo(function MealSection({
 
             <div className="flex flex-col gap-2">
               {!isLoading && imageUrl && !isError && (
-                <Link
-                  href={imageUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block active:scale-95 active:opacity-50 duration-100 self-center">
-                  <img
-                    src={imageUrl}
-                    alt={`${title} 급식 사진`}
-                    className="rounded-lg object-cover w-full scale-90"
-                    style={{ filter: 'drop-shadow(0 0 12px rgba(0, 0, 0, 0.2))' }}
-                    draggable={false}
-                  />
-                </Link>
+                <div className="flex flex-row gap-2">
+                  <p className="text-[20px] font-semibold">-</p>
+                  <button
+                    onClick={handlePhotoClick}
+                    className="text-[20px] font-semibold underline active:scale-95 active:opacity-50 duration-100 text-left">
+                    사진 보기
+                  </button>
+                </div>
               )}
 
               {mealItemsContent}

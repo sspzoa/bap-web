@@ -34,7 +34,6 @@ export interface MealSectionProps {
   errorMessage?: string;
   id?: string;
   showContent: boolean;
-  isSimpleMealMode?: boolean;
 }
 
 export interface InitialOpacity {
