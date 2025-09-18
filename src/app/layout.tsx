@@ -9,36 +9,16 @@ export const metadata: Metadata = {
   title: '밥.net',
   description: '한국디지털미디어고등학교 급식 API',
   appleWebApp: true,
-  display: 'fullscreen',
-  orientation: 'natural',
-  appleWebApp: true,
   icons: [
     {
-      src: '/favicon.ico',
-      type: 'image/x-icon',
-      sizes: '16x16 32x32',
+      "url": "/public/icons/icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192"
     },
     {
-      src: '/icons/icon-192.png',
-      sizes: '192x192',
-      type: 'image/png',
-    },
-    {
-      src: './icons/icon-512.png',
-      sizes: '512x512',
-      type: 'image/png',
-    },
-    {
-      src: '/icons/icon-192-maskable.png',
-      sizes: '192x192',
-      type: 'image/png',
-      purpose: 'maskable',
-    },
-    {
-      src: './icons/icon-512-maskable.png',
-      sizes: '512x512',
-      type: 'image/png',
-      purpose: 'maskable',
+      "url": "/public/icons/icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512"
     },
   ],
   openGraph: {
