@@ -1,7 +1,7 @@
 import { Glass } from '@/components/ui';
 import { useLongPress } from '@/hooks/ui';
 import Image from 'next/image';
-import { memo } from 'react';
+import React from 'react';
 
 interface MealNavigationBarProps {
   onPrevDay: () => void;
@@ -11,7 +11,7 @@ interface MealNavigationBarProps {
   formattedCurrentDate: string;
 }
 
-export const MealNavigationBar = memo(function MealNavigationBar({
+export function MealNavigationBar({
   onPrevDay,
   onNextDay,
   onResetToToday,
@@ -45,4 +45,4 @@ export const MealNavigationBar = memo(function MealNavigationBar({
       </Glass>
     </div>
   );
-});
+}

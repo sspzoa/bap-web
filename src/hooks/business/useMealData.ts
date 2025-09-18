@@ -6,7 +6,7 @@ import { formatToDateString, getKoreanDate } from '@/utils/date';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { addDays, subDays } from 'date-fns';
 import { useAtom } from 'jotai';
-import { useCallback, useEffect, useMemo } from 'react';
+import { useEffect } from 'react';
 
 export const useMealData = () => {
   const [currentDate, setCurrentDate] = useAtom(currentDateAtom);
@@ -31,11 +31,11 @@ export const useMealData = () => {
     retry: false,
   });
 
-  const data = useMemo(() => responseData?.data || null, [responseData?.data]);
-  const isError = useMemo(() => responseData?.isError || false, [responseData?.isError]);
-  const errorMessage = useMemo(() => responseData?.error || '급식 정보가 없어요', [responseData?.error]);
+  const data = responseData?.data || null;
+  const isError = responseData?.isError || false;
+  const errorMessage = responseData?.error || '급식 정보가 없어요';
 
-  const prefetchQueries = useCallback(() => {
+  const prefetchQueries = () => {
     const prevDate = subDays(currentDate, 1);
     const prevFormattedDate = formatToDateString(prevDate);
     queryClient.prefetchQuery({
@@ -53,43 +53,43 @@ export const useMealData = () => {
       staleTime: 300000, // 5 minutes
       retry: false,
     });
-  }, [currentDate, queryClient]);
+  };
 
   useEffect(() => {
     prefetchQueries();
   }, [prefetchQueries]);
 
-  const handlePrevDay = useCallback(() => {
+  const handlePrevDay = () => {
     setCurrentDate((prevDate) => subDays(prevDate, 1));
     setDateInitialized(true);
-  }, [setCurrentDate, setDateInitialized]);
+  };
 
-  const handleNextDay = useCallback(() => {
+  const handleNextDay = () => {
     setCurrentDate((prevDate) => addDays(prevDate, 1));
     setDateInitialized(true);
-  }, [setCurrentDate, setDateInitialized]);
+  };
 
-  const resetToToday = useCallback(() => {
+  const resetToToday = () => {
     setCurrentDate(getKoreanDate());
     setDateInitialized(true);
-  }, [setCurrentDate, setDateInitialized]);
+  };
 
-  const handleRefresh = useCallback(async () => {
+  const handleRefresh = async () => {
     try {
       const refreshedData = await refreshMealData(formattedDate);
       queryClient.setQueryData(['mealData', formattedDate], refreshedData);
     } catch (error) {
       // Silent error handling - error is handled by React Query
     }
-  }, [formattedDate, queryClient]);
+  };
 
-  const handleMobileLayout = useCallback(() => {
+  const handleMobileLayout = () => {
     if (isMobile) {
       setMealByTime();
     } else {
       setOpacity(0, 0, 1);
     }
-  }, [isMobile, setMealByTime, setOpacity]);
+  };
 
   useEffect(() => {
     handleMobileLayout();

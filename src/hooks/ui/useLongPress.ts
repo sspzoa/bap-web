@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useRef } from 'react';
+import { useRef } from 'react';
 
 interface UseLongPressOptions {
   onLongPress: () => void;
@@ -12,34 +12,34 @@ export const useLongPress = ({ onLongPress, onClick, threshold = 500 }: UseLongP
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const isLongPressRef = useRef(false);
 
-  const handleMouseDown = useCallback(() => {
+  const handleMouseDown = () => {
     isLongPressRef.current = false;
     timeoutRef.current = setTimeout(() => {
       isLongPressRef.current = true;
       onLongPress();
     }, threshold);
-  }, [onLongPress, threshold]);
+  };
 
-  const handleMouseUp = useCallback(() => {
+  const handleMouseUp = () => {
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
       timeoutRef.current = null;
     }
-    
+
     if (!isLongPressRef.current && onClick) {
       onClick();
     }
-    
-    isLongPressRef.current = false;
-  }, [onClick]);
 
-  const handleMouseLeave = useCallback(() => {
+    isLongPressRef.current = false;
+  };
+
+  const handleMouseLeave = () => {
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
       timeoutRef.current = null;
     }
     isLongPressRef.current = false;
-  }, []);
+  };
 
   return {
     onMouseDown: handleMouseDown,

@@ -1,6 +1,6 @@
 import { Glass } from '@/components/ui';
 import Image from 'next/image';
-import { memo } from 'react';
+import React from 'react';
 
 interface MealToggleButtonProps {
   simpleMealToggle: boolean;
@@ -8,7 +8,7 @@ interface MealToggleButtonProps {
   className?: string;
 }
 
-export const MealToggleButton = memo(function MealToggleButton({
+export function MealToggleButton({
   simpleMealToggle,
   onToggle,
   className = '',
@@ -49,4 +49,4 @@ export const MealToggleButton = memo(function MealToggleButton({
       </div>
     </Glass>
   );
-});
+}

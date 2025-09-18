@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { memo } from 'react';
+import React from 'react';
 
 interface MealBackgroundImagesProps {
   backgroundOpacities: {
@@ -9,7 +9,7 @@ interface MealBackgroundImagesProps {
   };
 }
 
-export const MealBackgroundImages = memo(function MealBackgroundImages({
+export function MealBackgroundImages({
   backgroundOpacities,
 }: MealBackgroundImagesProps) {
   return (
@@ -72,4 +72,4 @@ export const MealBackgroundImages = memo(function MealBackgroundImages({
       </div>
     </div>
   );
-});
+}

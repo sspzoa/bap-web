@@ -3,9 +3,9 @@ import { ERROR_MESSAGES } from '@/constants';
 import type { MealSectionProps, MealSearchResponse } from '@/types';
 import { searchFoodImage } from '@/services/mealService';
 import Image from 'next/image';
-import { memo, useMemo, useState } from 'react';
+import { useState } from 'react';
 
-export const MealSection = memo(function MealSection({
+export function MealSection({
   icon,
   title,
   regularItems,
@@ -53,15 +53,11 @@ export const MealSection = memo(function MealSection({
     setIsPopupOpen(false);
     setPopupData(null);
   };
-  const allItems = useMemo(() => {
-    return [...regularItems, ...simpleMealItems];
-  }, [regularItems, simpleMealItems]);
+  const allItems = [...regularItems, ...simpleMealItems];
 
-  const isMealOperationEmpty = useMemo(() => {
-    return allItems.length === 0;
-  }, [allItems]);
+  const isMealOperationEmpty = allItems.length === 0;
 
-  const mealItemsContent = useMemo(() => {
+  const getMealItemsContent = () => {
     if (isLoading) {
       return <div className="flex flex-row gap-2" />;
     }
@@ -106,7 +102,7 @@ export const MealSection = memo(function MealSection({
         <p className="text-[20px] font-semibold">{ERROR_MESSAGES.NO_MEAL_DATA}</p>
       </div>
     );
-  }, [allItems, regularItems.length, isLoading, isError, errorMessage, title, isMealOperationEmpty]);
+  };
 
   return (
     <>
@@ -140,7 +136,7 @@ export const MealSection = memo(function MealSection({
                 </div>
               )}
 
-              {mealItemsContent}
+              {getMealItemsContent()}
             </div>
           </>
         )}
@@ -153,4 +149,4 @@ export const MealSection = memo(function MealSection({
       />
     </>
   );
-});
+}
