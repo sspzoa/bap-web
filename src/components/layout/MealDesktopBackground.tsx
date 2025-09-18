@@ -1,7 +1,7 @@
 import Image from 'next/image';
-import React from 'react';
+import { memo } from 'react';
 
-export function MealDesktopBackground() {
+export const MealDesktopBackground = memo(function MealDesktopBackground() {
   return (
     <div className="fixed inset-0 w-full h-full hidden md:block">
       <div
@@ -24,4 +24,4 @@ export function MealDesktopBackground() {
       </div>
     </div>
   );
-}
+});

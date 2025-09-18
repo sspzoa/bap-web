@@ -1,7 +1,7 @@
 "use client"
 
 import Image from 'next/image';
-import { useEffect } from 'react';
+import { memo, useEffect } from 'react';
 import type { MealSearchResponse } from '@/types';
 import { X } from 'lucide-react';
 import Glass from './Glass';
@@ -12,7 +12,7 @@ interface ImagePopupProps {
   data: MealSearchResponse | null;
 }
 
-export function ImagePopup({ isOpen, onClose, data }: ImagePopupProps) {
+export const ImagePopup = memo(function ImagePopup({ isOpen, onClose, data }: ImagePopupProps) {
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
@@ -99,4 +99,4 @@ export function ImagePopup({ isOpen, onClose, data }: ImagePopupProps) {
       </Glass>
     </div>
   );
-}
+});
