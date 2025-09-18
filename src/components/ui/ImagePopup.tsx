@@ -31,6 +31,18 @@ export const ImagePopup = memo(function ImagePopup({ isOpen, onClose, data }: Im
     };
   }, [isOpen, onClose]);
 
+  const getMealTypeKorean = (mealType: string) => {
+    const mealMap: Record<string, string> = {
+      breakfast: '조식',
+      lunch: '중식',
+      dinner: '석식',
+      '아침': '조식',
+      '점심': '중식',
+      '저녁': '석식'
+    };
+    return mealMap[mealType.toLowerCase()] || mealMap[mealType] || mealType;
+  };
+
   const formatDate = (dateString: string) => {
     try {
       const date = new Date(dateString);
@@ -43,14 +55,7 @@ export const ImagePopup = memo(function ImagePopup({ isOpen, onClose, data }: Im
     }
   };
 
-  const getMealTypeKorean = (mealType: string) => {
-    const mealMap: Record<string, string> = {
-      breakfast: '아침',
-      lunch: '점심',
-      dinner: '저녁'
-    };
-    return mealMap[mealType.toLowerCase()] || mealType;
-  };
+  const isTodayMealPhoto = data?.foodName === data?.mealType;
 
   if (!isOpen || !data) return null;
 
@@ -63,9 +68,11 @@ export const ImagePopup = memo(function ImagePopup({ isOpen, onClose, data }: Im
         className="max-w-lg w-full max-h-[80vh] overflow-y-auto bg-white bg-opacity-20"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="p-6">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-bold text-white">{data.foodName}</h2>
+        <div className="p-6 flex flex-col gap-4">
+          <div className="flex justify-between items-center">
+            <h2 className="text-xl font-bold text-white">
+              {isTodayMealPhoto ? getMealTypeKorean(data.mealType) : data.foodName}
+            </h2>
             <button
               onClick={onClose}
               className="text-white hover:text-gray-300 p-1 rounded-full hover:bg-white hover:bg-opacity-20 transition-colors"
@@ -73,23 +80,21 @@ export const ImagePopup = memo(function ImagePopup({ isOpen, onClose, data }: Im
               <X size={24} />
             </button>
           </div>
-
-          <div className="mb-4">
-            <Image
-              src={data.image}
-              alt={data.foodName}
-              width={400}
-              height={300}
-              className="rounded-lg object-cover w-full scale-90"
-              style={{ filter: 'drop-shadow(0 0 12px rgba(0, 0, 0, 0.2))' }}
-            />
-          </div>
-
-          <div className="text-center">
-            <p className="font-bold text-white mb-2">
-              {formatDate(data.date)}<br />{getMealTypeKorean(data.mealType)}으로 나왔던 메뉴예요
-            </p>
-          </div>
+          <Image
+            src={data.image}
+            alt={data.foodName}
+            width={400}
+            height={300}
+            className="rounded-lg object-cover w-full scale-90"
+            style={{ filter: 'drop-shadow(0 0 12px rgba(0, 0, 0, 0.2))' }}
+          />
+          {!isTodayMealPhoto && (
+            <div className="text-center">
+              <p className="text-lg font-bold text-white">
+                {formatDate(data.date)}<br />{getMealTypeKorean(data.mealType)}으로 나왔던 메뉴예요
+              </p>
+            </div>
+          )}
         </div>
       </Glass>
     </div>
