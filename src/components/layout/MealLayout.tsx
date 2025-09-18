@@ -9,9 +9,9 @@ import { getCurrentMealTiming } from '@/utils/meal';
 import { useQueryClient } from '@tanstack/react-query';
 import { format } from 'date-fns/format';
 import { ko } from 'date-fns/locale/ko';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 
-function MealLayout({ initialData, initialDate, initialOpacity }: MealLayoutProps) {
+const MealLayout = memo(function MealLayout({ initialData, initialDate, initialOpacity }: MealLayoutProps) {
   const {
     currentDate,
     data,
@@ -137,6 +137,6 @@ function MealLayout({ initialData, initialDate, initialOpacity }: MealLayoutProp
       </div>
     </div>
   );
-}
+});
 
 export default MealLayout;
