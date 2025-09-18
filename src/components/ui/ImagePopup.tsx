@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import { memo, useEffect } from 'react';
 import type { MealSearchResponse } from '@/types';
+import { X } from 'lucide-react';
 import Glass from './Glass';
 
 interface ImagePopupProps {
@@ -67,9 +68,9 @@ export const ImagePopup = memo(function ImagePopup({ isOpen, onClose, data }: Im
             <h2 className="text-xl font-bold text-white">{data.foodName}</h2>
             <button
               onClick={onClose}
-              className="text-white hover:text-gray-300 text-2xl"
+              className="text-white hover:text-gray-300 p-1 rounded-full hover:bg-white hover:bg-opacity-20 transition-colors"
             >
-              ×
+              <X size={24} />
             </button>
           </div>
 

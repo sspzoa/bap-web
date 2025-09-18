@@ -105,18 +105,16 @@ const MealLayout = memo(function MealLayout({ initialData, initialDate, initialO
       errorMessage,
       showContent: showMealContent,
       isSimpleMealMode: simpleMealToggle,
+      simpleMealToggle,
+      onToggleSimpleMeal: handleToggleSimpleMeal,
     }),
-    [isLoading, isError, errorMessage, showMealContent, simpleMealToggle],
+    [isLoading, isError, errorMessage, showMealContent, simpleMealToggle, handleToggleSimpleMeal],
   );
 
   return (
     <div className="h-[100dvh] flex items-center justify-center py-4 md:py-8 md:px-4 overflow-hidden relative">
       <MealBackgroundImages backgroundOpacities={backgroundOpacities} />
       <MealDesktopBackground />
-
-      <div className="fixed top-4 right-4 z-20 md:hidden">
-        <MealToggleButton simpleMealToggle={simpleMealToggle} onToggle={handleToggleSimpleMeal} />
-      </div>
 
       <div className="flex flex-col-reverse md:flex-col max-w-[1500px] md:px-4 w-full max-h-[900px] h-full gap-4 z-10">
         <MealNavigationBar

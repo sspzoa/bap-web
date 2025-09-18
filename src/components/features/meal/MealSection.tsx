@@ -5,6 +5,7 @@ import { searchFoodImage } from '@/services/mealService';
 import Image from 'next/image';
 import Link from 'next/link';
 import { memo, useMemo, useState } from 'react';
+import { MealToggleButton } from "@/components/layout";
 
 export const MealSection = memo(function MealSection({
   icon,
@@ -18,7 +19,13 @@ export const MealSection = memo(function MealSection({
   id,
   showContent,
   isSimpleMealMode = false,
-}: MealSectionProps & { errorMessage?: string }) {
+  simpleMealToggle,
+  onToggleSimpleMeal,
+}: MealSectionProps & {
+  errorMessage?: string;
+  simpleMealToggle?: boolean;
+  onToggleSimpleMeal?: () => void;
+}) {
   const [popupData, setPopupData] = useState<MealSearchResponse | null>(null);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
 
@@ -109,6 +116,9 @@ export const MealSection = memo(function MealSection({
       <Glass
         className="flex-shrink-0 w-full md:flex-1 snap-center snap-always p-4 flex flex-col gap-4 overflow-y-auto"
         data-id={id}>
+        <div className="absolute top-0 right-0 z-10 md:hidden">
+          <MealToggleButton simpleMealToggle={simpleMealToggle || false} onToggle={onToggleSimpleMeal || (() => {})} />
+        </div>
         {showContent && (
           <>
             <div className="flex flex-row gap-2 items-center h-8">
