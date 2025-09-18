@@ -9,18 +9,6 @@ export const metadata: Metadata = {
   title: '밥.net',
   description: '한국디지털미디어고등학교 급식 API',
   appleWebApp: true,
-  icons: [
-    {
-      "url": "/public/icons/icon-192.png",
-      "type": "image/png",
-      "sizes": "192x192"
-    },
-    {
-      "url": "/public/icons/icon-512.png",
-      "type": "image/png",
-      "sizes": "512x512"
-    },
-  ],
   openGraph: {
     images: [
       {
