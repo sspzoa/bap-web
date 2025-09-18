@@ -16,6 +16,13 @@ export interface MealResponse {
   isError: boolean;
 }
 
+export interface MealSearchResponse {
+  foodName: string;
+  image: string;
+  date: string;
+  mealType: string;
+}
+
 export interface MealSectionProps {
   icon: string;
   title: string;
