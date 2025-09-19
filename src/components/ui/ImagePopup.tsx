@@ -49,7 +49,8 @@ export const ImagePopup = memo(function ImagePopup({ isOpen, onClose, data }: Im
       const year = date.getFullYear();
       const month = date.getMonth() + 1;
       const day = date.getDate();
-      return `${year}년 ${month}월 ${day}일`;
+      const dayOfWeek = date.toLocaleDateString('ko-KR', { weekday: 'long' });
+      return `${year}년 ${month}월 ${day}일 ${dayOfWeek}`;
     } catch {
       return dateString;
     }
@@ -91,7 +92,7 @@ export const ImagePopup = memo(function ImagePopup({ isOpen, onClose, data }: Im
           {!isTodayMealPhoto && (
             <div className="text-center">
               <p className="text-lg font-bold text-white">
-                {formatDate(data.date)}<br />{getMealTypeKorean(data.mealType)}으로 나왔던 메뉴예요
+                {formatDate(data.date)}에<br />{getMealTypeKorean(data.mealType)}으로 나왔던 메뉴예요
               </p>
             </div>
           )}
