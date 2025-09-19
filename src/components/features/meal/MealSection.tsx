@@ -1,9 +1,9 @@
 import { Glass, ImagePopup } from '@/components/ui';
 import { ERROR_MESSAGES } from '@/constants';
+import { useFoodImageSearch } from '@/hooks/business/useFoodImageSearch';
 import type { MealSectionProps, MealSearchResponse } from '@/types';
-import { searchFoodImage } from '@/services/mealService';
 import Image from 'next/image';
-import { memo, useMemo, useState } from 'react';
+import { memo, useMemo, useState, useEffect } from 'react';
 
 export const MealSection = memo(function MealSection({
   icon,
@@ -21,20 +21,23 @@ export const MealSection = memo(function MealSection({
 }) {
   const [popupData, setPopupData] = useState<MealSearchResponse | null>(null);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState<string>('');
 
-  const handleFoodClick = async (foodName: string) => {
-    try {
-      const result = await searchFoodImage(foodName);
-      if (result) {
-        setPopupData(result);
-        setIsPopupOpen(true);
-      } else {
-        window.open(`https://search.naver.com/search.naver?ssc=tab.image.all&where=image&sm=tab_jum&query=${encodeURIComponent(foodName)}`, '_blank');
-      }
-    } catch (error) {
-      console.error('Search failed:', error);
-      window.open(`https://search.naver.com/search.naver?ssc=tab.image.all&where=image&sm=tab_jum&query=${encodeURIComponent(foodName)}`, '_blank');
+  const { data: searchResult } = useFoodImageSearch(searchQuery, !!searchQuery);
+
+  useEffect(() => {
+    if (searchResult && searchQuery) {
+      setPopupData(searchResult);
+      setIsPopupOpen(true);
+      setSearchQuery('');
+    } else if (searchQuery && searchResult === null) {
+      window.open(`https://search.naver.com/search.naver?ssc=tab.image.all&where=image&sm=tab_jum&query=${encodeURIComponent(searchQuery)}`, '_blank');
+      setSearchQuery('');
     }
+  }, [searchResult, searchQuery]);
+
+  const handleFoodClick = (foodName: string) => {
+    setSearchQuery(foodName);
   };
 
   const handlePhotoClick = () => {
