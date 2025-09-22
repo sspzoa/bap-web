@@ -3,7 +3,7 @@ import type { MetadataRoute } from 'next';
 export default function manifest(): MetadataRoute.Manifest {
   return {
     display: 'fullscreen',
-    orientation: 'portrait-primary',
+    orientation: 'any',
     icons: [
       {
         src: '/favicon.ico',
