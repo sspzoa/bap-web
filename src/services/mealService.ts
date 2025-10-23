@@ -1,19 +1,9 @@
 import type { MealData, MealResponse, MealSearchResponse } from '@/types';
 import { handleMealError, handleMealResponse } from './mealServiceHelpers';
 
-const getApiBaseUrl = (): string => {
-  const isDev = process.env.NODE_ENV === 'development';
-
-  if (typeof window === 'undefined') {
-    return isDev ? 'http://localhost:3000' : 'https://xn--rh3b.net';
-  }
-  return '';
-};
-
 export const fetchMealData = async (date: string): Promise<MealResponse> => {
   try {
-    const baseUrl = getApiBaseUrl();
-    const response = await fetch(`${baseUrl}/api/${date}`);
+    const response = await fetch(`https://bap.sharp0802.com/${date}`);
     return await handleMealResponse(response);
   } catch (error) {
     return handleMealError(error);
@@ -22,8 +12,7 @@ export const fetchMealData = async (date: string): Promise<MealResponse> => {
 
 export const getMealDataServerSide = async (date: string): Promise<MealResponse | null> => {
   try {
-    const baseUrl = getApiBaseUrl();
-    const response = await fetch(`${baseUrl}/api/${date}`, {
+    const response = await fetch(`https://bap.sharp0802.com/${date}`, {
       cache: 'no-store',
     });
     return await handleMealResponse(response);
@@ -34,8 +23,7 @@ export const getMealDataServerSide = async (date: string): Promise<MealResponse 
 
 export const refreshMealData = async (date: string): Promise<MealResponse> => {
   try {
-    const baseUrl = getApiBaseUrl();
-    const response = await fetch(`${baseUrl}/api/refresh/${date}`, {
+    const response = await fetch(`https://bap.sharp0802.com/refresh/${date}`, {
       method: 'POST',
     });
     return await handleMealResponse(response);
@@ -46,8 +34,7 @@ export const refreshMealData = async (date: string): Promise<MealResponse> => {
 
 export const searchFoodImage = async (foodName: string): Promise<MealSearchResponse | null> => {
   try {
-    const baseUrl = getApiBaseUrl();
-    const response = await fetch(`${baseUrl}/api/search/${encodeURIComponent(foodName)}`);
+    const response = await fetch(`https://bap.sharp0802.com/search/${encodeURIComponent(foodName)}`);
     if (!response.ok) {
       return null;
     }

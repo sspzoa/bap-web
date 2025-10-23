@@ -1,8 +1,0 @@
-{
-  "crons": [
-    {
-      "path": "/api/cron/refresh?type=all",
-      "schedule": "0 6 * * 0,1,2,3,4,5,6"
-    }
-  ]
-}
