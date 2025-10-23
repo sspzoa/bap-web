@@ -11,7 +11,6 @@ export const handleMealResponse = async (response: Response): Promise<MealRespon
         errorMessage = errorData.error;
       }
     } catch {
-      // Keep default error message if JSON parsing fails
     }
 
     return {
