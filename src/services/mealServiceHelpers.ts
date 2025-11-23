@@ -30,7 +30,10 @@ export const handleMealResponse = async (response: Response): Promise<MealRespon
 };
 
 export const handleMealError = (error: unknown): MealResponse => {
-  const errorMessage = error instanceof Error ? error.message : ERROR_MESSAGES.NO_MEAL_DATA;
+  if (error instanceof Error) {
+    console.error('Meal fetch error:', error);
+  }
+  const errorMessage = ERROR_MESSAGES.NO_MEAL_DATA;
   return {
     data: null,
     error: errorMessage,
