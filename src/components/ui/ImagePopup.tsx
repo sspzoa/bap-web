@@ -1,9 +1,9 @@
-"use client"
+'use client';
 
-import Image from 'next/image';
-import { memo, useEffect } from 'react';
 import type { MealSearchResponse } from '@/types';
 import { X } from 'lucide-react';
+import Image from 'next/image';
+import { memo, useEffect } from 'react';
 import Glass from './Glass';
 
 interface ImagePopupProps {
@@ -36,9 +36,9 @@ export const ImagePopup = memo(function ImagePopup({ isOpen, onClose, data }: Im
       breakfast: '조식',
       lunch: '중식',
       dinner: '석식',
-      '아침': '조식',
-      '점심': '중식',
-      '저녁': '석식'
+      아침: '조식',
+      점심: '중식',
+      저녁: '석식',
     };
     return mealMap[mealType.toLowerCase()] || mealMap[mealType] || mealType;
   };
@@ -61,14 +61,10 @@ export const ImagePopup = memo(function ImagePopup({ isOpen, onClose, data }: Im
   if (!isOpen || !data) return null;
 
   return (
-    <div
-      className="fixed inset-0 backdrop-blur-sm flex items-center justify-center z-50 p-4"
-      onClick={onClose}
-    >
+    <div className="fixed inset-0 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={onClose}>
       <Glass
         className="max-w-lg w-full max-h-[80vh] overflow-y-auto bg-white bg-opacity-20"
-        onClick={(e) => e.stopPropagation()}
-      >
+        onClick={(e) => e.stopPropagation()}>
         <div className="p-6 flex flex-col gap-4">
           <div className="flex justify-between items-center">
             <h2 className="text-xl font-bold text-white">
@@ -76,8 +72,7 @@ export const ImagePopup = memo(function ImagePopup({ isOpen, onClose, data }: Im
             </h2>
             <button
               onClick={onClose}
-              className="text-white hover:text-gray-300 p-1 rounded-full hover:bg-white hover:bg-opacity-20 transition-colors"
-            >
+              className="text-white hover:text-gray-300 p-1 rounded-full hover:bg-white hover:bg-opacity-20 transition-colors">
               <X size={24} />
             </button>
           </div>
@@ -92,7 +87,8 @@ export const ImagePopup = memo(function ImagePopup({ isOpen, onClose, data }: Im
           {!isTodayMealPhoto && (
             <div className="text-center">
               <p className="text-lg font-bold text-white">
-                {formatDate(data.date)}에<br />{getMealTypeKorean(data.mealType)}으로 나왔던 메뉴예요
+                {formatDate(data.date)}에<br />
+                {getMealTypeKorean(data.mealType)}으로 나왔던 메뉴예요
               </p>
             </div>
           )}

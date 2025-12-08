@@ -54,7 +54,6 @@ const MealLayout = memo(function MealLayout({ initialData, initialDate, initialO
     [initialLoad, initialOpacity, breakfastOpacity, lunchOpacity, dinnerOpacity],
   );
 
-
   const handleResetToToday = useCallback(() => {
     resetToToday();
     setMealByTime();

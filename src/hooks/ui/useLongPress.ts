@@ -25,11 +25,11 @@ export const useLongPress = ({ onLongPress, onClick, threshold = 500 }: UseLongP
       clearTimeout(timeoutRef.current);
       timeoutRef.current = null;
     }
-    
+
     if (!isLongPressRef.current && onClick) {
       onClick();
     }
-    
+
     isLongPressRef.current = false;
   }, [onClick]);
 
