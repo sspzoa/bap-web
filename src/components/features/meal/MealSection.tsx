@@ -1,9 +1,9 @@
 import { Glass, ImagePopup } from '@/components/ui';
 import { ERROR_MESSAGES } from '@/constants';
 import { useFoodImageSearch } from '@/hooks/business/useFoodImageSearch';
-import type { MealSectionProps, MealSearchResponse } from '@/types';
+import type { MealSearchResponse, MealSectionProps } from '@/types';
 import Image from 'next/image';
-import { memo, useMemo, useState, useEffect } from 'react';
+import { memo, useEffect, useMemo, useState } from 'react';
 
 export const MealSection = memo(function MealSection({
   icon,
@@ -31,7 +31,10 @@ export const MealSection = memo(function MealSection({
       setIsPopupOpen(true);
       setSearchQuery('');
     } else if (searchQuery && searchResult === null) {
-      window.open(`https://search.naver.com/search.naver?ssc=tab.image.all&where=image&sm=tab_jum&query=${encodeURIComponent(searchQuery)}`, '_blank');
+      window.open(
+        `https://search.naver.com/search.naver?ssc=tab.image.all&where=image&sm=tab_jum&query=${encodeURIComponent(searchQuery)}`,
+        '_blank',
+      );
       setSearchQuery('');
     }
   }, [searchResult, searchQuery]);
@@ -46,7 +49,7 @@ export const MealSection = memo(function MealSection({
         foodName: `${title}`,
         image: imageUrl,
         date: new Date().toISOString().split('T')[0],
-        mealType: title
+        mealType: title,
       });
       setIsPopupOpen(true);
     }
@@ -86,8 +89,7 @@ export const MealSection = memo(function MealSection({
             <p className="text-[20px] font-semibold">-</p>
             <button
               className="active:scale-95 active:opacity-50 duration-100 text-left"
-              onClick={() => handleFoodClick(item)}
-            >
+              onClick={() => handleFoodClick(item)}>
               <p className="text-[20px] font-semibold break-words">{displayItem}</p>
             </button>
           </div>
@@ -102,7 +104,6 @@ export const MealSection = memo(function MealSection({
         </div>
       );
     }
-
 
     return (
       <div className="flex flex-row gap-2">
@@ -149,11 +150,7 @@ export const MealSection = memo(function MealSection({
         )}
       </Glass>
 
-      <ImagePopup
-        isOpen={isPopupOpen}
-        onClose={closePopup}
-        data={popupData}
-      />
+      <ImagePopup isOpen={isPopupOpen} onClose={closePopup} data={popupData} />
     </>
   );
 });

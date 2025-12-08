@@ -1,7 +1,7 @@
 import { searchFoodImage } from '@/services/mealService';
 import { useQuery } from '@tanstack/react-query';
 
-export const useFoodImageSearch = (foodName: string, enabled: boolean = true) => {
+export const useFoodImageSearch = (foodName: string, enabled = true) => {
   return useQuery({
     queryKey: ['foodImage', foodName],
     queryFn: () => searchFoodImage(foodName),
