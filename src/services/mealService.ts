@@ -1,9 +1,11 @@
 import type { MealData, MealResponse, MealSearchResponse } from '@/types';
 import { handleMealError, handleMealResponse } from './mealServiceHelpers';
 
+const API_BASE_URL = 'https://api.xn--rh3b.net';
+
 export const fetchMealData = async (date: string): Promise<MealResponse> => {
   try {
-    const response = await fetch(`https://api.xn--rh3b.net/${date}`);
+    const response = await fetch(`${API_BASE_URL}/${date}`);
     return await handleMealResponse(response);
   } catch (error) {
     return handleMealError(error);
@@ -12,7 +14,7 @@ export const fetchMealData = async (date: string): Promise<MealResponse> => {
 
 export const getMealDataServerSide = async (date: string): Promise<MealResponse | null> => {
   try {
-    const response = await fetch(`https://api.xn--rh3b.net/${date}`, {
+    const response = await fetch(`${API_BASE_URL}/${date}`, {
       cache: 'no-store',
     });
     return await handleMealResponse(response);
@@ -23,7 +25,7 @@ export const getMealDataServerSide = async (date: string): Promise<MealResponse 
 
 export const refreshMealData = async (date: string): Promise<MealResponse> => {
   try {
-    const response = await fetch(`https://api.xn--rh3b.net/refresh/${date}`, {
+    const response = await fetch(`${API_BASE_URL}/refresh/${date}`, {
       method: 'POST',
     });
     return await handleMealResponse(response);
@@ -34,7 +36,7 @@ export const refreshMealData = async (date: string): Promise<MealResponse> => {
 
 export const searchFoodImage = async (foodName: string): Promise<MealSearchResponse | null> => {
   try {
-    const response = await fetch(`https://api.xn--rh3b.net/search/${encodeURIComponent(foodName)}`);
+    const response = await fetch(`${API_BASE_URL}/search/${encodeURIComponent(foodName)}`);
     if (!response.ok) {
       return null;
     }
