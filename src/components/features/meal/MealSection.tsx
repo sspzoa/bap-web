@@ -10,6 +10,7 @@ export const MealSection = memo(function MealSection({
   title,
   regularItems,
   simpleMealItems,
+  plusItems,
   imageUrl,
   isLoading,
   isError = false,
@@ -60,8 +61,8 @@ export const MealSection = memo(function MealSection({
     setPopupData(null);
   };
   const allItems = useMemo(() => {
-    return [...regularItems, ...simpleMealItems];
-  }, [regularItems, simpleMealItems]);
+    return [...regularItems, ...simpleMealItems, ...plusItems];
+  }, [regularItems, simpleMealItems, plusItems]);
 
   const isMealOperationEmpty = useMemo(() => {
     return allItems.length === 0;
@@ -83,7 +84,8 @@ export const MealSection = memo(function MealSection({
     if (allItems.length > 0) {
       return allItems.map((item, index) => {
         const isSimpleItem = index >= regularItems.length;
-        const displayItem = isSimpleItem ? `<간편식>${item}` : item;
+        const isPlusItem = index >= regularItems.length + simpleMealItems.length;
+        const displayItem = isPlusItem ? `<플러스바>${item}` : isSimpleItem ? `<간편식>${item}` : item;
         return (
           <div key={`${title.toLowerCase()}-${index}`} className="flex flex-row gap-2">
             <p className="text-[20px] font-semibold">-</p>

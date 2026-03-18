@@ -1,6 +1,7 @@
 export interface MealItem {
   regular: string[];
   simple: string[];
+  plus: string[];
   image: string;
 }
 
@@ -28,6 +29,7 @@ export interface MealSectionProps {
   title: string;
   regularItems: string[];
   simpleMealItems: string[];
+  plusItems: string[];
   imageUrl: string;
   isLoading: boolean;
   isError?: boolean;
