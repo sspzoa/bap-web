@@ -27,14 +27,10 @@ export const handleMealResponse = async (response: Response): Promise<MealRespon
   };
 };
 
-export const handleMealError = (error: unknown): MealResponse => {
-  if (error instanceof Error) {
-    console.error("Meal fetch error:", error);
-  }
-  const errorMessage = ERROR_MESSAGES.NO_MEAL_DATA;
+export const handleMealError = (_error: unknown): MealResponse => {
   return {
     data: null,
-    error: errorMessage,
+    error: ERROR_MESSAGES.NO_MEAL_DATA,
     isError: true,
   };
 };

@@ -42,8 +42,7 @@ export const searchFoodImage = async (foodName: string): Promise<MealSearchRespo
     }
     const data = await response.json();
     return data as MealSearchResponse;
-  } catch (error) {
-    console.error("Food search error:", error);
+  } catch {
     return null;
   }
 };

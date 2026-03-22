@@ -79,7 +79,9 @@ export const useMealData = () => {
     try {
       const refreshedData = await refreshMealData(formattedDate);
       queryClient.setQueryData(["mealData", formattedDate], refreshedData);
-    } catch (_error) {}
+    } catch {
+      queryClient.invalidateQueries({ queryKey: ["mealData", formattedDate] });
+    }
   }, [formattedDate, queryClient]);
 
   const handleMobileLayout = useCallback(() => {
