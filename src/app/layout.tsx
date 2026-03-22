@@ -1,30 +1,30 @@
-import type { Metadata, Viewport } from 'next';
-import type { ReactNode } from 'react';
-import './globals.css';
-import QueryProvider from '@/providers/QueryProvider';
-import { Analytics } from '@vercel/analytics/next';
-import { SpeedInsights } from '@vercel/speed-insights/next';
+import type { Metadata, Viewport } from "next";
+import type { ReactNode } from "react";
+import "./globals.css";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import QueryProvider from "@/shared/lib/provider";
 
 export const metadata: Metadata = {
-  title: '밥.net',
-  description: '한국디지털미디어고등학교 급식 API',
+  title: "밥.net",
+  description: "한국디지털미디어고등학교 급식 API",
   appleWebApp: true,
   openGraph: {
     images: [
       {
-        url: './logo/icon-512.png',
+        url: "./logo/icon-512.png",
       },
     ],
   },
 };
 
 export const viewport: Viewport = {
-  themeColor: '#000000',
-  width: 'device-width',
+  themeColor: "#000000",
+  width: "device-width",
   initialScale: 1,
   maximumScale: 1,
   userScalable: false,
-  viewportFit: 'cover',
+  viewportFit: "cover",
 };
 
 interface RootLayoutProps {

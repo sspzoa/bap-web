@@ -6,16 +6,57 @@
     "useIgnoreFile": true
   },
   "files": {
-    "maxSize": 3145728
+    "includes": ["**", "!**/*.css"]
+  },
+  "assist": {
+    "actions": {
+      "source": {
+        "organizeImports": "on"
+      }
+    }
   },
   "linter": {
     "enabled": true,
-    "ignore": ["./public/*"],
     "rules": {
       "recommended": true,
+      "a11y": {
+        "noSvgWithoutTitle": "off",
+        "noAutofocus": "off",
+        "useKeyWithClickEvents": "off",
+        "noStaticElementInteractions": "off",
+        "useButtonType": "off",
+        "useSemanticElements": "off",
+        "noLabelWithoutControl": "off"
+      },
+      "correctness": {
+        "useExhaustiveDependencies": "off",
+        "useUniqueElementIds": "off",
+        "useParseIntRadix": "off",
+        "noUnusedImports": "error"
+      },
+      "security": {
+        "noDangerouslySetInnerHtml": "warn"
+      },
+      "style": {
+        "noNonNullAssertion": "off"
+      },
+      "complexity": {
+        "useLiteralKeys": "off",
+        "useArrowFunction": "error"
+      },
       "suspicious": {
-        "noExplicitAny": "warn",
-        "noArrayIndexKey": "off"
+        "noExplicitAny": "off",
+        "noImplicitAnyLet": "off",
+        "noArrayIndexKey": "off",
+        "noShadowRestrictedNames": "off",
+        "noUnknownAtRules": "off",
+        "noDocumentCookie": "off"
+      },
+      "performance": {
+        "noImgElement": "off"
+      },
+      "nursery": {
+        "useSortedClasses": "warn"
       }
     }
   },
@@ -25,11 +66,7 @@
     "indentStyle": "space",
     "indentWidth": 2,
     "lineWidth": 120,
-    "lineEnding": "lf",
-    "ignore": ["./public/*"]
-  },
-  "organizeImports": {
-    "enabled": true
+    "lineEnding": "lf"
   },
   "javascript": {
     "formatter": {
@@ -38,9 +75,15 @@
       "bracketSameLine": true,
       "bracketSpacing": true,
       "jsxQuoteStyle": "double",
-      "quoteStyle": "single",
+      "quoteStyle": "double",
       "semicolons": "always",
       "trailingCommas": "all"
+    }
+  },
+  "json": {
+    "formatter": {
+      "enabled": true,
+      "trailingCommas": "none"
     }
   }
 }
