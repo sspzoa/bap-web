@@ -1,10 +1,11 @@
 import Image from "next/image";
 import { memo, useEffect, useMemo, useState } from "react";
-import { ImagePopup } from "@/app/(pages)/(home)/(components)/imagePopup";
-import { useFoodImageSearch } from "@/app/(pages)/(home)/(hooks)/useFoodImageSearch";
+import { ImagePopup } from "@/sites/kdmhs/components/imagePopup";
+import { useFoodImageSearch } from "@/sites/kdmhs/hooks/useFoodImageSearch";
+import type { MealSectionProps } from "@/sites/kdmhs/types";
 import Glass from "@/shared/components/common/glass";
 import { ERROR_MESSAGES } from "@/shared/lib/constants";
-import type { MealSearchResponse, MealSectionProps } from "@/shared/types/index";
+import type { MealSearchResponse } from "@/shared/types/index";
 
 export const MealSection = memo(function MealSection({
   icon,
@@ -61,6 +62,7 @@ export const MealSection = memo(function MealSection({
     setIsPopupOpen(false);
     setPopupData(null);
   };
+
   const isMealOperationEmpty = useMemo(() => {
     return regularItems.length === 0 && simpleMealItems.length === 0 && plusItems.length === 0;
   }, [regularItems, simpleMealItems, plusItems]);
@@ -86,7 +88,7 @@ export const MealSection = memo(function MealSection({
     if (isError) {
       return (
         <div className="flex flex-row gap-2">
-          <p className="font-semibold text-[20px]">{errorMessage || ERROR_MESSAGES.NO_MEAL_DATA}</p>
+          <p className="font-semibold text-[20px]">{errorMessage || ERROR_MESSAGES.kdmhs.NO_MEAL_DATA}</p>
         </div>
       );
     }
@@ -113,7 +115,7 @@ export const MealSection = memo(function MealSection({
 
     return (
       <div className="flex flex-row gap-2">
-        <p className="font-semibold text-[20px]">{ERROR_MESSAGES.NO_MEAL_OPERATION}</p>
+        <p className="font-semibold text-[20px]">{ERROR_MESSAGES.kdmhs.NO_MEAL_OPERATION}</p>
       </div>
     );
   }, [regularItems, simpleMealItems, plusItems, isLoading, isError, errorMessage, title, isMealOperationEmpty]);

@@ -2,7 +2,7 @@
 
 import { useCallback, useRef, useState } from "react";
 import { UI_CONSTANTS } from "@/shared/lib/constants";
-import { calculateOpacityFromScroll } from "@/shared/utils/mealTimingUtils";
+import { calculateOpacityFromScroll } from "@/sites/kdmhs/utils/mealTimingUtils";
 
 export const useScrollOpacity = () => {
   const scrollContainerRef = useRef<HTMLDivElement | null>(null);

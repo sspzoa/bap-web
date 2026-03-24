@@ -3,18 +3,18 @@ import { handleMealError, handleMealResponse } from "./mealServiceHelpers";
 
 const API_BASE_URL = "https://api.xn--rh3b.net";
 
-export const fetchMealData = async (date: string): Promise<MealResponse> => {
+export const fetchMealData = async (apiPath: string, date: string): Promise<MealResponse> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/${date}`);
+    const response = await fetch(`${API_BASE_URL}${apiPath}/${date}`);
     return await handleMealResponse(response);
   } catch (error) {
     return handleMealError(error);
   }
 };
 
-export const getMealDataServerSide = async (date: string): Promise<MealResponse | null> => {
+export const getMealDataServerSide = async (apiPath: string, date: string): Promise<MealResponse | null> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/${date}`, {
+    const response = await fetch(`${API_BASE_URL}${apiPath}/${date}`, {
       cache: "no-store",
     });
     return await handleMealResponse(response);
@@ -23,9 +23,9 @@ export const getMealDataServerSide = async (date: string): Promise<MealResponse 
   }
 };
 
-export const refreshMealData = async (date: string): Promise<MealResponse> => {
+export const refreshMealData = async (apiPath: string, date: string): Promise<MealResponse> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/refresh/${date}`, {
+    const response = await fetch(`${API_BASE_URL}${apiPath}/refresh/${date}`, {
       method: "POST",
     });
     return await handleMealResponse(response);

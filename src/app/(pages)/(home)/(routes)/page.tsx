@@ -1,14 +1,23 @@
-import MealLayout from "@/app/(pages)/(home)/(components)/mealLayout";
 import { getMealDataServerSide } from "@/shared/lib/mealService";
 import { getInitialDateForServer } from "@/shared/utils/dateUtils";
-import { getCurrentMealTiming } from "@/shared/utils/mealTimingUtils";
 import { formatToDateString } from "@/shared/utils/timeZoneUtils";
+import { getSiteConfig } from "@/sites/config";
+import { getSiteId } from "@/sites/server";
+import DguMealLayout from "@/sites/dgu/components/mealLayout";
+import KdmhsMealLayout from "@/sites/kdmhs/components/mealLayout";
+import { getCurrentMealTiming } from "@/sites/kdmhs/utils/mealTimingUtils";
 
 export default async function Page() {
-  const initialDate = getInitialDateForServer();
+  const siteId = await getSiteId();
+  const siteConfig = getSiteConfig(siteId);
+  const initialDate = getInitialDateForServer(siteId);
   const formattedDate = formatToDateString(initialDate);
-  const initialData = await getMealDataServerSide(formattedDate);
-  const { opacity: initialOpacity } = getCurrentMealTiming();
+  const initialData = await getMealDataServerSide(siteConfig.apiPath, formattedDate);
 
-  return <MealLayout initialData={initialData} initialDate={initialDate} initialOpacity={initialOpacity} />;
+  if (siteId === "dgu") {
+    return <DguMealLayout initialData={initialData} initialDate={initialDate} />;
+  }
+
+  const { opacity: initialOpacity } = getCurrentMealTiming();
+  return <KdmhsMealLayout initialData={initialData} initialDate={initialDate} initialOpacity={initialOpacity} />;
 }

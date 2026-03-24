@@ -1,9 +1,8 @@
-import { ERROR_MESSAGES } from "@/shared/lib/constants";
 import type { MealResponse } from "@/shared/types/index";
 
 export const handleMealResponse = async (response: Response): Promise<MealResponse> => {
   if (!response.ok) {
-    let errorMessage = ERROR_MESSAGES.NO_MEAL_DATA;
+    let errorMessage: string | null = null;
 
     try {
       const errorData = await response.json();
@@ -30,7 +29,7 @@ export const handleMealResponse = async (response: Response): Promise<MealRespon
 export const handleMealError = (_error: unknown): MealResponse => {
   return {
     data: null,
-    error: ERROR_MESSAGES.NO_MEAL_DATA,
+    error: null,
     isError: true,
   };
 };

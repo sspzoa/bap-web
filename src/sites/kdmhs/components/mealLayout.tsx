@@ -4,13 +4,13 @@ import { useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns/format";
 import { ko } from "date-fns/locale/ko";
 import { memo, useCallback, useEffect, useMemo } from "react";
-import { MealBackgroundImages } from "@/app/(pages)/(home)/(components)/mealBackgroundImages";
-import { MealDesktopBackground } from "@/app/(pages)/(home)/(components)/mealDesktopBackground";
 import { MealNavigationBar } from "@/app/(pages)/(home)/(components)/mealNavigationBar";
-import { MealSection } from "@/app/(pages)/(home)/(components)/mealSection";
-import { useMealData } from "@/app/(pages)/(home)/(hooks)/useMealData";
+import { MealBackgroundImages } from "@/sites/kdmhs/components/mealBackgroundImages";
+import { MealDesktopBackground } from "@/sites/kdmhs/components/mealDesktopBackground";
+import { MealSection } from "@/sites/kdmhs/components/mealSection";
+import { useMealData } from "@/sites/kdmhs/hooks/useMealData";
+import type { MealLayoutProps } from "@/sites/kdmhs/types";
 import LoadingSpinner from "@/shared/components/common/loadingSpinner";
-import type { MealLayoutProps } from "@/shared/types/index";
 
 const MealLayout = memo(function MealLayout({ initialData, initialDate, initialOpacity }: MealLayoutProps) {
   const {
