@@ -5,6 +5,7 @@ export interface MealItem {
   simple: string[];
   plus: string[];
   image: string;
+  kcal: number;
 }
 
 export interface MealData {
@@ -18,6 +19,7 @@ export interface MealSectionProps {
   title: string;
   regularItems: string[];
   simpleMealItems: string[];
+  kcal: number;
   plusItems: string[];
   imageUrl: string;
   isLoading: boolean;

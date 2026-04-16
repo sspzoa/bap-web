@@ -12,6 +12,7 @@ export const MealSection = memo(function MealSection({
   title,
   regularItems,
   simpleMealItems,
+  kcal,
   plusItems,
   imageUrl,
   isLoading,
@@ -138,6 +139,10 @@ export const MealSection = memo(function MealSection({
                 draggable={false}
               />
               <p className="font-bold text-[32px] tracking-tight">{title}</p>
+              {kcal > 0 && (
+
+                <p className="ml-auto text-[16px] opacity-50 tracking-tight">{kcal} kcal</p>
+              )}
             </div>
 
             <div className="flex flex-col gap-2">

@@ -77,9 +77,12 @@ export const useMealData = () => {
   const handleRefresh = useCallback(async () => {
     try {
       const refreshedData = await refreshMealData(apiPath, formattedDate);
-      queryClient.setQueryData(["mealData", formattedDate], refreshedData);
+      if (!refreshedData.isError) {
+        queryClient.setQueryData(["mealData", formattedDate], refreshedData);
+        alert("Meal data refreshed.");
+      }
     } catch {
-      queryClient.invalidateQueries({ queryKey: ["mealData", formattedDate] });
+      console.error("Failed to refresh meal data.");
     }
   }, [formattedDate, queryClient, apiPath]);
 
