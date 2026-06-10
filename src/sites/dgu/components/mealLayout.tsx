@@ -6,7 +6,6 @@ import { ko } from "date-fns/locale/ko";
 import Image from "next/image";
 import { memo, useCallback, useEffect, useMemo } from "react";
 import { MealNavigationBar } from "@/app/(pages)/(home)/(components)/mealNavigationBar";
-import Glass from "@/shared/components/common/glass";
 import LoadingSpinner from "@/shared/components/common/loadingSpinner";
 import { MealSection } from "@/sites/dgu/components/mealSection";
 import { useMealData } from "@/sites/dgu/hooks/useMealData";
@@ -55,7 +54,7 @@ const MealLayout = memo(function MealLayout({ initialData, initialDate }: MealLa
   }, [resetToToday]);
 
   return (
-    <div className="relative flex h-svh items-center justify-center overflow-hidden py-4 md:px-4 md:py-8">
+    <div className="relative flex h-svh items-center justify-center overflow-hidden pt-[max(1rem,env(safe-area-inset-top))] pb-[max(1rem,env(safe-area-inset-bottom))] md:px-4 md:py-8">
       <div className="fixed inset-0 h-full w-full">
         <Image
           src="/img/dinner.svg"
@@ -83,15 +82,16 @@ const MealLayout = memo(function MealLayout({ initialData, initialDate }: MealLa
         )}
 
         <div className="flex w-full flex-1 flex-col gap-6 overflow-y-auto px-4 md:px-0">
-          {showContent && isError ? (
-            <Glass className="flex w-full flex-col gap-2 p-4">
-              <p className="font-semibold text-[20px]">{errorMessage}</p>
-            </Glass>
-          ) : (
-            displayMeals.map((meal) => (
-              <MealSection key={meal.time} meal={meal} isLoading={isLoading} showContent={showContent} />
-            ))
-          )}
+          {displayMeals.map((meal) => (
+            <MealSection
+              key={meal.time}
+              meal={meal}
+              isLoading={isLoading}
+              isError={isError}
+              errorMessage={errorMessage}
+              showContent={showContent}
+            />
+          ))}
         </div>
       </div>
     </div>

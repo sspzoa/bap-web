@@ -19,6 +19,8 @@ export interface DayMenu {
 export interface MealSectionProps {
   meal: Meal;
   isLoading: boolean;
+  isError?: boolean;
+  errorMessage?: string;
   showContent: boolean;
 }
 
