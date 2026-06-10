@@ -8,9 +8,10 @@ const HOSTNAME_TO_SITE: Record<string, string> = {
   "dflex.xn--rh3b.net": "dgu",
 };
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const hostname = request.headers.get("host")?.split(":")[0] || "";
-  const siteId = HOSTNAME_TO_SITE[hostname] || "kdmhs";
+  const devSiteId = process.env.NODE_ENV === "development" ? process.env.SITE_ID : undefined;
+  const siteId = devSiteId || HOSTNAME_TO_SITE[hostname] || "kdmhs";
 
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set("x-site-id", siteId);
