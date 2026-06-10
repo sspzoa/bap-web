@@ -19,11 +19,11 @@ export const SITES: Record<SiteId, SiteConfig> = {
   },
   dgu: {
     id: "dgu",
-    title: "상록원.밥.net",
-    schoolName: "동국대학교 서울캠퍼스 상록원",
-    url: "https://상록원.밥.net",
+    title: "dflex.밥.net",
+    schoolName: "동국대학교 경영관 D-Flex",
+    url: "https://dflex.밥.net",
     apiPath: "/dgu",
-    manifestName: "동국대 식단",
+    manifestName: "D-Flex 식단",
   },
 };
 

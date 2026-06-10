@@ -4,8 +4,8 @@ const HOSTNAME_TO_SITE: Record<string, string> = {
   "밥.net": "kdmhs",
   "xn--rh3b.net": "kdmhs",
   "www.xn--rh3b.net": "kdmhs",
-  "상록원.밥.net": "dgu",
-  "xn--3o2bl7m86e.xn--rh3b.net": "dgu",
+  "dflex.밥.net": "dgu",
+  "dflex.xn--rh3b.net": "dgu",
 };
 
 export function middleware(request: NextRequest) {

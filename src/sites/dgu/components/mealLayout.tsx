@@ -11,11 +11,7 @@ import { useMealData } from "@/sites/dgu/hooks/useMealData";
 import type { MealLayoutProps } from "@/sites/dgu/types";
 import LoadingSpinner from "@/shared/components/common/loadingSpinner";
 
-const PLACEHOLDER_RESTAURANTS = [
-  { id: "1F", name: "1층", categories: [] },
-  { id: "2F", name: "2층", categories: [] },
-  { id: "3F", name: "3층", categories: [] },
-];
+const PLACEHOLDER_RESTAURANTS = [{ id: "dflex", name: "경영관 D-Flex", categories: [] }];
 
 const MealLayout = memo(function MealLayout({ initialData, initialDate }: MealLayoutProps) {
   const {
