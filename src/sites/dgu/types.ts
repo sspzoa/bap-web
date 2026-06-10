@@ -24,7 +24,13 @@ export interface MealSectionProps {
   showContent: boolean;
 }
 
+export interface InitialOpacity {
+  lunch: number;
+  dinner: number;
+}
+
 export interface MealLayoutProps {
   initialData: MealResponse | null;
   initialDate: Date;
+  initialOpacity: InitialOpacity;
 }

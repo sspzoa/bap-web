@@ -3,12 +3,14 @@ import { addDays, subDays } from "date-fns";
 import { useAtom } from "jotai";
 import { useCallback, useEffect, useMemo } from "react";
 import { currentDateAtom } from "@/app/(pages)/(home)/(atoms)/currentDateAtom";
+import { useResponsiveness } from "@/app/(pages)/(home)/(hooks)/useResponsiveness";
 import { ERROR_MESSAGES } from "@/shared/lib/constants";
 import { fetchMealData, refreshMealData } from "@/shared/lib/mealService";
 import { formatToDateString, getKoreanDate } from "@/shared/utils/timeZoneUtils";
 import { SITES } from "@/sites/config";
 import { useSiteId } from "@/sites/context";
 import { useMealInitialization } from "@/sites/dgu/hooks/useMealInitialization";
+import { useScrollOpacity } from "@/sites/dgu/hooks/useScrollOpacity";
 import type { DayMenu } from "@/sites/dgu/types";
 
 export const useMealData = () => {
@@ -18,7 +20,15 @@ export const useMealData = () => {
   const formattedDate = formatToDateString(currentDate);
   const queryClient = useQueryClient();
 
-  const { initialLoad, dateInitialized, setDateInitialized } = useMealInitialization();
+  const { scrollContainerRef, lunchOpacity, dinnerOpacity, handleScroll, setOpacity } = useScrollOpacity();
+
+  const { isMobile } = useResponsiveness();
+
+  const { initialLoad, dateInitialized, setDateInitialized, setMealByTime } = useMealInitialization(
+    scrollContainerRef,
+    setOpacity,
+    setCurrentDate,
+  );
 
   const { data: responseData, isLoading } = useQuery({
     queryKey: ["mealData", formattedDate],
@@ -83,6 +93,19 @@ export const useMealData = () => {
     }
   }, [formattedDate, queryClient, apiPath]);
 
+  // 모바일은 시간대에 맞는 끼니로 스크롤·페이드, 데스크톱은 저녁 배경 고정.
+  const handleMobileLayout = useCallback(() => {
+    if (isMobile) {
+      setMealByTime();
+    } else {
+      setOpacity(0, 1);
+    }
+  }, [isMobile, setMealByTime, setOpacity]);
+
+  useEffect(() => {
+    handleMobileLayout();
+  }, [handleMobileLayout]);
+
   return {
     currentDate,
     setCurrentDate,
@@ -95,6 +118,12 @@ export const useMealData = () => {
     handleNextDay,
     resetToToday,
     handleRefresh,
+    setMealByTime,
+    scrollContainerRef,
+    lunchOpacity,
+    dinnerOpacity,
+    isMobile,
+    handleScroll,
     dateInitialized,
     initialLoad,
   };

@@ -4,6 +4,7 @@ import { formatToDateString } from "@/shared/utils/timeZoneUtils";
 import { getSiteConfig } from "@/sites/config";
 import { getSiteId } from "@/sites/server";
 import DguMealLayout from "@/sites/dgu/components/mealLayout";
+import { getCurrentMealTiming as getDguMealTiming } from "@/sites/dgu/utils/mealTimingUtils";
 import KdmhsMealLayout from "@/sites/kdmhs/components/mealLayout";
 import { getCurrentMealTiming } from "@/sites/kdmhs/utils/mealTimingUtils";
 
@@ -15,7 +16,8 @@ export default async function Page() {
   const initialData = await getMealDataServerSide(siteConfig.apiPath, formattedDate);
 
   if (siteId === "dgu") {
-    return <DguMealLayout initialData={initialData} initialDate={initialDate} />;
+    const { opacity: dguInitialOpacity } = getDguMealTiming();
+    return <DguMealLayout initialData={initialData} initialDate={initialDate} initialOpacity={dguInitialOpacity} />;
   }
 
   const { opacity: initialOpacity } = getCurrentMealTiming();

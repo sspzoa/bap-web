@@ -3,20 +3,22 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns/format";
 import { ko } from "date-fns/locale/ko";
-import Image from "next/image";
 import { memo, useCallback, useEffect, useMemo } from "react";
 import { MealNavigationBar } from "@/app/(pages)/(home)/(components)/mealNavigationBar";
 import LoadingSpinner from "@/shared/components/common/loadingSpinner";
+import { MealBackgroundImages } from "@/sites/dgu/components/mealBackgroundImages";
+import { MealDesktopBackground } from "@/sites/dgu/components/mealDesktopBackground";
 import { MealSection } from "@/sites/dgu/components/mealSection";
 import { useMealData } from "@/sites/dgu/hooks/useMealData";
 import type { Meal, MealLayoutProps } from "@/sites/dgu/types";
 
-const PLACEHOLDER_MEALS: Meal[] = [
-  { time: "중식", operatingHours: "11:30~14:00", corners: [] },
-  { time: "석식", operatingHours: "17:00~19:00", corners: [] },
+// 끼니 순서·운영시간을 고정해 스와이프 섹션과 배경(중식→점심, 석식→저녁)을 항상 2개로 맞춤.
+const MEAL_ORDER: { time: string; operatingHours: string }[] = [
+  { time: "중식", operatingHours: "11:30~14:00" },
+  { time: "석식", operatingHours: "17:00~19:00" },
 ];
 
-const MealLayout = memo(function MealLayout({ initialData, initialDate }: MealLayoutProps) {
+const MealLayout = memo(function MealLayout({ initialData, initialDate, initialOpacity }: MealLayoutProps) {
   const {
     currentDate,
     meals,
@@ -27,6 +29,11 @@ const MealLayout = memo(function MealLayout({ initialData, initialDate }: MealLa
     handleNextDay,
     resetToToday,
     handleRefresh,
+    setMealByTime,
+    scrollContainerRef,
+    lunchOpacity,
+    dinnerOpacity,
+    handleScroll,
     dateInitialized,
     initialLoad,
   } = useMealData();
@@ -42,29 +49,37 @@ const MealLayout = memo(function MealLayout({ initialData, initialDate }: MealLa
 
   const showContent = useMemo(() => dateInitialized || !initialLoad, [dateInitialized, initialLoad]);
 
+  const backgroundOpacities = useMemo(
+    () => ({
+      lunch: initialLoad ? initialOpacity.lunch : lunchOpacity,
+      dinner: initialLoad ? initialOpacity.dinner : dinnerOpacity,
+    }),
+    [initialLoad, initialOpacity, lunchOpacity, dinnerOpacity],
+  );
+
   const formattedCurrentDate = useMemo(
     () => (dateInitialized ? format(currentDate, "M월 d일 eeee", { locale: ko }) : ""),
     [dateInitialized, currentDate],
   );
 
-  const displayMeals = useMemo(() => (meals.length > 0 ? meals : PLACEHOLDER_MEALS), [meals]);
+  const displayMeals = useMemo<Meal[]>(
+    () =>
+      MEAL_ORDER.map((base) => {
+        const found = meals.find((meal) => meal.time === base.time);
+        return found ?? { time: base.time, operatingHours: base.operatingHours, corners: [] };
+      }),
+    [meals],
+  );
 
   const handleResetToToday = useCallback(() => {
     resetToToday();
-  }, [resetToToday]);
+    setMealByTime();
+  }, [resetToToday, setMealByTime]);
 
   return (
-    <div className="relative flex h-svh items-center justify-center overflow-hidden pt-[max(1rem,env(safe-area-inset-top))] pb-[max(1rem,env(safe-area-inset-bottom))] md:px-4 md:py-8">
-      <div className="fixed inset-0 h-full w-full">
-        <Image
-          src="/img/dinner.svg"
-          alt="배경"
-          fill
-          style={{ objectFit: "cover", objectPosition: "50% 90%" }}
-          priority
-          draggable={false}
-        />
-      </div>
+    <div className="relative flex h-svh items-center justify-center overflow-hidden py-4 md:px-4 md:py-8">
+      <MealBackgroundImages backgroundOpacities={backgroundOpacities} />
+      <MealDesktopBackground />
 
       <div className="z-10 flex h-full max-h-[900px] w-full max-w-[1500px] flex-col-reverse gap-4 md:flex-col md:px-4">
         <MealNavigationBar
@@ -81,7 +96,10 @@ const MealLayout = memo(function MealLayout({ initialData, initialDate }: MealLa
           </div>
         )}
 
-        <div className="flex min-h-0 w-full flex-1 flex-col gap-4 px-4 md:flex-row md:items-stretch md:px-0">
+        <div
+          ref={scrollContainerRef}
+          onScroll={handleScroll}
+          className="flex w-full flex-1 snap-x snap-mandatory flex-row gap-4 overflow-x-auto px-4 md:snap-none md:px-0">
           {displayMeals.map((meal) => (
             <MealSection
               key={meal.time}

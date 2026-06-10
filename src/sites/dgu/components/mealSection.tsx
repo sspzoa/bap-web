@@ -41,8 +41,6 @@ export const MealSection = memo(function MealSection({
   errorMessage,
   showContent,
 }: MealSectionProps) {
-  if (!showContent) return null;
-
   const showCorners = !isLoading && !isError && meal.corners.length > 0;
   const fallbackMessage = isError
     ? errorMessage || ERROR_MESSAGES.dgu.NO_MEAL_DATA
@@ -50,30 +48,39 @@ export const MealSection = memo(function MealSection({
       ? ""
       : ERROR_MESSAGES.dgu.NO_MEAL_OPERATION;
 
-  // 끼니 카드 2개가 화면을 1:1로 나눠 가짐 — 모바일은 상하, 데스크톱은 좌우.
-  // min-h-0 으로 카드가 내용보다 작게 줄어들 수 있게 해 내용이 넘치면 카드 내부에서 스크롤(Glass 기본 overflow-y-auto).
+  // 모바일은 카드 1장이 화면 전체를 차지하는 스와이프(snap) 섹션, 데스크톱은 2개가 좌우로 나란히(md:flex-1).
+  // min-h-0 + Glass 기본 overflow-y-auto 로 내용이 넘치면 카드 내부에서 세로 스크롤.
+  // Glass 껍데기는 항상 렌더해야 초기 스크롤 위치(시간대별 끼니) 계산이 올바른 폭으로 동작함.
   return (
-    <Glass className="flex min-h-0 w-full flex-1 flex-col gap-4 p-4" data-id={meal.time}>
-      <div className="flex h-8 flex-row items-center gap-2">
-        <Image
-          src={MEAL_ICONS[meal.time] ?? "/icon/utensils.svg"}
-          alt={meal.time}
-          width={32}
-          height={32}
-          style={{ filter: "drop-shadow(0 0 12px rgba(0, 0, 0, 0.2))" }}
-          draggable={false}
-        />
-        <p className="font-bold text-[32px] tracking-tight">{meal.time}</p>
-        {meal.operatingHours && <p className="ml-auto text-[16px] opacity-50 tracking-tight">{meal.operatingHours}</p>}
-      </div>
-      {showCorners ? (
-        <div className="flex flex-col gap-4">
-          {meal.corners.map((corner) => (
-            <CornerBlock key={corner.name} corner={corner} />
-          ))}
-        </div>
-      ) : (
-        fallbackMessage && <p className="font-semibold text-[20px]">{fallbackMessage}</p>
+    <Glass
+      className="flex min-h-0 w-full flex-shrink-0 snap-center snap-always flex-col gap-4 p-4 md:flex-1"
+      data-id={meal.time}>
+      {showContent && (
+        <>
+          <div className="flex h-8 flex-row items-center gap-2">
+            <Image
+              src={MEAL_ICONS[meal.time] ?? "/icon/utensils.svg"}
+              alt={meal.time}
+              width={32}
+              height={32}
+              style={{ filter: "drop-shadow(0 0 12px rgba(0, 0, 0, 0.2))" }}
+              draggable={false}
+            />
+            <p className="font-bold text-[32px] tracking-tight">{meal.time}</p>
+            {meal.operatingHours && (
+              <p className="ml-auto text-[16px] opacity-50 tracking-tight">{meal.operatingHours}</p>
+            )}
+          </div>
+          {showCorners ? (
+            <div className="flex flex-col gap-4">
+              {meal.corners.map((corner) => (
+                <CornerBlock key={corner.name} corner={corner} />
+              ))}
+            </div>
+          ) : (
+            fallbackMessage && <p className="font-semibold text-[20px]">{fallbackMessage}</p>
+          )}
+        </>
       )}
     </Glass>
   );
