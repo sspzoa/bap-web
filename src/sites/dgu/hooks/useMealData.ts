@@ -3,13 +3,13 @@ import { addDays, subDays } from "date-fns";
 import { useAtom } from "jotai";
 import { useCallback, useEffect, useMemo } from "react";
 import { currentDateAtom } from "@/app/(pages)/(home)/(atoms)/currentDateAtom";
+import { ERROR_MESSAGES } from "@/shared/lib/constants";
+import { fetchMealData, refreshMealData } from "@/shared/lib/mealService";
+import { formatToDateString, getKoreanDate } from "@/shared/utils/timeZoneUtils";
 import { SITES } from "@/sites/config";
 import { useSiteId } from "@/sites/context";
-import type { CafeteriaData } from "@/sites/dgu/types";
 import { useMealInitialization } from "@/sites/dgu/hooks/useMealInitialization";
-import { fetchMealData, refreshMealData } from "@/shared/lib/mealService";
-import { ERROR_MESSAGES } from "@/shared/lib/constants";
-import { formatToDateString, getKoreanDate } from "@/shared/utils/timeZoneUtils";
+import type { DayMenu } from "@/sites/dgu/types";
 
 export const useMealData = () => {
   const siteId = useSiteId();
@@ -27,13 +27,10 @@ export const useMealData = () => {
     retry: false,
   });
 
-  const data = useMemo(() => (responseData?.data as CafeteriaData | null) ?? null, [responseData?.data]);
+  const data = useMemo(() => (responseData?.data as DayMenu | null) ?? null, [responseData?.data]);
   const isError = useMemo(() => responseData?.isError || false, [responseData?.isError]);
-  const errorMessage = useMemo(
-    () => responseData?.error || ERROR_MESSAGES.dgu.NO_MEAL_DATA,
-    [responseData?.error],
-  );
-  const restaurants = useMemo(() => data?.restaurants || [], [data]);
+  const errorMessage = useMemo(() => responseData?.error || ERROR_MESSAGES.dgu.NO_MEAL_DATA, [responseData?.error]);
+  const meals = useMemo(() => data?.meals || [], [data]);
 
   const prefetchQueries = useCallback(() => {
     const prevDate = subDays(currentDate, 1);
@@ -90,7 +87,7 @@ export const useMealData = () => {
     currentDate,
     setCurrentDate,
     data,
-    restaurants,
+    meals,
     isLoading,
     isError,
     errorMessage,

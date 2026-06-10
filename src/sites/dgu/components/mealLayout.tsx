@@ -6,17 +6,21 @@ import { ko } from "date-fns/locale/ko";
 import Image from "next/image";
 import { memo, useCallback, useEffect, useMemo } from "react";
 import { MealNavigationBar } from "@/app/(pages)/(home)/(components)/mealNavigationBar";
-import { RestaurantSection } from "@/sites/dgu/components/restaurantSection";
-import { useMealData } from "@/sites/dgu/hooks/useMealData";
-import type { MealLayoutProps } from "@/sites/dgu/types";
+import Glass from "@/shared/components/common/glass";
 import LoadingSpinner from "@/shared/components/common/loadingSpinner";
+import { MealSection } from "@/sites/dgu/components/mealSection";
+import { useMealData } from "@/sites/dgu/hooks/useMealData";
+import type { Meal, MealLayoutProps } from "@/sites/dgu/types";
 
-const PLACEHOLDER_RESTAURANTS = [{ id: "dflex", name: "경영관 D-Flex", categories: [] }];
+const PLACEHOLDER_MEALS: Meal[] = [
+  { time: "중식", operatingHours: "11:30~14:00", corners: [] },
+  { time: "석식", operatingHours: "17:00~19:00", corners: [] },
+];
 
 const MealLayout = memo(function MealLayout({ initialData, initialDate }: MealLayoutProps) {
   const {
     currentDate,
-    restaurants,
+    meals,
     isLoading,
     isError,
     errorMessage,
@@ -37,28 +41,14 @@ const MealLayout = memo(function MealLayout({ initialData, initialDate }: MealLa
     }
   }, [initialData, initialDate, queryClient]);
 
-  const showContent = useMemo(() => {
-    return dateInitialized || !initialLoad;
-  }, [dateInitialized, initialLoad]);
+  const showContent = useMemo(() => dateInitialized || !initialLoad, [dateInitialized, initialLoad]);
 
-  const formattedCurrentDate = useMemo(() => {
-    return dateInitialized ? format(currentDate, "M월 d일 eeee", { locale: ko }) : "";
-  }, [dateInitialized, currentDate]);
-
-  const displayRestaurants = useMemo(
-    () => (restaurants.length > 0 ? restaurants : PLACEHOLDER_RESTAURANTS),
-    [restaurants],
+  const formattedCurrentDate = useMemo(
+    () => (dateInitialized ? format(currentDate, "M월 d일 eeee", { locale: ko }) : ""),
+    [dateInitialized, currentDate],
   );
 
-  const commonProps = useMemo(
-    () => ({
-      isLoading,
-      isError,
-      errorMessage,
-      showContent,
-    }),
-    [isLoading, isError, errorMessage, showContent],
-  );
+  const displayMeals = useMemo(() => (meals.length > 0 ? meals : PLACEHOLDER_MEALS), [meals]);
 
   const handleResetToToday = useCallback(() => {
     resetToToday();
@@ -92,10 +82,16 @@ const MealLayout = memo(function MealLayout({ initialData, initialDate }: MealLa
           </div>
         )}
 
-        <div className="flex w-full flex-1 snap-x snap-mandatory flex-row gap-4 overflow-x-auto px-4 md:snap-none md:px-0">
-          {displayRestaurants.map((restaurant) => (
-            <RestaurantSection key={restaurant.id} restaurant={restaurant} {...commonProps} />
-          ))}
+        <div className="flex w-full flex-1 flex-col gap-6 overflow-y-auto px-4 md:px-0">
+          {showContent && isError ? (
+            <Glass className="flex w-full flex-col gap-2 p-4">
+              <p className="font-semibold text-[20px]">{errorMessage}</p>
+            </Glass>
+          ) : (
+            displayMeals.map((meal) => (
+              <MealSection key={meal.time} meal={meal} isLoading={isLoading} showContent={showContent} />
+            ))
+          )}
         </div>
       </div>
     </div>

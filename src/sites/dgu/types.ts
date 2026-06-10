@@ -1,37 +1,24 @@
 import type { MealResponse } from "@/shared/types/index";
 
-export interface MenuItem {
+export interface MenuCorner {
   name: string;
   price: string | null;
+  items: string[];
 }
 
-export interface MealInfo {
-  items: MenuItem[];
-  price: string | null;
+export interface Meal {
+  time: string;
   operatingHours: string | null;
+  corners: MenuCorner[];
 }
 
-export interface Category {
-  name: string;
-  lunch: MealInfo | null;
-  dinner: MealInfo | null;
+export interface DayMenu {
+  meals: Meal[];
 }
 
-export interface RestaurantMenu {
-  id: string;
-  name: string;
-  categories: Category[];
-}
-
-export interface CafeteriaData {
-  restaurants: RestaurantMenu[];
-}
-
-export interface RestaurantSectionProps {
-  restaurant: RestaurantMenu;
+export interface MealSectionProps {
+  meal: Meal;
   isLoading: boolean;
-  isError?: boolean;
-  errorMessage?: string;
   showContent: boolean;
 }
 
