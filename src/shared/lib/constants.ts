@@ -20,12 +20,12 @@ export const UI_CONSTANTS = {
 
 export const ERROR_MESSAGES = {
   kdmhs: {
-    NO_MEAL_DATA: "급식 정보가 없어요",
+    NO_MEAL_DATA: "정보가 없어요",
     NO_MEAL_OPERATION: "급식 운영이 없어요",
     NO_SIMPLE_MEAL: "간편식이 없어요",
   },
   dgu: {
-    NO_MEAL_DATA: "식단 정보가 없어요",
-    NO_MEAL_OPERATION: "식단 운영이 없어요",
+    NO_MEAL_DATA: "정보가 없어요",
+    NO_MEAL_OPERATION: "운영이 없어요",
   },
 } as const;

@@ -81,7 +81,7 @@ const MealLayout = memo(function MealLayout({ initialData, initialDate }: MealLa
           </div>
         )}
 
-        <div className="flex w-full flex-1 flex-col gap-6 overflow-y-auto px-4 md:px-0">
+        <div className="flex min-h-0 w-full flex-1 flex-col gap-4 px-4 md:flex-row md:items-stretch md:px-0">
           {displayMeals.map((meal) => (
             <MealSection
               key={meal.time}
