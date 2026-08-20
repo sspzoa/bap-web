@@ -26,7 +26,7 @@ export const SITES: Record<SiteId, SiteConfig> = {
     url: "https://밥.net",
     hosts: ["밥.net", "xn--rh3b.net", "www.xn--rh3b.net"],
     apiPath: "/kdmhs",
-    description: "한국디지털미디어고등학교 오늘의 급식. 아침·점심·저녁 메뉴를 한눈에 확인하세요.",
+    description: "한국디지털미디어고등학교 급식. 아침·점심·저녁 메뉴를 한눈에 확인하세요.",
     keywords: ["급식", "디미고", "한국디지털미디어고등학교", "식단", "밥.net"],
     manifestName: "밥.net",
     googleSiteVerification: "Autqjgf5q34Q-Bi4JnRwIuiJW-WzwkCU6Y4wlGU0IVU",
@@ -43,7 +43,7 @@ export const SITES: Record<SiteId, SiteConfig> = {
     url: "https://dflex.밥.net",
     hosts: ["dflex.밥.net", "dflex.xn--rh3b.net"],
     apiPath: "/dgu",
-    description: "동국대학교 경영관 D-Flex 오늘의 학식. 중식·석식 코너 메뉴를 확인하세요.",
+    description: "동국대학교 경영관 D-Flex 학식. 중식·석식 코너 메뉴를 확인하세요.",
     keywords: ["학식", "동국대", "D-Flex", "경영관", "식단", "밥.net"],
     manifestName: "D-Flex 식단",
     errorMessages: {

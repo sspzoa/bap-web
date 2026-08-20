@@ -3,20 +3,8 @@ import { loadOgFont } from "@/shared/lib/ogFont";
 
 export const OG_SIZE = { width: 1200, height: 630 };
 
-export async function renderOgCard({
-  title,
-  heading,
-  subtitle,
-  lines,
-}: {
-  title: string;
-  heading: string;
-  subtitle?: string;
-  lines: string[];
-}) {
-  const body = lines.length > 0 ? lines : [];
-  const fontText = [title, heading, subtitle, ...body].filter(Boolean).join("");
-  const fonts = await loadOgFont(fontText);
+export async function renderOgCard({ mark, caption }: { mark: string; caption: string }) {
+  const fonts = await loadOgFont(`${mark}${caption}`);
 
   return new ImageResponse(
     <div
@@ -25,27 +13,15 @@ export async function renderOgCard({
         height: "100%",
         display: "flex",
         flexDirection: "column",
-        justifyContent: "space-between",
-        padding: 72,
-        background: "linear-gradient(160deg, #1a120c 0%, #3d2a1c 55%, #c45c26 100%)",
-        color: "white",
+        alignItems: "center",
+        justifyContent: "center",
+        background: "#ffffff",
+        color: "#111111",
         fontFamily: fonts.length > 0 ? "Noto Sans KR" : "sans-serif",
       }}>
-      <div style={{ display: "flex", flexDirection: "column" }}>
-        <div style={{ fontSize: 40, opacity: 0.72, marginBottom: 12 }}>{title}</div>
-        <div style={{ fontSize: 64, lineHeight: 1.15 }}>{heading}</div>
-        {subtitle ? <div style={{ fontSize: 36, opacity: 0.8, marginTop: 12 }}>{subtitle}</div> : null}
-      </div>
-      <div style={{ display: "flex", flexDirection: "column" }}>
-        {body.length > 0 ? (
-          body.map((line) => (
-            <div key={line} style={{ fontSize: 34, opacity: 0.95, marginBottom: 10 }}>
-              {line}
-            </div>
-          ))
-        ) : (
-          <div style={{ fontSize: 34, opacity: 0.8 }}>사이트를 선택하세요.</div>
-        )}
+      <div style={{ fontSize: 120, fontWeight: 700, letterSpacing: "-0.06em", lineHeight: 1 }}>{mark}</div>
+      <div style={{ fontSize: 36, fontWeight: 700, letterSpacing: "-0.04em", marginTop: 28, opacity: 0.55 }}>
+        {caption}
       </div>
     </div>,
     { ...OG_SIZE, fonts },

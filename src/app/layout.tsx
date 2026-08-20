@@ -3,11 +3,7 @@ import type { ReactNode } from "react";
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
-import { getMealDataServerSide } from "@/shared/lib/mealService";
-import { summarizeMealPreview } from "@/shared/lib/ogMeal";
 import QueryProvider from "@/shared/lib/provider";
-import { getInitialDateForServer } from "@/shared/utils/dateUtils";
-import { formatToDateString } from "@/shared/utils/timeZoneUtils";
 import { getSiteConfig } from "@/sites/config";
 import { SiteProvider } from "@/sites/context";
 import { getSiteId, isSelectPath } from "@/sites/server";
@@ -45,12 +41,7 @@ export async function generateMetadata(): Promise<Metadata> {
   }
 
   const config = getSiteConfig(siteId);
-  const date = getInitialDateForServer();
-  const meal = await getMealDataServerSide(config.apiPath, formatToDateString(date));
-  const preview = summarizeMealPreview(siteId, meal?.data);
-  const dateLabel = `${date.getMonth() + 1}월 ${date.getDate()}일`;
-  const description =
-    preview.length > 0 ? `${dateLabel} ${config.schoolName} 식단: ${preview.join(", ")}` : config.description;
+  const description = config.description;
 
   return {
     metadataBase: new URL(config.url),
