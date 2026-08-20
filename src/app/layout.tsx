@@ -4,14 +4,14 @@ import "./globals.css";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import QueryProvider from "@/shared/lib/provider";
-import { getSiteConfig } from "@/sites/config";
+import { BRAND, getSiteConfig } from "@/sites/config";
 import { SiteProvider } from "@/sites/context";
 import { getSiteId, isSelectPath } from "@/sites/server";
 
 const FALLBACK_METADATA = {
-  title: "밥.net",
-  description: "학교별 식단. 사이트를 선택하세요.",
-  url: "https://밥.net",
+  title: BRAND.title,
+  description: BRAND.tagline,
+  url: BRAND.url,
 };
 
 export async function generateMetadata(): Promise<Metadata> {

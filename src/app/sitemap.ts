@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { SITES } from "@/sites/config";
+import { BRAND, SITES } from "@/sites/config";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
@@ -12,7 +12,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1,
     })),
     {
-      url: "https://밥.net/select",
+      url: `${BRAND.url}/select`,
       lastModified: now,
       changeFrequency: "monthly",
       priority: 0.3,

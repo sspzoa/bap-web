@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { getSiteConfig } from "@/sites/config";
+import { BRAND, getSiteConfig } from "@/sites/config";
 import { getSiteId } from "@/sites/server";
 
 export default async function manifest(): Promise<MetadataRoute.Manifest> {
@@ -7,9 +7,9 @@ export default async function manifest(): Promise<MetadataRoute.Manifest> {
   const config = siteId
     ? getSiteConfig(siteId)
     : {
-        manifestName: "밥.net",
-        title: "밥.net",
-        description: "학교별 식단. 사이트를 선택하세요.",
+        manifestName: BRAND.title,
+        title: BRAND.title,
+        description: BRAND.tagline,
       };
 
   return {

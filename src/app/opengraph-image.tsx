@@ -1,5 +1,5 @@
 import { OG_SIZE, renderOgCard } from "@/shared/lib/ogCard";
-import { getSiteConfig } from "@/sites/config";
+import { BRAND, getSiteConfig } from "@/sites/config";
 import { getSiteId } from "@/sites/server";
 
 export const runtime = "nodejs";
@@ -13,7 +13,7 @@ export default async function OpenGraphImage() {
   const config = siteId ? getSiteConfig(siteId) : null;
 
   return renderOgCard({
-    mark: config?.title ?? "밥.net",
-    caption: config?.schoolName ?? "학교별 식단",
+    mark: config?.title ?? BRAND.title,
+    caption: config?.schoolName ?? BRAND.tagline,
   });
 }

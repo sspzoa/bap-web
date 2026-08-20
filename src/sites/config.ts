@@ -53,6 +53,12 @@ export const SITES: Record<SiteId, SiteConfig> = {
   },
 };
 
+export const BRAND = {
+  title: "밥.net",
+  tagline: "한눈에 보는 학교 식단",
+  url: "https://밥.net",
+} as const;
+
 export const SITE_IDS = Object.keys(SITES) as SiteId[];
 
 export function isSiteId(value: string | null | undefined): value is SiteId {
