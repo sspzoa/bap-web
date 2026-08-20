@@ -1,9 +1,21 @@
 import type { MetadataRoute } from "next";
+import { getSiteConfig } from "@/sites/config";
+import { getSiteId } from "@/sites/server";
 
-export default function manifest(): MetadataRoute.Manifest {
+export default async function manifest(): Promise<MetadataRoute.Manifest> {
+  const siteId = await getSiteId();
+  const config = getSiteConfig(siteId);
+
   return {
+    name: config.manifestName,
+    short_name: config.title,
+    description: config.description,
+    start_url: "/",
     display: "fullscreen",
     orientation: "any",
+    lang: "ko",
+    background_color: "#1a120c",
+    theme_color: "#1a120c",
     icons: [
       {
         src: "/favicon.ico",

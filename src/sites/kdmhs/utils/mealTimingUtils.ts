@@ -1,5 +1,8 @@
-import { CACHE_SETTINGS, MEAL_TIME_THRESHOLDS, UI_CONSTANTS } from "@/shared/lib/constants";
+import { CACHE_SETTINGS, MEAL_TIME_THRESHOLDS } from "@/shared/lib/constants";
 import { getKoreanHours } from "@/shared/utils/timeZoneUtils";
+
+export const KDMHS_SCROLL_SECTIONS = 3;
+export const KDMHS_BREAKFAST_END = 8;
 
 type MealTiming = {
   meal: "breakfast" | "lunch" | "dinner";
@@ -17,7 +20,7 @@ export const getMealTimingByHour = (hour: number): MealTiming => {
 
   let result: MealTiming;
 
-  if (hour >= MEAL_TIME_THRESHOLDS.DINNER_START || hour < MEAL_TIME_THRESHOLDS.BREAKFAST_END) {
+  if (hour >= MEAL_TIME_THRESHOLDS.DINNER_START || hour < KDMHS_BREAKFAST_END) {
     result = {
       meal: "breakfast",
       scrollPosition: 0,
@@ -56,7 +59,7 @@ export const calculateOpacityFromScroll = (scrollPosition: number, totalWidth: n
     return cached;
   }
 
-  const sectionWidth = totalWidth / UI_CONSTANTS.SCROLL_SECTIONS;
+  const sectionWidth = totalWidth / KDMHS_SCROLL_SECTIONS;
   let result: { breakfast: number; lunch: number; dinner: number };
 
   if (scrollPosition < sectionWidth) {

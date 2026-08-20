@@ -1,5 +1,4 @@
 export const MEAL_TIME_THRESHOLDS = {
-  BREAKFAST_END: 8,
   LUNCH_END: 14,
   DINNER_START: 20,
 } as const;
@@ -14,18 +13,5 @@ export const BREAKPOINTS = {
 } as const;
 
 export const UI_CONSTANTS = {
-  SCROLL_SECTIONS: 3,
   DEBOUNCE_DELAY: 100,
-} as const;
-
-export const ERROR_MESSAGES = {
-  kdmhs: {
-    NO_MEAL_DATA: "정보가 없어요",
-    NO_MEAL_OPERATION: "급식 운영이 없어요",
-    NO_SIMPLE_MEAL: "간편식이 없어요",
-  },
-  dgu: {
-    NO_MEAL_DATA: "정보가 없어요",
-    NO_MEAL_OPERATION: "운영이 없어요",
-  },
 } as const;

@@ -1,26 +1,24 @@
-import Image from "next/image";
+import type { Metadata } from "next";
 import Glass from "@/shared/components/common/glass";
+import { MealDesktopBackground } from "@/shared/components/mealDesktopBackground";
 import { SITES, type SiteId } from "@/sites/config";
 
 const SITE_IDS: SiteId[] = ["kdmhs", "dgu"];
 
+export const metadata: Metadata = {
+  title: "사이트 선택",
+  description: "한국디지털미디어고등학교와 동국대학교 D-Flex 식단 사이트 중 선택할 수 있습니다.",
+  robots: { index: true, follow: true },
+};
+
 export default function SelectPage() {
   return (
     <div className="relative flex h-svh items-center justify-center overflow-hidden p-4">
-      <div className="fixed inset-0 h-full w-full">
-        <Image
-          src="/img/dinner.svg"
-          alt="배경"
-          fill
-          style={{ objectFit: "cover", objectPosition: "50% 90%" }}
-          priority
-          draggable={false}
-        />
-      </div>
+      <MealDesktopBackground className="fixed inset-0 h-full w-full" />
 
       <div className="z-10 flex w-full max-w-[600px] flex-col items-center gap-6">
         <div className="flex flex-col items-center gap-2">
-          <p className="font-bold text-[40px] tracking-tight">밥.net</p>
+          <h1 className="font-bold text-[40px] tracking-tight">밥.net</h1>
           <p className="text-[16px] opacity-60">사이트를 선택하세요</p>
         </div>
 

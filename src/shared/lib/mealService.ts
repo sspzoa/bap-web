@@ -1,8 +1,41 @@
-import type { MealResponse, MealSearchResponse } from "@/shared/types/index";
-import { handleMealError, handleMealResponse } from "./mealServiceHelpers";
+import type { MealFetchResult, MealSearchResponse } from "@/shared/types/index";
 
-const API_BASE_URL = "https://api.xn--rh3b.net";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? "https://api.xn--rh3b.net";
 const API_KEY_STORAGE_KEY = "refresh_api_key";
+
+async function handleMealResponse<T>(response: Response): Promise<MealFetchResult<T>> {
+  if (!response.ok) {
+    let errorMessage: string | null = null;
+
+    try {
+      const errorData = await response.json();
+      if (errorData?.error) {
+        errorMessage = errorData.error;
+      }
+    } catch {}
+
+    return {
+      data: null,
+      error: errorMessage,
+      isError: true,
+    };
+  }
+
+  const responseData = await response.json();
+  return {
+    data: (responseData.data as T) ?? null,
+    error: null,
+    isError: false,
+  };
+}
+
+function handleMealError(error: unknown): MealFetchResult<never> {
+  return {
+    data: null,
+    error: error instanceof Error ? error.message : null,
+    isError: true,
+  };
+}
 
 const getRefreshApiKey = (): string | null => {
   const storedApiKey = localStorage.getItem(API_KEY_STORAGE_KEY);
@@ -28,27 +61,27 @@ const requestMealRefresh = async (apiPath: string, date: string, apiKey: string)
   });
 };
 
-export const fetchMealData = async (apiPath: string, date: string): Promise<MealResponse> => {
+export const fetchMealData = async <T>(apiPath: string, date: string): Promise<MealFetchResult<T>> => {
   try {
     const response = await fetch(`${API_BASE_URL}${apiPath}/${date}`);
-    return await handleMealResponse(response);
+    return await handleMealResponse<T>(response);
   } catch (error) {
     return handleMealError(error);
   }
 };
 
-export const getMealDataServerSide = async (apiPath: string, date: string): Promise<MealResponse | null> => {
+export const getMealDataServerSide = async <T>(apiPath: string, date: string): Promise<MealFetchResult<T> | null> => {
   try {
     const response = await fetch(`${API_BASE_URL}${apiPath}/${date}`, {
       cache: "no-store",
     });
-    return await handleMealResponse(response);
+    return await handleMealResponse<T>(response);
   } catch (error) {
     return handleMealError(error);
   }
 };
 
-export const refreshMealData = async (apiPath: string, date: string): Promise<MealResponse> => {
+export const refreshMealData = async <T>(apiPath: string, date: string): Promise<MealFetchResult<T>> => {
   const apiKey = getRefreshApiKey();
   if (!apiKey) {
     return handleMealError(new Error("API KEY is required."));
@@ -68,20 +101,27 @@ export const refreshMealData = async (apiPath: string, date: string): Promise<Me
       response = await requestMealRefresh(apiPath, date, newApiKey);
     }
 
-    return await handleMealResponse(response);
+    return await handleMealResponse<T>(response);
   } catch (error) {
     return handleMealError(error);
   }
 };
 
-export const searchFoodImage = async (foodName: string): Promise<MealSearchResponse | null> => {
+export const searchFoodImage = async (apiPath: string, foodName: string): Promise<MealSearchResponse | null> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/search/${encodeURIComponent(foodName)}`);
+    const response = await fetch(`${API_BASE_URL}${apiPath}/search/${encodeURIComponent(foodName)}`);
     if (!response.ok) {
       return null;
     }
-    const data = await response.json();
-    return data as MealSearchResponse;
+    const body = await response.json();
+    return {
+      foodName: body.foodName,
+      image: body.image,
+      date: body.date,
+      mealType: body.mealType,
+      matchedMenu: body.matchedMenu,
+      section: body.section,
+    };
   } catch {
     return null;
   }

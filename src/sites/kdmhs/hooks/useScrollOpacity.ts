@@ -1,8 +1,7 @@
 "use client";
 
 import { useCallback, useRef, useState } from "react";
-import { UI_CONSTANTS } from "@/shared/lib/constants";
-import { calculateOpacityFromScroll } from "@/sites/kdmhs/utils/mealTimingUtils";
+import { calculateOpacityFromScroll, KDMHS_SCROLL_SECTIONS } from "@/sites/kdmhs/utils/mealTimingUtils";
 
 export const useScrollOpacity = () => {
   const scrollContainerRef = useRef<HTMLDivElement | null>(null);
@@ -15,7 +14,7 @@ export const useScrollOpacity = () => {
     const scrollPosition = scrollContainer.scrollLeft;
     const totalWidth = scrollContainer.scrollWidth - scrollContainer.clientWidth;
 
-    const visibleSections = UI_CONSTANTS.SCROLL_SECTIONS;
+    const visibleSections = KDMHS_SCROLL_SECTIONS;
     const adjustedTotalWidth = (totalWidth / (visibleSections - 1)) * visibleSections;
 
     if (Math.abs(scrollPosition - totalWidth) < 1) {

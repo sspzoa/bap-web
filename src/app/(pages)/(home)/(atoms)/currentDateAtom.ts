@@ -1,4 +1,4 @@
 import { atom } from "jotai";
-import { getKoreanDate } from "@/shared/utils/timeZoneUtils";
+import { getMealDisplayDate } from "@/shared/utils/dateUtils";
 
-export const currentDateAtom = atom<Date>(getKoreanDate());
+export const currentDateAtom = atom<Date>(getMealDisplayDate());

@@ -4,7 +4,7 @@ import { ImagePopup } from "@/sites/kdmhs/components/imagePopup";
 import { useFoodImageSearch } from "@/sites/kdmhs/hooks/useFoodImageSearch";
 import type { MealSectionProps } from "@/sites/kdmhs/types";
 import Glass from "@/shared/components/common/glass";
-import { ERROR_MESSAGES } from "@/shared/lib/constants";
+import { SITES } from "@/sites/config";
 import type { MealSearchResponse } from "@/shared/types/index";
 
 export const MealSection = memo(function MealSection({
@@ -89,7 +89,7 @@ export const MealSection = memo(function MealSection({
     if (isError) {
       return (
         <div className="flex flex-row gap-2">
-          <p className="font-semibold text-[20px]">{errorMessage || ERROR_MESSAGES.kdmhs.NO_MEAL_DATA}</p>
+          <p className="font-semibold text-[20px]">{errorMessage || SITES.kdmhs.errorMessages.noMealData}</p>
         </div>
       );
     }
@@ -116,7 +116,7 @@ export const MealSection = memo(function MealSection({
 
     return (
       <div className="flex flex-row gap-2">
-        <p className="font-semibold text-[20px]">{ERROR_MESSAGES.kdmhs.NO_MEAL_OPERATION}</p>
+        <p className="font-semibold text-[20px]">{SITES.kdmhs.errorMessages.noMealOperation}</p>
       </div>
     );
   }, [regularItems, simpleMealItems, plusItems, isLoading, isError, errorMessage, title, isMealOperationEmpty]);

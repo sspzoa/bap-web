@@ -1,7 +1,0 @@
-rmsid ahens User-agent: *
-Allow: /
-
-User-agent: *
-Allow: /
-
-Sitemap: https://밥.net/sitemap.xml

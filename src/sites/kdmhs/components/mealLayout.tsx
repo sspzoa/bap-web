@@ -1,18 +1,15 @@
 "use client";
 
-import { useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns/format";
 import { ko } from "date-fns/locale/ko";
-import { memo, useCallback, useEffect, useMemo } from "react";
-import { MealNavigationBar } from "@/app/(pages)/(home)/(components)/mealNavigationBar";
+import { memo, useCallback, useMemo } from "react";
+import { MealPageShell } from "@/shared/components/mealPageShell";
 import { MealBackgroundImages } from "@/sites/kdmhs/components/mealBackgroundImages";
-import { MealDesktopBackground } from "@/sites/kdmhs/components/mealDesktopBackground";
 import { MealSection } from "@/sites/kdmhs/components/mealSection";
 import { useMealData } from "@/sites/kdmhs/hooks/useMealData";
 import type { MealLayoutProps } from "@/sites/kdmhs/types";
-import LoadingSpinner from "@/shared/components/common/loadingSpinner";
 
-const MealLayout = memo(function MealLayout({ initialData, initialDate, initialOpacity }: MealLayoutProps) {
+const MealLayout = memo(function MealLayout({ initialData, initialOpacity }: MealLayoutProps) {
   const {
     currentDate,
     data,
@@ -31,20 +28,9 @@ const MealLayout = memo(function MealLayout({ initialData, initialDate, initialO
     handleScroll,
     dateInitialized,
     initialLoad,
-  } = useMealData();
+  } = useMealData(initialData);
 
-  const queryClient = useQueryClient();
-
-  useEffect(() => {
-    if (initialData) {
-      const formattedInitialDate = format(initialDate, "yyyy-MM-dd");
-      queryClient.setQueryData(["mealData", formattedInitialDate], initialData);
-    }
-  }, [initialData, initialDate, queryClient]);
-
-  const showMealContent = useMemo(() => {
-    return dateInitialized || !initialLoad;
-  }, [dateInitialized, initialLoad]);
+  const showMealContent = useMemo(() => dateInitialized || !initialLoad, [dateInitialized, initialLoad]);
 
   const backgroundOpacities = useMemo(
     () => ({
@@ -111,37 +97,21 @@ const MealLayout = memo(function MealLayout({ initialData, initialDate, initialO
   );
 
   return (
-    <div className="relative flex h-svh items-center justify-center overflow-hidden py-4 md:px-4 md:py-8">
-      <MealBackgroundImages backgroundOpacities={backgroundOpacities} />
-      <MealDesktopBackground />
-
-      <div className="z-10 flex h-full max-h-[900px] w-full max-w-[1500px] flex-col-reverse gap-4 md:flex-col md:px-4">
-        <MealNavigationBar
-          onPrevDay={handlePrevDay}
-          onNextDay={handleNextDay}
-          onResetToToday={handleResetToToday}
-          onRefresh={handleRefresh}
-          formattedCurrentDate={formattedCurrentDate}
-        />
-
-        {isLoading && !initialLoad && (
-          <div className="pointer-events-none absolute inset-0 z-20 flex items-center justify-center">
-            <LoadingSpinner />
-          </div>
-        )}
-
-        <div
-          ref={scrollContainerRef}
-          onScroll={handleScroll}
-          className="flex w-full flex-1 snap-x snap-mandatory flex-row gap-4 overflow-x-auto px-4 md:snap-none md:px-0">
-          <MealSection {...mealSectionProps.breakfast} {...commonMealProps} />
-
-          <MealSection {...mealSectionProps.lunch} {...commonMealProps} />
-
-          <MealSection {...mealSectionProps.dinner} {...commonMealProps} />
-        </div>
-      </div>
-    </div>
+    <MealPageShell
+      background={<MealBackgroundImages backgroundOpacities={backgroundOpacities} />}
+      formattedCurrentDate={formattedCurrentDate}
+      onPrevDay={handlePrevDay}
+      onNextDay={handleNextDay}
+      onResetToToday={handleResetToToday}
+      onRefresh={handleRefresh}
+      isLoading={isLoading}
+      initialLoad={initialLoad}
+      scrollContainerRef={scrollContainerRef}
+      onScroll={handleScroll}>
+      <MealSection {...mealSectionProps.breakfast} {...commonMealProps} />
+      <MealSection {...mealSectionProps.lunch} {...commonMealProps} />
+      <MealSection {...mealSectionProps.dinner} {...commonMealProps} />
+    </MealPageShell>
   );
 });
 

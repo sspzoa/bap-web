@@ -1,100 +1,36 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { addDays, subDays } from "date-fns";
-import { useAtom } from "jotai";
-import { useCallback, useEffect, useMemo } from "react";
-import { currentDateAtom } from "@/app/(pages)/(home)/(atoms)/currentDateAtom";
+import { useCallback, useEffect } from "react";
+import { useMealQuery } from "@/shared/hooks/useMealQuery";
+import type { MealFetchResult } from "@/shared/types/index";
 import { useResponsiveness } from "@/app/(pages)/(home)/(hooks)/useResponsiveness";
-import { SITES } from "@/sites/config";
-import { useSiteId } from "@/sites/context";
-import type { MealData } from "@/sites/kdmhs/types";
 import { useMealInitialization } from "@/sites/kdmhs/hooks/useMealInitialization";
 import { useScrollOpacity } from "@/sites/kdmhs/hooks/useScrollOpacity";
-import { fetchMealData, refreshMealData } from "@/shared/lib/mealService";
-import { ERROR_MESSAGES } from "@/shared/lib/constants";
-import { formatToDateString, getKoreanDate } from "@/shared/utils/timeZoneUtils";
+import type { MealData } from "@/sites/kdmhs/types";
 
-export const useMealData = () => {
-  const siteId = useSiteId();
-  const apiPath = SITES[siteId].apiPath;
-  const [currentDate, setCurrentDate] = useAtom(currentDateAtom);
-  const formattedDate = formatToDateString(currentDate);
-  const queryClient = useQueryClient();
-
+export const useMealData = (initialData?: MealFetchResult<MealData> | null) => {
+  const query = useMealQuery<MealData>(initialData);
   const { scrollContainerRef, breakfastOpacity, lunchOpacity, dinnerOpacity, handleScroll, setOpacity } =
     useScrollOpacity();
-
   const { isMobile } = useResponsiveness();
-
   const { initialLoad, dateInitialized, setDateInitialized, setMealByTime } = useMealInitialization(
     scrollContainerRef,
     setOpacity,
-    setCurrentDate,
+    query.setCurrentDate,
   );
-
-  const { data: responseData, isLoading } = useQuery({
-    queryKey: ["mealData", formattedDate],
-    queryFn: () => fetchMealData(apiPath, formattedDate),
-    staleTime: 300000,
-    retry: false,
-  });
-
-  const data = useMemo(() => (responseData?.data as MealData | null) ?? null, [responseData?.data]);
-  const isError = useMemo(() => responseData?.isError || false, [responseData?.isError]);
-  const errorMessage = useMemo(
-    () => responseData?.error || ERROR_MESSAGES.kdmhs.NO_MEAL_DATA,
-    [responseData?.error],
-  );
-
-  const prefetchQueries = useCallback(() => {
-    const prevDate = subDays(currentDate, 1);
-    const prevFormattedDate = formatToDateString(prevDate);
-    queryClient.prefetchQuery({
-      queryKey: ["mealData", prevFormattedDate],
-      queryFn: () => fetchMealData(apiPath, prevFormattedDate),
-      staleTime: 300000,
-      retry: false,
-    });
-
-    const nextDate = addDays(currentDate, 1);
-    const nextFormattedDate = formatToDateString(nextDate);
-    queryClient.prefetchQuery({
-      queryKey: ["mealData", nextFormattedDate],
-      queryFn: () => fetchMealData(apiPath, nextFormattedDate),
-      staleTime: 300000,
-      retry: false,
-    });
-  }, [currentDate, queryClient, apiPath]);
-
-  useEffect(() => {
-    prefetchQueries();
-  }, [prefetchQueries]);
 
   const handlePrevDay = useCallback(() => {
-    setCurrentDate((prevDate) => subDays(prevDate, 1));
+    query.handlePrevDay();
     setDateInitialized(true);
-  }, [setCurrentDate, setDateInitialized]);
+  }, [query.handlePrevDay, setDateInitialized]);
 
   const handleNextDay = useCallback(() => {
-    setCurrentDate((prevDate) => addDays(prevDate, 1));
+    query.handleNextDay();
     setDateInitialized(true);
-  }, [setCurrentDate, setDateInitialized]);
+  }, [query.handleNextDay, setDateInitialized]);
 
   const resetToToday = useCallback(() => {
-    setCurrentDate(getKoreanDate());
+    query.resetToToday();
     setDateInitialized(true);
-  }, [setCurrentDate, setDateInitialized]);
-
-  const handleRefresh = useCallback(async () => {
-    try {
-      const refreshedData = await refreshMealData(apiPath, formattedDate);
-      if (!refreshedData.isError) {
-        queryClient.setQueryData(["mealData", formattedDate], refreshedData);
-        alert("Meal data refreshed.");
-      }
-    } catch {
-      console.error("Failed to refresh meal data.");
-    }
-  }, [formattedDate, queryClient, apiPath]);
+  }, [query.resetToToday, setDateInitialized]);
 
   const handleMobileLayout = useCallback(() => {
     if (isMobile) {
@@ -109,16 +45,16 @@ export const useMealData = () => {
   }, [handleMobileLayout]);
 
   return {
-    currentDate,
-    setCurrentDate,
-    data,
-    isLoading,
-    isError,
-    errorMessage,
+    currentDate: query.currentDate,
+    setCurrentDate: query.setCurrentDate,
+    data: query.data,
+    isLoading: query.isLoading,
+    isError: query.isError,
+    errorMessage: query.errorMessage,
     handlePrevDay,
     handleNextDay,
     resetToToday,
-    handleRefresh,
+    handleRefresh: query.handleRefresh,
     setMealByTime,
     scrollContainerRef,
     breakfastOpacity,

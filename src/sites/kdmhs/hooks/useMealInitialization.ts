@@ -1,11 +1,12 @@
 import { useQueryClient } from "@tanstack/react-query";
-import { addDays } from "date-fns";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { prefetchMealDate } from "@/shared/lib/queryKeys";
+import { getMealDisplayDate } from "@/shared/utils/dateUtils";
+import { formatToDateString, getKoreanDate } from "@/shared/utils/timeZoneUtils";
 import { SITES } from "@/sites/config";
 import { useSiteId } from "@/sites/context";
-import { fetchMealData } from "@/shared/lib/mealService";
-import { getCurrentMealTiming } from "@/sites/kdmhs/utils/mealTimingUtils";
-import { formatToDateString, getKoreanDate, getKoreanHours } from "@/shared/utils/timeZoneUtils";
+import { getCurrentMealTiming, KDMHS_SCROLL_SECTIONS } from "@/sites/kdmhs/utils/mealTimingUtils";
+import type { MealData } from "@/sites/kdmhs/types";
 
 export const useMealInitialization = (
   scrollContainerRef: React.RefObject<HTMLDivElement | null>,
@@ -22,38 +23,24 @@ export const useMealInitialization = (
     if (!scrollContainerRef?.current) return;
 
     const now = getKoreanDate();
-    const koreanHour = getKoreanHours();
+    const displayDate = getMealDisplayDate(now);
     const scrollContainer = scrollContainerRef.current;
-    const scrollWidth = scrollContainer.scrollWidth / 3;
-
+    const scrollWidth = scrollContainer.scrollWidth / KDMHS_SCROLL_SECTIONS;
     const mealTiming = getCurrentMealTiming();
-    let newDate = now;
-    let shouldUpdateDate = false;
+    const rolledOver = formatToDateString(displayDate) !== formatToDateString(now);
 
-    if (koreanHour >= 20) {
-      newDate = addDays(now, 1);
-      shouldUpdateDate = true;
-
-      const tomorrowFormatted = formatToDateString(newDate);
-      queryClient.prefetchQuery({
-        queryKey: ["mealData", tomorrowFormatted],
-        queryFn: () => fetchMealData(apiPath, tomorrowFormatted),
-        staleTime: 300000,
-        retry: false,
-      });
+    if (rolledOver) {
+      void prefetchMealDate<MealData>(queryClient, siteId, apiPath, formatToDateString(displayDate));
     }
 
     scrollContainer.scrollLeft = mealTiming.scrollPosition * scrollWidth;
     setOpacity(mealTiming.opacity.breakfast, mealTiming.opacity.lunch, mealTiming.opacity.dinner);
-
     setDateInitialized(true);
 
-    if (shouldUpdateDate && updateCurrentDate) {
-      updateCurrentDate(newDate);
+    if (rolledOver && updateCurrentDate) {
+      updateCurrentDate(displayDate);
     }
-  }, [scrollContainerRef, setOpacity, queryClient, updateCurrentDate, apiPath]);
-
-  const timeoutValue = useMemo(() => 0, []);
+  }, [scrollContainerRef, setOpacity, queryClient, updateCurrentDate, apiPath, siteId]);
 
   useEffect(() => {
     if (!initialLoad) return;
@@ -62,9 +49,9 @@ export const useMealInitialization = (
       setTimeout(() => {
         setMealByTime();
         setInitialLoad(false);
-      }, timeoutValue);
+      }, 0);
     }
-  }, [initialLoad, setMealByTime, timeoutValue]);
+  }, [initialLoad, setMealByTime]);
 
   return {
     initialLoad,

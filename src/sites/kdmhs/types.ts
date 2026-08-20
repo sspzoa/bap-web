@@ -1,4 +1,4 @@
-import type { MealResponse } from "@/shared/types/index";
+import type { MealFetchResult } from "@/shared/types/index";
 
 export interface MealItem {
   regular: string[];
@@ -36,7 +36,6 @@ export interface InitialOpacity {
 }
 
 export interface MealLayoutProps {
-  initialData: MealResponse | null;
-  initialDate: Date;
+  initialData: MealFetchResult<MealData> | null;
   initialOpacity: InitialOpacity;
 }

@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { memo } from "react";
 import Glass from "@/shared/components/common/glass";
-import { ERROR_MESSAGES } from "@/shared/lib/constants";
+import { SITES } from "@/sites/config";
 import type { MealSectionProps, MenuCorner } from "@/sites/dgu/types";
 
 const MEAL_ICONS: Record<string, string> = {
@@ -43,10 +43,10 @@ export const MealSection = memo(function MealSection({
 }: MealSectionProps) {
   const showCorners = !isLoading && !isError && meal.corners.length > 0;
   const fallbackMessage = isError
-    ? errorMessage || ERROR_MESSAGES.dgu.NO_MEAL_DATA
+    ? errorMessage || SITES.dgu.errorMessages.noMealData
     : isLoading
       ? ""
-      : ERROR_MESSAGES.dgu.NO_MEAL_OPERATION;
+      : SITES.dgu.errorMessages.noMealOperation;
 
   // 모바일은 카드 1장이 화면 전체를 차지하는 스와이프(snap) 섹션, 데스크톱은 2개가 좌우로 나란히(md:flex-1).
   // min-h-0 + Glass 기본 overflow-y-auto 로 내용이 넘치면 카드 내부에서 세로 스크롤.
