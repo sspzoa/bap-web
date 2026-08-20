@@ -4,7 +4,6 @@ import { prefetchMealDate } from "@/shared/lib/queryKeys";
 import { getMealDisplayDate } from "@/shared/utils/dateUtils";
 import { formatToDateString, getKoreanDate } from "@/shared/utils/timeZoneUtils";
 import { SITES } from "@/sites/config";
-import { useSiteId } from "@/sites/context";
 import { getCurrentMealTiming, KDMHS_SCROLL_SECTIONS } from "@/sites/kdmhs/utils/mealTimingUtils";
 import type { MealData } from "@/sites/kdmhs/types";
 
@@ -13,8 +12,7 @@ export const useMealInitialization = (
   setOpacity: (breakfast: number, lunch: number, dinner: number) => void,
   updateCurrentDate?: (date: Date) => void,
 ) => {
-  const siteId = useSiteId();
-  const apiPath = SITES[siteId].apiPath;
+  const { id: siteId, apiPath } = SITES.kdmhs;
   const [initialLoad, setInitialLoad] = useState(true);
   const [dateInitialized, setDateInitialized] = useState(false);
   const queryClient = useQueryClient();

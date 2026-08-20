@@ -4,13 +4,19 @@ import { getSiteId } from "@/sites/server";
 
 export default async function manifest(): Promise<MetadataRoute.Manifest> {
   const siteId = await getSiteId();
-  const config = getSiteConfig(siteId);
+  const config = siteId
+    ? getSiteConfig(siteId)
+    : {
+        manifestName: "밥.net",
+        title: "밥.net",
+        description: "학교별 식단. 사이트를 선택하세요.",
+      };
 
   return {
     name: config.manifestName,
     short_name: config.title,
     description: config.description,
-    start_url: "/",
+    start_url: siteId ? "/" : "/select",
     display: "fullscreen",
     orientation: "any",
     lang: "ko",

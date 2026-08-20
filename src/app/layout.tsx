@@ -12,8 +12,23 @@ import { getSiteConfig } from "@/sites/config";
 import { SiteProvider } from "@/sites/context";
 import { getSiteId } from "@/sites/server";
 
+const FALLBACK_METADATA = {
+  title: "밥.net",
+  description: "학교별 식단. 사이트를 선택하세요.",
+  url: "https://밥.net",
+};
+
 export async function generateMetadata(): Promise<Metadata> {
   const siteId = await getSiteId();
+  if (!siteId) {
+    return {
+      metadataBase: new URL(FALLBACK_METADATA.url),
+      title: FALLBACK_METADATA.title,
+      description: FALLBACK_METADATA.description,
+      alternates: { canonical: `${FALLBACK_METADATA.url}/select` },
+    };
+  }
+
   const config = getSiteConfig(siteId);
   const date = getInitialDateForServer();
   const meal = await getMealDataServerSide(config.apiPath, formatToDateString(date));
@@ -68,15 +83,7 @@ export const viewport: Viewport = {
   viewportFit: "cover",
 };
 
-function JsonLd({
-  name,
-  description,
-  url,
-}: {
-  name: string;
-  description: string;
-  url: string;
-}) {
+function JsonLd({ name, description, url }: { name: string; description: string; url: string }) {
   const schema = {
     "@context": "https://schema.org",
     "@type": "WebApplication",
@@ -96,24 +103,22 @@ interface RootLayoutProps {
 
 export default async function RootLayout({ children }: RootLayoutProps) {
   const siteId = await getSiteId();
-  const config = getSiteConfig(siteId);
+  const config = siteId ? getSiteConfig(siteId) : null;
 
   return (
     <html lang="ko">
       <head>
-        {siteId === "kdmhs" && (
-          <>
-            <meta name="google-site-verification" content="Autqjgf5q34Q-Bi4JnRwIuiJW-WzwkCU6Y4wlGU0IVU" />
-            <script
-              async
-              src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2186209581588169"
-              crossOrigin="anonymous"
-            />
-          </>
+        {config?.googleSiteVerification && <meta name="google-site-verification" content={config.googleSiteVerification} />}
+        {config?.adsenseClient && (
+          <script
+            async
+            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${config.adsenseClient}`}
+            crossOrigin="anonymous"
+          />
         )}
       </head>
       <body className="antialiased">
-        <JsonLd name={config.manifestName} description={config.description} url={config.url} />
+        {config && <JsonLd name={config.manifestName} description={config.description} url={config.url} />}
         <Analytics />
         <SpeedInsights />
         <SiteProvider siteId={siteId}>

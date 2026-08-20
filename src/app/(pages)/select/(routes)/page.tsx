@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import Glass from "@/shared/components/common/glass";
 import { MealDesktopBackground } from "@/shared/components/mealDesktopBackground";
-import { SITES, type SiteId } from "@/sites/config";
-
-const SITE_IDS: SiteId[] = ["kdmhs", "dgu"];
+import { SITE_IDS, SITES } from "@/sites/config";
 
 export const metadata: Metadata = {
   title: "사이트 선택",

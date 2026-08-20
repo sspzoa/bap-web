@@ -15,13 +15,20 @@ export const revalidate = 3600;
 
 export default async function OpenGraphImage() {
   const siteId = await getSiteId();
-  const config = getSiteConfig(siteId);
   const date = getInitialDateForServer();
-  const dateLabel = formatToDateString(date);
-  const meal = await getMealDataServerSide(config.apiPath, dateLabel);
-  const items = summarizeMealPreview(siteId, meal?.data);
   const displayDate = `${date.getMonth() + 1}월 ${date.getDate()}일 식단`;
-  const fontText = [config.title, config.schoolName, displayDate, ...items].join("");
+
+  const config = siteId ? getSiteConfig(siteId) : null;
+  const title = config?.title ?? "밥.net";
+  const schoolName = config?.schoolName ?? "학교별 식단";
+  const description = config?.description ?? "사이트를 선택하세요.";
+  const items = config
+    ? summarizeMealPreview(
+        config.id,
+        (await getMealDataServerSide(config.apiPath, formatToDateString(date)))?.data,
+      )
+    : [];
+  const fontText = [title, schoolName, displayDate, description, ...items].join("");
   const fonts = await loadOgFont(fontText);
 
   return new ImageResponse(
@@ -38,8 +45,8 @@ export default async function OpenGraphImage() {
         fontFamily: fonts.length > 0 ? "Noto Sans KR" : "sans-serif",
       }}>
       <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-        <div style={{ fontSize: 40, opacity: 0.72 }}>{config.title}</div>
-        <div style={{ fontSize: 64, lineHeight: 1.15 }}>{config.schoolName}</div>
+        <div style={{ fontSize: 40, opacity: 0.72 }}>{title}</div>
+        <div style={{ fontSize: 64, lineHeight: 1.15 }}>{schoolName}</div>
         <div style={{ fontSize: 36, opacity: 0.8 }}>{displayDate}</div>
       </div>
       <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
@@ -50,7 +57,7 @@ export default async function OpenGraphImage() {
             </div>
           ))
         ) : (
-          <div style={{ fontSize: 34, opacity: 0.8 }}>{config.description}</div>
+          <div style={{ fontSize: 34, opacity: 0.8 }}>{description}</div>
         )}
       </div>
     </div>,
