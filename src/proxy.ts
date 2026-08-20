@@ -7,6 +7,7 @@ export function proxy(request: NextRequest) {
   const siteId = (isSiteId(devSiteId) ? devSiteId : null) ?? getSiteIdByHost(hostname);
 
   const requestHeaders = new Headers(request.headers);
+  requestHeaders.set("x-pathname", request.nextUrl.pathname);
   if (siteId) {
     requestHeaders.set("x-site-id", siteId);
   } else {

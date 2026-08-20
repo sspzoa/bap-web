@@ -10,7 +10,7 @@ import { getInitialDateForServer } from "@/shared/utils/dateUtils";
 import { formatToDateString } from "@/shared/utils/timeZoneUtils";
 import { getSiteConfig } from "@/sites/config";
 import { SiteProvider } from "@/sites/context";
-import { getSiteId } from "@/sites/server";
+import { getSiteId, isSelectPath } from "@/sites/server";
 
 const FALLBACK_METADATA = {
   title: "밥.net",
@@ -20,12 +20,27 @@ const FALLBACK_METADATA = {
 
 export async function generateMetadata(): Promise<Metadata> {
   const siteId = await getSiteId();
-  if (!siteId) {
+  if (!siteId || (await isSelectPath())) {
     return {
       metadataBase: new URL(FALLBACK_METADATA.url),
       title: FALLBACK_METADATA.title,
       description: FALLBACK_METADATA.description,
+      applicationName: FALLBACK_METADATA.title,
+      keywords: ["식단", "급식", "학식", "밥.net"],
       alternates: { canonical: `${FALLBACK_METADATA.url}/select` },
+      openGraph: {
+        type: "website",
+        locale: "ko_KR",
+        url: `${FALLBACK_METADATA.url}/select`,
+        siteName: FALLBACK_METADATA.title,
+        title: FALLBACK_METADATA.title,
+        description: FALLBACK_METADATA.description,
+      },
+      twitter: {
+        card: "summary_large_image",
+        title: FALLBACK_METADATA.title,
+        description: FALLBACK_METADATA.description,
+      },
     };
   }
 
@@ -103,7 +118,7 @@ interface RootLayoutProps {
 
 export default async function RootLayout({ children }: RootLayoutProps) {
   const siteId = await getSiteId();
-  const config = siteId ? getSiteConfig(siteId) : null;
+  const config = siteId && !(await isSelectPath()) ? getSiteConfig(siteId) : null;
 
   return (
     <html lang="ko">

@@ -4,18 +4,18 @@ import { SITES } from "@/sites/config";
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
 
-  return Object.values(SITES).flatMap((site) => [
-    {
+  return [
+    ...Object.values(SITES).map((site) => ({
       url: site.url,
       lastModified: now,
-      changeFrequency: "daily",
+      changeFrequency: "daily" as const,
       priority: 1,
-    },
+    })),
     {
-      url: `${site.url}/select`,
+      url: "https://밥.net/select",
       lastModified: now,
       changeFrequency: "monthly",
       priority: 0.3,
     },
-  ]);
+  ];
 }

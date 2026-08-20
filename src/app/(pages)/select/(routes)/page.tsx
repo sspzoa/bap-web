@@ -4,9 +4,25 @@ import { MealDesktopBackground } from "@/shared/components/mealDesktopBackground
 import { SITE_IDS, SITES } from "@/sites/config";
 
 export const metadata: Metadata = {
-  title: "사이트 선택",
-  description: "한국디지털미디어고등학교와 동국대학교 D-Flex 식단 사이트 중 선택할 수 있습니다.",
+  title: { absolute: "사이트 선택 | 밥.net" },
+  description: "학교별 식단 사이트를 선택하세요.",
+  keywords: ["식단", "급식", "학식", "밥.net"],
+  applicationName: "밥.net",
   robots: { index: true, follow: true },
+  alternates: { canonical: "https://밥.net/select" },
+  openGraph: {
+    type: "website",
+    locale: "ko_KR",
+    url: "https://밥.net/select",
+    siteName: "밥.net",
+    title: "사이트 선택 | 밥.net",
+    description: "학교별 식단 사이트를 선택하세요.",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "사이트 선택 | 밥.net",
+    description: "학교별 식단 사이트를 선택하세요.",
+  },
 };
 
 export default function SelectPage() {
