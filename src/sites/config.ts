@@ -1,4 +1,9 @@
-export type SiteId = "kdmhs" | "dgu";
+export type SiteId = "kdmhs" | "dgu" | "mega";
+
+export interface MealSlot {
+  time: string;
+  operatingHours: string | null;
+}
 
 export interface SiteConfig {
   id: SiteId;
@@ -12,6 +17,7 @@ export interface SiteConfig {
   manifestName: string;
   googleSiteVerification?: string;
   adsenseClient?: string;
+  mealSlots?: MealSlot[];
   errorMessages: {
     noMealData: string;
     noMealOperation: string;
@@ -46,6 +52,29 @@ export const SITES: Record<SiteId, SiteConfig> = {
     description: "동국대학교 경영관 D-Flex 학식. 중식·석식 코너 메뉴를 확인하세요.",
     keywords: ["학식", "동국대", "D-Flex", "경영관", "식단", "밥.net"],
     manifestName: "D-Flex 식단",
+    mealSlots: [
+      { time: "중식", operatingHours: "11:30~14:00" },
+      { time: "석식", operatingHours: "17:00~19:00" },
+    ],
+    errorMessages: {
+      noMealData: "정보가 없어요",
+      noMealOperation: "운영이 없어요",
+    },
+  },
+  mega: {
+    id: "mega",
+    title: "mega.밥.net",
+    schoolName: "메가스터디 구내식당",
+    url: "https://mega.밥.net",
+    hosts: ["mega.밥.net", "mega.xn--rh3b.net"],
+    apiPath: "/mega",
+    description: "메가스터디 구내식당 식단. 점심·저녁 코너 메뉴를 확인하세요.",
+    keywords: ["학식", "메가스터디", "메가라운지", "구내식당", "식단", "밥.net"],
+    manifestName: "메가스터디 식단",
+    mealSlots: [
+      { time: "중식", operatingHours: null },
+      { time: "석식", operatingHours: null },
+    ],
     errorMessages: {
       noMealData: "정보가 없어요",
       noMealOperation: "운영이 없어요",

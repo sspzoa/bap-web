@@ -6,6 +6,6 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: "*",
       allow: "/",
     },
-    sitemap: ["https://밥.net/sitemap.xml", "https://dflex.밥.net/sitemap.xml"],
+    sitemap: ["https://밥.net/sitemap.xml", "https://dflex.밥.net/sitemap.xml", "https://mega.밥.net/sitemap.xml"],
   };
 }

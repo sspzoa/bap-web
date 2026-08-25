@@ -6,6 +6,7 @@ import { prefetchMealDate } from "@/shared/lib/queryKeys";
 import { getMealDisplayDate } from "@/shared/utils/dateUtils";
 import { formatToDateString, getKoreanDate } from "@/shared/utils/timeZoneUtils";
 import { SITES } from "@/sites/config";
+import { useSiteId } from "@/sites/context";
 import { DGU_SCROLL_SECTIONS, getCurrentMealTiming } from "@/sites/dgu/utils/mealTimingUtils";
 import type { DayMenu } from "@/sites/dgu/types";
 
@@ -14,7 +15,8 @@ export const useMealInitialization = (
   setOpacity: (lunch: number, dinner: number) => void,
   updateCurrentDate?: (date: Date) => void,
 ) => {
-  const { id: siteId, apiPath } = SITES.dgu;
+  const siteId = useSiteId();
+  const { apiPath } = SITES[siteId];
   const [initialLoad, setInitialLoad] = useState(true);
   const [dateInitialized, setDateInitialized] = useState(false);
   const queryClient = useQueryClient();

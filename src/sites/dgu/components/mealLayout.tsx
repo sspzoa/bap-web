@@ -4,17 +4,21 @@ import { format } from "date-fns/format";
 import { ko } from "date-fns/locale/ko";
 import { memo, useCallback, useMemo } from "react";
 import { MealPageShell } from "@/shared/components/mealPageShell";
+import { type MealSlot, SITES } from "@/sites/config";
+import { useSiteId } from "@/sites/context";
 import { MealBackgroundImages } from "@/sites/dgu/components/mealBackgroundImages";
 import { MealSection } from "@/sites/dgu/components/mealSection";
 import { useMealData } from "@/sites/dgu/hooks/useMealData";
 import type { Meal, MealLayoutProps } from "@/sites/dgu/types";
 
-const MEAL_ORDER: { time: string; operatingHours: string }[] = [
+const DEFAULT_MEAL_SLOTS: MealSlot[] = [
   { time: "중식", operatingHours: "11:30~14:00" },
   { time: "석식", operatingHours: "17:00~19:00" },
 ];
 
 const MealLayout = memo(function MealLayout({ initialData, initialOpacity }: MealLayoutProps) {
+  const siteId = useSiteId();
+  const mealSlots = SITES[siteId].mealSlots ?? DEFAULT_MEAL_SLOTS;
   const {
     currentDate,
     meals,
@@ -51,11 +55,11 @@ const MealLayout = memo(function MealLayout({ initialData, initialOpacity }: Mea
 
   const displayMeals = useMemo<Meal[]>(
     () =>
-      MEAL_ORDER.map((base) => {
+      mealSlots.map((base) => {
         const found = meals.find((meal) => meal.time === base.time);
         return found ?? { time: base.time, operatingHours: base.operatingHours, corners: [] };
       }),
-    [meals],
+    [meals, mealSlots],
   );
 
   const handleResetToToday = useCallback(() => {
