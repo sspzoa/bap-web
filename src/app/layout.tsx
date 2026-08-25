@@ -46,11 +46,11 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     metadataBase: new URL(config.url),
     title: {
-      default: `${config.schoolName} 식단`,
-      template: `%s | ${config.title}`,
+      default: config.siteName,
+      template: `%s | ${config.siteName}`,
     },
     description,
-    applicationName: config.manifestName,
+    applicationName: config.siteName,
     keywords: config.keywords,
     alternates: {
       canonical: config.url,
@@ -61,20 +61,20 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     appleWebApp: {
       capable: true,
-      title: config.manifestName,
+      title: config.siteName,
       statusBarStyle: "black-translucent",
     },
     openGraph: {
       type: "website",
       locale: "ko_KR",
       url: config.url,
-      siteName: config.title,
-      title: `${config.schoolName} 식단`,
+      siteName: config.siteName,
+      title: config.siteName,
       description,
     },
     twitter: {
       card: "summary_large_image",
-      title: `${config.schoolName} 식단`,
+      title: config.siteName,
       description,
     },
   };
@@ -124,7 +124,7 @@ export default async function RootLayout({ children }: RootLayoutProps) {
         )}
       </head>
       <body className="antialiased">
-        {config && <JsonLd name={config.manifestName} description={config.description} url={config.url} />}
+        {config && <JsonLd name={config.siteName} description={config.description} url={config.url} />}
         <Analytics />
         <SpeedInsights />
         <SiteProvider siteId={siteId}>

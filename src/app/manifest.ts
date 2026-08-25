@@ -7,14 +7,14 @@ export default async function manifest(): Promise<MetadataRoute.Manifest> {
   const config = siteId
     ? getSiteConfig(siteId)
     : {
-        manifestName: BRAND.title,
+        siteName: BRAND.title,
         title: BRAND.title,
         description: BRAND.tagline,
       };
 
   return {
-    name: config.manifestName,
-    short_name: config.title,
+    name: config.siteName,
+    short_name: config.siteName,
     description: config.description,
     start_url: siteId ? "/" : "/select",
     display: "fullscreen",
