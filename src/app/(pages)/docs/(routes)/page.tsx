@@ -1,5 +1,14 @@
 import type { Metadata } from "next";
-import { Code, Endpoint, FieldTable, Note, ProviderCard, Section, TocLink } from "@/app/(pages)/docs/(routes)/docsUi";
+import {
+  Code,
+  Endpoint,
+  FieldTable,
+  Guide,
+  Note,
+  ProviderCard,
+  Section,
+  TocLink,
+} from "@/app/(pages)/docs/(routes)/docsUi";
 import Glass from "@/shared/components/common/glass";
 import { MealDesktopBackground } from "@/shared/components/mealDesktopBackground";
 import { API_BASE_URL } from "@/shared/lib/apiBase";
@@ -8,8 +17,8 @@ import { BRAND } from "@/sites/config";
 
 export const metadata: Metadata = {
   title: { absolute: `API · ${BRAND.title}` },
-  description: "밥.net 식단 API 문서 — 카탈로그, 통일 식단 스키마, 엔드포인트 레퍼런스",
-  keywords: ["식단", "급식", "학식", "구내식당", "API", "밥.net"],
+  description: "밥.net 식단 API · MCP 문서 — 카탈로그, 통일 식단 스키마, 프로바이더 추가",
+  keywords: ["식단", "급식", "학식", "구내식당", "API", "MCP", "밥.net"],
   applicationName: BRAND.title,
   robots: { index: true, follow: true },
   alternates: { canonical: `${BRAND.url}/docs` },
@@ -19,12 +28,12 @@ export const metadata: Metadata = {
     url: `${BRAND.url}/docs`,
     siteName: BRAND.title,
     title: `API · ${BRAND.title}`,
-    description: "밥.net 식단 API 문서",
+    description: "밥.net 식단 API · MCP 문서",
   },
   twitter: {
     card: "summary_large_image",
     title: `API · ${BRAND.title}`,
-    description: "밥.net 식단 API 문서",
+    description: "밥.net 식단 API · MCP 문서",
   },
 };
 
@@ -149,6 +158,7 @@ export default async function DocsPage() {
           {renderEndpoint("meals", "식단")}
           {renderEndpoint("search", "메뉴 검색")}
           {renderEndpoint("health", "헬스")}
+          {renderEndpoint("mcp", "MCP")}
 
           <Section id="types" title="타입">
             <Glass className="flex flex-col gap-4 p-5">
@@ -168,6 +178,18 @@ export default async function DocsPage() {
               <Note>{docs.errors.note}</Note>
             </Glass>
           </Section>
+
+          {(docs.guides ?? []).map((guide) => (
+            <Section key={guide.id} id={guide.id} title={guide.title}>
+              <Guide
+                intro={guide.intro}
+                steps={guide.steps}
+                tables={guide.fieldTables}
+                checklist={guide.checklist}
+                notes={guide.notes}
+              />
+            </Section>
+          ))}
         </main>
 
         <footer className="pb-2 text-center text-[13px] opacity-45">

@@ -8,7 +8,7 @@ API: [bap-back](https://github.com/sspzoa/bap-back) · 문서: [/docs](https://�
 
 - `/` — 선택한 사이트 식단 (쿠키 `bap-site-id`)
 - `/select` — 사이트 선택
-- `/docs` — API 문서 (카탈로그 기반)
+- `/docs` — API 문서 (카탈로그·MCP 포함, `GET /docs`에서 렌더)
 
 사이트별 App Router 폴더는 **없습니다**. 백엔드에 프로바이더만 추가하면 select·홈·docs에 자동 반영됩니다.
 
@@ -50,9 +50,11 @@ Next.js 16 **`proxy.ts`** (middleware 대체):
 ## 데이터 흐름
 
 ```
-GET / (catalog)  →  layout / select / docs / manifest
-GET /{basePath}/{date}  →  TanStack Query (useMealQuery)
-SSR initialData  →  오늘 날짜에만 시드 (날짜 변경 시 다른 날 메뉴로 섞이지 않음)
+GET / (catalog)           →  layout / select / docs / manifest
+GET /{basePath}/{date}    →  TanStack Query (useMealQuery)
+GET /docs                 →  /docs 페이지 (엔드포인트·MCP·프로바이더 가이드)
+POST /mcp                 → 에이전트 (프론트가 호출하지 않음)
+SSR initialData           →  오늘 날짜에만 시드 (날짜 변경 시 다른 날 메뉴로 섞이지 않음)
 ```
 
 ## 디렉터리
@@ -78,9 +80,25 @@ public/
 
 ## 새 사이트 추가
 
-**프론트 수정 불필요** (아이콘·배경 경로는 백엔드 `presentation.meals`에 URL로 실어 보내면 됨).
+**기본은 프론트 수정 없음.** 학교는 bap-back 프로바이더 + `presentation`으로만 추가합니다. 카탈로그가 `/select`, 홈, 엣지 패널, `/docs`, PWA manifest, MCP `list_providers`에 같이 반영됩니다.
 
-필요 시 `public/img`, `public/icon`에 에셋만 추가.
+공개 가이드: [밥.net/docs#adding-provider](https://밥.net/docs#adding-provider) · 백엔드 절차: [bap-back README](https://github.com/sspzoa/bap-back#새-프로바이더-추가)
+
+하지 말 것:
+
+- `src/sites/{id}/` 트리, `SITES` 맵, `/kdmhs` 같은 경로 하드코딩
+- 클라이언트에서 `bap-site-id` 쿠키를 읽어 라우팅
+- `/docs`에 엔드포인트·MCP·오류 문구를 하드코딩 (`GET /docs`만 렌더)
+
+필요할 때만:
+
+| 상황 | 프론트에서 할 일 |
+|---|---|
+| 기존 아침·점심·저녁 에셋 재사용 | 없음. presentation이 `/icon/lunch.svg` 등을 가리키면 됨 |
+| 새 끼니 아이콘·배경 | `public/icon`, `public/img`에 파일 추가 후 presentation URL 맞추기 |
+| 메뉴 사진 검색 | 백엔드 `features.foodSearch: true` + `handleExtraRoute`. 프론트 `mealSection`이 플래그만 봄 |
+
+`presentation` 계약은 백엔드 `SitePresentation`과 동일합니다 (`src/shared/types`). 카탈로그에 `id`, `basePath`, `meals[]`가 없으면 `getCatalog()`가 그 사이트를 버립니다.
 
 ## 스택
 

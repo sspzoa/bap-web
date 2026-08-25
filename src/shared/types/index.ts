@@ -70,13 +70,29 @@ export interface ApiDocsField {
 
 export interface ApiDocsEndpoint {
   id: string;
-  method: "GET";
+  method: "GET" | "POST";
   path: string;
   description: string;
   curls: string[];
   responseExample?: string;
   notes?: string[];
   fieldTables?: { title?: string; rows: ApiDocsField[] }[];
+}
+
+export interface ApiDocsGuideStep {
+  title: string;
+  body: string;
+  code?: string;
+}
+
+export interface ApiDocsGuide {
+  id: string;
+  title: string;
+  intro: string;
+  steps: ApiDocsGuideStep[];
+  fieldTables?: { title?: string; rows: ApiDocsField[] }[];
+  checklist: string[];
+  notes: string[];
 }
 
 export interface ApiDocsPayload {
@@ -89,6 +105,7 @@ export interface ApiDocsPayload {
   providerNote: string;
   endpoints: ApiDocsEndpoint[];
   typeSchemas: { title: string; rows: ApiDocsField[] }[];
+  guides?: ApiDocsGuide[];
   errors: {
     example: string;
     rows: ApiDocsField[];

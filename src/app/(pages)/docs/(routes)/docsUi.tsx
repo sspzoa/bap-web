@@ -104,6 +104,54 @@ export function ProviderCard({
   );
 }
 
+export function Guide({
+  intro,
+  steps,
+  tables,
+  checklist,
+  notes,
+}: {
+  intro: string;
+  steps: { title: string; body: string; code?: string }[];
+  tables?: { title?: string; rows: { name: string; type: string; description: string }[] }[];
+  checklist: string[];
+  notes: string[];
+}) {
+  return (
+    <Glass className="flex flex-col gap-5 p-5">
+      <p className="text-[15px] leading-relaxed opacity-70">{intro}</p>
+      <ol className="flex flex-col gap-4">
+        {steps.map((step) => (
+          <li key={step.title} className="flex flex-col gap-2">
+            <p className="font-bold text-[15px] tracking-tight">{step.title}</p>
+            <p className="text-[14px] leading-relaxed opacity-70">{step.body}</p>
+            {step.code && <Code>{step.code}</Code>}
+          </li>
+        ))}
+      </ol>
+      {tables?.map((table) => (
+        <div key={table.title ?? "table"}>
+          {table.title && <p className="mb-2 font-bold text-[14px] opacity-60">{table.title}</p>}
+          <FieldTable rows={table.rows} />
+        </div>
+      ))}
+      {checklist.length > 0 && (
+        <div>
+          <p className="mb-2 font-bold text-[14px] opacity-60">체크리스트</p>
+          <ul className="flex list-disc flex-col gap-1 pl-5 text-[14px] opacity-70">
+            {checklist.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+      {notes.map((note) => (
+        <Note key={note}>{note}</Note>
+      ))}
+    </Glass>
+  );
+}
+
 export function TocLink({ href, label }: { href: string; label: string }) {
   return (
     <a

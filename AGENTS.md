@@ -26,7 +26,7 @@ Pair repo: **bap-back** (API). Default API: `https://api.밥.net` / `https://api
 - **SSR hydration** — `initialData` from the server applies only when `formattedDate === initialFormattedDate` (see `useMealQuery`).
 - **Shared layer boundaries** — `src/shared/**` must not import from `src/app/(pages)/**`.
 - **Next.js 16** — read `node_modules/next/dist/docs/` before changing routing, metadata, OG, or proxy.
-- **Docs page** — fetch `GET /docs` via `getApiDocs()`; do not hardcode endpoint/type/error copy in the frontend.
+- **Docs page** — fetch `GET /docs` via `getApiDocs()`; do not hardcode endpoint/type/error/MCP copy in the frontend.
 
 ## Don't
 
@@ -57,13 +57,23 @@ bun run lint
 
 ## Adding a school
 
-Backend only: new provider + `presentation` in bap-back. Frontend picks it up on `/select`, edge panel, docs, manifest.
+**Backend only.** New provider + complete `presentation` in bap-back. This frontend already consumes the catalog:
+
+| Surface | Source |
+|---|---|
+| `/select`, home, edge panel, manifest | `GET /` (`getCatalog`) |
+| `/docs` (endpoints, MCP, 새 프로바이더 가이드) | `GET /docs` (`getApiDocs`) |
+| MCP tools | `POST /mcp` on the API — not called from this app |
+
+Do **not** add `src/sites/{id}/`, a `SITES` map, or hardcoded `/kdmhs` paths. If new meal art is required, add files under `public/icon` and `public/img` and point `presentation.meals` at those URLs. `features.foodSearch` toggles search UI; the search HTTP route lives on the API.
+
+Walkthrough: [README.md](./README.md#새-사이트-추가) · [bap-back](https://github.com/sspzoa/bap-back#새-프로바이더-추가) · [밥.net/docs#adding-provider](https://밥.net/docs#adding-provider).
 
 ## Review checklist
 
 - [ ] No hardcoded provider IDs or API paths
 - [ ] Catalog empty-state acceptable for the change
 - [ ] Date navigation does not reuse wrong day's `initialData`
-- [ ] Docs/curl examples use `API_BASE_URL`
+- [ ] Docs/curl examples use `API_BASE_URL`; MCP and provider-guide copy come from `GET /docs` only
 
 See [README.md](./README.md) for architecture and env vars.
