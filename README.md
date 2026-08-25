@@ -80,7 +80,7 @@ public/
 
 ## 새 사이트 추가
 
-**기본은 프론트 수정 없음.** 학교는 bap-back 프로바이더 + `presentation`으로만 추가합니다. 카탈로그가 `/select`, 홈, 엣지 패널, `/docs`, PWA manifest, MCP `list_providers`에 같이 반영됩니다.
+**기본은 프론트 수정 없음.** 학교는 bap-back 프로바이더 + `presentation`으로만 추가합니다. 카탈로그가 `/select`, 홈, 엣지 패널, `/docs`, PWA manifest, MCP `bap_list_providers`에 같이 반영됩니다.
 
 공개 가이드: [밥.net/docs#adding-provider](https://밥.net/docs#adding-provider) · 백엔드 절차: [bap-back README](https://github.com/sspzoa/bap-back#새-프로바이더-추가)
 
