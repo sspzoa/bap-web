@@ -11,7 +11,6 @@ interface MealPageShellProps {
   onPrevDay: () => void;
   onNextDay: () => void;
   onResetToToday: () => void;
-  onRefresh: () => void;
   isLoading: boolean;
   initialLoad: boolean;
   scrollContainerRef: RefObject<HTMLDivElement | null>;
@@ -25,7 +24,6 @@ export const MealPageShell = memo(function MealPageShell({
   onPrevDay,
   onNextDay,
   onResetToToday,
-  onRefresh,
   isLoading,
   initialLoad,
   scrollContainerRef,
@@ -43,7 +41,6 @@ export const MealPageShell = memo(function MealPageShell({
           onPrevDay={onPrevDay}
           onNextDay={onNextDay}
           onResetToToday={onResetToToday}
-          onRefresh={onRefresh}
           formattedCurrentDate={formattedCurrentDate}
         />
 

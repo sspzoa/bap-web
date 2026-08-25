@@ -1,47 +1,53 @@
+"use client";
+
 import { useQueryClient } from "@tanstack/react-query";
 import { useCallback, useEffect, useState } from "react";
 import { prefetchMealDate } from "@/shared/lib/queryKeys";
+import type { PublicDayMenu } from "@/shared/types/index";
 import { getMealDisplayDate } from "@/shared/utils/dateUtils";
+import { getCurrentMealTiming } from "@/shared/utils/mealTimingUtils";
 import { formatToDateString, getKoreanDate } from "@/shared/utils/timeZoneUtils";
-import { SITES } from "@/sites/config";
-import { getCurrentMealTiming, KDMHS_SCROLL_SECTIONS } from "@/sites/kdmhs/utils/mealTimingUtils";
-import type { MealData } from "@/sites/kdmhs/types";
+import { useSite } from "@/sites/context";
 
 export const useMealInitialization = (
   scrollContainerRef: React.RefObject<HTMLDivElement | null>,
-  setOpacity: (breakfast: number, lunch: number, dinner: number) => void,
+  setOpacity: (opacities: Record<string, number>) => void,
   updateCurrentDate?: (date: Date) => void,
 ) => {
-  const { id: siteId, apiPath } = SITES.kdmhs;
+  const site = useSite();
   const [initialLoad, setInitialLoad] = useState(true);
   const [dateInitialized, setDateInitialized] = useState(false);
   const queryClient = useQueryClient();
 
   const setMealByTime = useCallback(() => {
-    if (!scrollContainerRef?.current) return;
+    if (!scrollContainerRef?.current || site.meals.length === 0) {
+      return;
+    }
 
     const now = getKoreanDate();
     const displayDate = getMealDisplayDate(now);
     const scrollContainer = scrollContainerRef.current;
-    const scrollWidth = scrollContainer.scrollWidth / KDMHS_SCROLL_SECTIONS;
-    const mealTiming = getCurrentMealTiming();
+    const sectionWidth = scrollContainer.scrollWidth / site.meals.length;
+    const mealTiming = getCurrentMealTiming(site.meals);
     const rolledOver = formatToDateString(displayDate) !== formatToDateString(now);
 
     if (rolledOver) {
-      void prefetchMealDate<MealData>(queryClient, siteId, apiPath, formatToDateString(displayDate));
+      void prefetchMealDate<PublicDayMenu>(queryClient, site.id, site.basePath, formatToDateString(displayDate));
     }
 
-    scrollContainer.scrollLeft = mealTiming.scrollPosition * scrollWidth;
-    setOpacity(mealTiming.opacity.breakfast, mealTiming.opacity.lunch, mealTiming.opacity.dinner);
+    scrollContainer.scrollLeft = mealTiming.scrollPosition * sectionWidth;
+    setOpacity(mealTiming.opacities);
     setDateInitialized(true);
 
     if (rolledOver && updateCurrentDate) {
       updateCurrentDate(displayDate);
     }
-  }, [scrollContainerRef, setOpacity, queryClient, updateCurrentDate, apiPath, siteId]);
+  }, [scrollContainerRef, setOpacity, queryClient, updateCurrentDate, site]);
 
   useEffect(() => {
-    if (!initialLoad) return;
+    if (!initialLoad) {
+      return;
+    }
 
     if (typeof window !== "undefined") {
       setTimeout(() => {

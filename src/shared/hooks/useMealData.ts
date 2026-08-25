@@ -1,21 +1,25 @@
-import { useCallback, useEffect } from "react";
-import { useMealQuery } from "@/shared/hooks/useMealQuery";
-import type { MealFetchResult } from "@/shared/types/index";
-import { useResponsiveness } from "@/app/(pages)/(home)/(hooks)/useResponsiveness";
-import { useMealInitialization } from "@/sites/kdmhs/hooks/useMealInitialization";
-import { useScrollOpacity } from "@/sites/kdmhs/hooks/useScrollOpacity";
-import type { MealData } from "@/sites/kdmhs/types";
+"use client";
 
-export const useMealData = (initialData?: MealFetchResult<MealData> | null) => {
-  const query = useMealQuery<MealData>(initialData);
-  const { scrollContainerRef, breakfastOpacity, lunchOpacity, dinnerOpacity, handleScroll, setOpacity } =
-    useScrollOpacity();
+import { useCallback, useEffect, useMemo } from "react";
+import { useMealInitialization } from "@/shared/hooks/useMealInitialization";
+import { useMealQuery } from "@/shared/hooks/useMealQuery";
+import { useResponsiveness } from "@/shared/hooks/useResponsiveness";
+import { useScrollOpacity } from "@/shared/hooks/useScrollOpacity";
+import type { MealFetchResult, PublicDayMenu } from "@/shared/types/index";
+import { lastSlotOpacities } from "@/shared/utils/mealTimingUtils";
+import { useSite } from "@/sites/context";
+
+export const useMealData = (initialData?: MealFetchResult<PublicDayMenu> | null, initialFormattedDate?: string) => {
+  const site = useSite();
+  const query = useMealQuery<PublicDayMenu>(initialData, initialFormattedDate);
+  const { scrollContainerRef, opacities, handleScroll, setOpacity } = useScrollOpacity(site.meals);
   const { isMobile } = useResponsiveness();
   const { initialLoad, dateInitialized, setDateInitialized, setMealByTime } = useMealInitialization(
     scrollContainerRef,
     setOpacity,
     query.setCurrentDate,
   );
+  const meals = useMemo(() => query.data?.meals ?? [], [query.data]);
 
   const handlePrevDay = useCallback(() => {
     query.handlePrevDay();
@@ -35,10 +39,11 @@ export const useMealData = (initialData?: MealFetchResult<MealData> | null) => {
   const handleMobileLayout = useCallback(() => {
     if (isMobile) {
       setMealByTime();
-    } else {
-      setOpacity(0, 0, 1);
+      return;
     }
-  }, [isMobile, setMealByTime, setOpacity]);
+
+    setOpacity(lastSlotOpacities(site.meals));
+  }, [isMobile, setMealByTime, setOpacity, site.meals]);
 
   useEffect(() => {
     handleMobileLayout();
@@ -46,21 +51,16 @@ export const useMealData = (initialData?: MealFetchResult<MealData> | null) => {
 
   return {
     currentDate: query.currentDate,
-    setCurrentDate: query.setCurrentDate,
-    data: query.data,
+    meals,
     isLoading: query.isLoading,
     isError: query.isError,
     errorMessage: query.errorMessage,
     handlePrevDay,
     handleNextDay,
     resetToToday,
-    handleRefresh: query.handleRefresh,
     setMealByTime,
     scrollContainerRef,
-    breakfastOpacity,
-    lunchOpacity,
-    dinnerOpacity,
-    isMobile,
+    opacities,
     handleScroll,
     dateInitialized,
     initialLoad,

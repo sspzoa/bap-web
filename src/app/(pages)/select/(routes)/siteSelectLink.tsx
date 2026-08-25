@@ -2,7 +2,6 @@
 
 import type { ReactNode } from "react";
 import { setSitePreferenceCookie } from "@/shared/lib/sitePreference";
-import type { SiteId } from "@/sites/config";
 
 export function SiteSelectLink({
   siteId,
@@ -10,7 +9,7 @@ export function SiteSelectLink({
   className,
   children,
 }: {
-  siteId: SiteId;
+  siteId: string;
   href: string;
   className?: string;
   children: ReactNode;

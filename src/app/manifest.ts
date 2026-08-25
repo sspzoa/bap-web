@@ -1,21 +1,20 @@
 import type { MetadataRoute } from "next";
-import { BRAND, getSiteConfig } from "@/sites/config";
+import { findSite, getCatalog } from "@/shared/lib/catalog";
+import { BRAND } from "@/sites/config";
 import { getSiteId } from "@/sites/server";
 
 export default async function manifest(): Promise<MetadataRoute.Manifest> {
   const siteId = await getSiteId();
-  const config = siteId
-    ? getSiteConfig(siteId)
-    : {
-        siteName: BRAND.title,
-        description: BRAND.tagline,
-      };
+  const catalog = await getCatalog();
+  const site = findSite(catalog, siteId);
+  const name = site?.name ?? BRAND.title;
+  const description = site?.description ?? BRAND.tagline;
 
   return {
-    name: config.siteName,
-    short_name: config.siteName,
-    description: config.description,
-    start_url: siteId ? "/" : "/select",
+    name,
+    short_name: name,
+    description,
+    start_url: site ? "/" : "/select",
     display: "fullscreen",
     orientation: "any",
     lang: "ko",

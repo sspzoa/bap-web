@@ -1,18 +1,50 @@
 "use client";
 
-import { createContext, useContext } from "react";
-import type { SiteId } from "@/sites/config";
+import { createContext, type ReactNode, useContext } from "react";
+import type { SitePresentation } from "@/shared/types/index";
 
-const SiteContext = createContext<SiteId | null>(null);
-
-export function SiteProvider({ siteId, children }: { siteId: SiteId | null; children: React.ReactNode }) {
-  return <SiteContext.Provider value={siteId}>{children}</SiteContext.Provider>;
+interface SiteContextValue {
+  siteId: string | null;
+  site: SitePresentation | null;
+  catalog: SitePresentation[];
 }
 
-export function useSiteId(): SiteId {
-  const siteId = useContext(SiteContext);
+const SiteContext = createContext<SiteContextValue>({
+  siteId: null,
+  site: null,
+  catalog: [],
+});
+
+export function SiteProvider({
+  siteId,
+  site,
+  catalog,
+  children,
+}: {
+  siteId: string | null;
+  site: SitePresentation | null;
+  catalog: SitePresentation[];
+  children: ReactNode;
+}) {
+  return <SiteContext.Provider value={{ siteId, site, catalog }}>{children}</SiteContext.Provider>;
+}
+
+export function useSiteId(): string {
+  const { siteId } = useContext(SiteContext);
   if (!siteId) {
     throw new Error("useSiteId must be used within a resolved site");
   }
   return siteId;
+}
+
+export function useSite(): SitePresentation {
+  const { site } = useContext(SiteContext);
+  if (!site) {
+    throw new Error("useSite must be used within a resolved site");
+  }
+  return site;
+}
+
+export function useCatalog(): SitePresentation[] {
+  return useContext(SiteContext).catalog;
 }

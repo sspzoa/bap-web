@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { SiteSelectLink } from "@/app/(pages)/select/(routes)/siteSelectLink";
 import Glass from "@/shared/components/common/glass";
 import { MealDesktopBackground } from "@/shared/components/mealDesktopBackground";
-import { BRAND, SITE_IDS, SITES } from "@/sites/config";
+import { getCatalog } from "@/shared/lib/catalog";
+import { BRAND } from "@/sites/config";
 
 export const metadata: Metadata = {
   title: { absolute: BRAND.title },
@@ -26,7 +27,9 @@ export const metadata: Metadata = {
   },
 };
 
-export default function SelectPage() {
+export default async function SelectPage() {
+  const catalog = await getCatalog();
+
   return (
     <div className="relative flex min-h-svh flex-col overflow-x-hidden p-4">
       <MealDesktopBackground className="fixed inset-0 h-full w-full" />
@@ -38,15 +41,14 @@ export default function SelectPage() {
             <p className="text-[16px] opacity-60">오늘 메뉴를 한곳에서 확인하세요</p>
           </div>
 
-          <div className="flex w-full flex-col gap-3 md:flex-row">
-            {SITE_IDS.map((id) => {
-              const site = SITES[id];
-              const showSchoolName = site.schoolName !== site.siteName;
+          <div className="grid w-full grid-cols-1 gap-3 md:grid-cols-3">
+            {catalog.map((site) => {
+              const showSchoolName = site.schoolName !== site.name;
 
               return (
-                <SiteSelectLink key={id} siteId={id} href="/" className="block md:flex-1">
+                <SiteSelectLink key={site.id} siteId={site.id} href="/" className="block h-full">
                   <Glass className="flex h-full w-full cursor-pointer flex-col items-center justify-center gap-1 p-5 transition-transform duration-100 active:scale-[0.98] active:opacity-80">
-                    <p className="font-bold text-[20px] tracking-tight">{site.siteName}</p>
+                    <p className="font-bold text-[20px] tracking-tight">{site.name}</p>
                     {showSchoolName && <p className="text-[14px] opacity-55">{site.schoolName}</p>}
                   </Glass>
                 </SiteSelectLink>
@@ -55,6 +57,12 @@ export default function SelectPage() {
           </div>
         </div>
       </div>
+
+      <a
+        href="/docs"
+        className="z-10 mb-3 text-center font-bold text-[15px] uppercase tracking-tight underline underline-offset-4 opacity-60 duration-100 active:opacity-40">
+        API docs
+      </a>
 
       <footer className="z-10 pb-2 text-center text-[13px] opacity-45">
         maintained by{" "}

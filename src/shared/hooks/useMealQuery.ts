@@ -5,24 +5,23 @@ import { useCallback, useEffect } from "react";
 import { currentDateAtom } from "@/app/(pages)/(home)/(atoms)/currentDateAtom";
 import { MEAL_ERROR_MESSAGES } from "@/shared/lib/mealErrors";
 import { mealQueryOptions, prefetchMealDate } from "@/shared/lib/queryKeys";
-import { refreshMealData } from "@/shared/lib/mealService";
 import type { MealFetchResult } from "@/shared/types/index";
 import { getMealDisplayDate } from "@/shared/utils/dateUtils";
 import { formatToDateString } from "@/shared/utils/timeZoneUtils";
-import { SITES } from "@/sites/config";
-import { useSiteId } from "@/sites/context";
+import { useSite } from "@/sites/context";
 
-export function useMealQuery<T>(initialData?: MealFetchResult<T> | null) {
-  const siteId = useSiteId();
-  const apiPath = SITES[siteId].apiPath;
+export function useMealQuery<T>(initialData?: MealFetchResult<T> | null, initialFormattedDate?: string) {
+  const site = useSite();
   const fallbackError = MEAL_ERROR_MESSAGES.noMealData;
   const [currentDate, setCurrentDate] = useAtom(currentDateAtom);
   const formattedDate = formatToDateString(currentDate);
   const queryClient = useQueryClient();
+  const seededInitialData =
+    initialFormattedDate && formattedDate === initialFormattedDate ? (initialData ?? undefined) : undefined;
 
   const { data: responseData, isLoading } = useQuery({
-    ...mealQueryOptions<T>(siteId, apiPath, formattedDate),
-    initialData: initialData ?? undefined,
+    ...mealQueryOptions<T>(site.id, site.basePath, formattedDate),
+    initialData: seededInitialData,
   });
 
   const data = responseData?.data ?? null;
@@ -32,9 +31,9 @@ export function useMealQuery<T>(initialData?: MealFetchResult<T> | null) {
   useEffect(() => {
     const prevFormattedDate = formatToDateString(subDays(currentDate, 1));
     const nextFormattedDate = formatToDateString(addDays(currentDate, 1));
-    void prefetchMealDate<T>(queryClient, siteId, apiPath, prevFormattedDate);
-    void prefetchMealDate<T>(queryClient, siteId, apiPath, nextFormattedDate);
-  }, [currentDate, queryClient, apiPath, siteId]);
+    void prefetchMealDate<T>(queryClient, site.id, site.basePath, prevFormattedDate);
+    void prefetchMealDate<T>(queryClient, site.id, site.basePath, nextFormattedDate);
+  }, [currentDate, queryClient, site.basePath, site.id]);
 
   const handlePrevDay = useCallback(() => {
     setCurrentDate((prevDate) => subDays(prevDate, 1));
@@ -48,21 +47,9 @@ export function useMealQuery<T>(initialData?: MealFetchResult<T> | null) {
     setCurrentDate(getMealDisplayDate());
   }, [setCurrentDate]);
 
-  const handleRefresh = useCallback(async () => {
-    try {
-      const refreshedData = await refreshMealData<T>(apiPath, formattedDate);
-      if (!refreshedData.isError) {
-        queryClient.setQueryData(mealQueryOptions<T>(siteId, apiPath, formattedDate).queryKey, refreshedData);
-        alert("Meal data refreshed.");
-      }
-    } catch {
-      console.error("Failed to refresh meal data.");
-    }
-  }, [formattedDate, queryClient, apiPath, siteId]);
-
   return {
-    siteId,
-    apiPath,
+    siteId: site.id,
+    apiPath: site.basePath,
     currentDate,
     setCurrentDate,
     formattedDate,
@@ -73,6 +60,5 @@ export function useMealQuery<T>(initialData?: MealFetchResult<T> | null) {
     handlePrevDay,
     handleNextDay,
     resetToToday,
-    handleRefresh,
   };
 }

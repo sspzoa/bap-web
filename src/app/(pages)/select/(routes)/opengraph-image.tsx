@@ -8,8 +8,5 @@ export const contentType = "image/png";
 export const revalidate = 3600;
 
 export default async function SelectOpenGraphImage() {
-  return renderOgCard({
-    mark: BRAND.title,
-    caption: BRAND.tagline,
-  });
+  return renderOgCard();
 }

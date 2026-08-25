@@ -3,8 +3,9 @@ import type { ReactNode } from "react";
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { findSite, getCatalog } from "@/shared/lib/catalog";
 import QueryProvider from "@/shared/lib/provider";
-import { BRAND, getSiteConfig } from "@/sites/config";
+import { BRAND } from "@/sites/config";
 import { SiteProvider } from "@/sites/context";
 import { getSiteId, isSelectPath } from "@/sites/server";
 
@@ -16,7 +17,10 @@ const FALLBACK_METADATA = {
 
 export async function generateMetadata(): Promise<Metadata> {
   const siteId = await getSiteId();
-  if (!siteId || (await isSelectPath())) {
+  const catalog = await getCatalog();
+  const site = findSite(catalog, siteId);
+
+  if (!site || (await isSelectPath())) {
     return {
       metadataBase: new URL(FALLBACK_METADATA.url),
       title: FALLBACK_METADATA.title,
@@ -40,18 +44,15 @@ export async function generateMetadata(): Promise<Metadata> {
     };
   }
 
-  const config = getSiteConfig(siteId);
-  const description = config.description;
-
   return {
     metadataBase: new URL(BRAND.url),
     title: {
-      default: config.siteName,
-      template: `%s | ${config.siteName}`,
+      default: site.name,
+      template: `%s | ${site.name}`,
     },
-    description,
-    applicationName: config.siteName,
-    keywords: config.keywords,
+    description: site.description,
+    applicationName: site.name,
+    keywords: site.keywords,
     alternates: {
       canonical: BRAND.url,
     },
@@ -61,21 +62,21 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     appleWebApp: {
       capable: true,
-      title: config.siteName,
+      title: site.name,
       statusBarStyle: "black-translucent",
     },
     openGraph: {
       type: "website",
       locale: "ko_KR",
       url: BRAND.url,
-      siteName: config.siteName,
-      title: config.siteName,
-      description,
+      siteName: site.name,
+      title: site.name,
+      description: site.description,
     },
     twitter: {
       card: "summary_large_image",
-      title: config.siteName,
-      description,
+      title: site.name,
+      description: site.description,
     },
   };
 }
@@ -109,25 +110,26 @@ interface RootLayoutProps {
 
 export default async function RootLayout({ children }: RootLayoutProps) {
   const siteId = await getSiteId();
-  const config = siteId && !(await isSelectPath()) ? getSiteConfig(siteId) : null;
+  const catalog = await getCatalog();
+  const site = siteId && !(await isSelectPath()) ? findSite(catalog, siteId) : null;
 
   return (
     <html lang="ko">
       <head>
-        {config?.googleSiteVerification && <meta name="google-site-verification" content={config.googleSiteVerification} />}
-        {config?.adsenseClient && (
+        {site?.googleSiteVerification && <meta name="google-site-verification" content={site.googleSiteVerification} />}
+        {site?.adsenseClient && (
           <script
             async
-            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${config.adsenseClient}`}
+            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${site.adsenseClient}`}
             crossOrigin="anonymous"
           />
         )}
       </head>
       <body className="antialiased">
-        {config && <JsonLd name={config.siteName} description={config.description} url={BRAND.url} />}
+        {site && <JsonLd name={site.name} description={site.description} url={BRAND.url} />}
         <Analytics />
         <SpeedInsights />
-        <SiteProvider siteId={siteId}>
+        <SiteProvider siteId={site?.id ?? null} site={site} catalog={catalog}>
           <QueryProvider>{children}</QueryProvider>
         </SiteProvider>
       </body>

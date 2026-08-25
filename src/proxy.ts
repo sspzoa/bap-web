@@ -1,8 +1,7 @@
-import { NextResponse, type NextRequest } from "next/server";
-import { isSelectPath, readSitePreference, SITE_PREFERENCE_COOKIE } from "@/shared/lib/sitePreference";
-import type { SiteId } from "@/sites/config";
+import { type NextRequest, NextResponse } from "next/server";
+import { isDocsPath, isSelectPath, readSitePreference, SITE_PREFERENCE_COOKIE } from "@/shared/lib/sitePreference";
 
-function nextWithHeaders(request: NextRequest, siteId: SiteId | null) {
+function nextWithHeaders(request: NextRequest, siteId: string | null) {
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set("x-pathname", request.nextUrl.pathname);
 
@@ -21,7 +20,7 @@ export function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
   const preferredSiteId = readSitePreference(request.cookies.get(SITE_PREFERENCE_COOKIE)?.value);
 
-  if (isSelectPath(pathname)) {
+  if (isSelectPath(pathname) || isDocsPath(pathname)) {
     return nextWithHeaders(request, null);
   }
 
