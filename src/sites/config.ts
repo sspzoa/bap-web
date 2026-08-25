@@ -1,4 +1,4 @@
-export type SiteId = "kdmhs" | "dgu" | "mega";
+export type SiteId = "kdmhs" | "dgu" | "horang";
 
 export interface MealSlot {
   time: string;
@@ -40,13 +40,13 @@ export const SITES: Record<SiteId, SiteConfig> = {
       { time: "석식", operatingHours: "17:00~19:00" },
     ],
   },
-  mega: {
-    id: "mega",
-    siteName: "메가스터디 식단",
-    schoolName: "메가스터디 구내식당",
-    apiPath: "/mega",
-    description: "메가스터디 식단을 확인해보세요",
-    keywords: ["학식", "메가스터디", "메가라운지", "구내식당", "식단", "밥.net"],
+  horang: {
+    id: "horang",
+    siteName: "호랑에듀 구내식당",
+    schoolName: "호랑에듀 구내식당",
+    apiPath: "/horang",
+    description: "호랑에듀 구내식당을 확인해보세요",
+    keywords: ["구내식당", "호랑에듀", "horang-edu", "식단", "밥.net"],
     mealSlots: [
       { time: "중식", operatingHours: null },
       { time: "석식", operatingHours: null },
@@ -56,7 +56,7 @@ export const SITES: Record<SiteId, SiteConfig> = {
 
 export const BRAND = {
   title: "밥.net",
-  tagline: "학교 식단을 확인해보세요",
+  tagline: "급식·학식·구내식당을 확인해보세요",
   url: "https://밥.net",
 } as const;
 

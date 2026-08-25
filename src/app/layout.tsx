@@ -22,7 +22,7 @@ export async function generateMetadata(): Promise<Metadata> {
       title: FALLBACK_METADATA.title,
       description: FALLBACK_METADATA.description,
       applicationName: FALLBACK_METADATA.title,
-      keywords: ["식단", "급식", "학식", "밥.net"],
+      keywords: ["식단", "급식", "학식", "구내식당", "밥.net"],
       alternates: { canonical: `${FALLBACK_METADATA.url}/select` },
       openGraph: {
         type: "website",

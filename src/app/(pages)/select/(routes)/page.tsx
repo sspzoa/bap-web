@@ -7,7 +7,7 @@ import { BRAND, SITE_IDS, SITES } from "@/sites/config";
 export const metadata: Metadata = {
   title: { absolute: BRAND.title },
   description: BRAND.tagline,
-  keywords: ["식단", "급식", "학식", "밥.net"],
+  keywords: ["식단", "급식", "학식", "구내식당", "밥.net"],
   applicationName: BRAND.title,
   robots: { index: true, follow: true },
   alternates: { canonical: `${BRAND.url}/select` },
