@@ -3,6 +3,7 @@ import { addDays, subDays } from "date-fns";
 import { useAtom } from "jotai";
 import { useCallback, useEffect } from "react";
 import { currentDateAtom } from "@/app/(pages)/(home)/(atoms)/currentDateAtom";
+import { MEAL_ERROR_MESSAGES } from "@/shared/lib/mealErrors";
 import { mealQueryOptions, prefetchMealDate } from "@/shared/lib/queryKeys";
 import { refreshMealData } from "@/shared/lib/mealService";
 import type { MealFetchResult } from "@/shared/types/index";
@@ -14,7 +15,7 @@ import { useSiteId } from "@/sites/context";
 export function useMealQuery<T>(initialData?: MealFetchResult<T> | null) {
   const siteId = useSiteId();
   const apiPath = SITES[siteId].apiPath;
-  const fallbackError = SITES[siteId].errorMessages.noMealData;
+  const fallbackError = MEAL_ERROR_MESSAGES.noMealData;
   const [currentDate, setCurrentDate] = useAtom(currentDateAtom);
   const formattedDate = formatToDateString(currentDate);
   const queryClient = useQueryClient();

@@ -4,7 +4,8 @@ import { ImagePopup } from "@/sites/kdmhs/components/imagePopup";
 import { useFoodImageSearch } from "@/sites/kdmhs/hooks/useFoodImageSearch";
 import type { MealSectionProps } from "@/sites/kdmhs/types";
 import Glass from "@/shared/components/common/glass";
-import { SITES } from "@/sites/config";
+import { MealSectionStatusMessage } from "@/shared/components/mealSectionStatusMessage";
+import { resolveMealSectionMessage } from "@/shared/lib/mealErrors";
 import type { MealSearchResponse } from "@/shared/types/index";
 
 export const MealSection = memo(function MealSection({
@@ -86,38 +87,37 @@ export const MealSection = memo(function MealSection({
       return <div className="flex flex-row gap-2" />;
     }
 
-    if (isError) {
+    const statusMessage = resolveMealSectionMessage({
+      isLoading,
+      isError,
+      errorMessage,
+      isEmpty: isMealOperationEmpty,
+    });
+
+    if (statusMessage) {
       return (
         <div className="flex flex-row gap-2">
-          <p className="font-semibold text-[20px]">{errorMessage || SITES.kdmhs.errorMessages.noMealData}</p>
+          <MealSectionStatusMessage message={statusMessage} />
         </div>
       );
     }
 
-    if (!isMealOperationEmpty) {
-      return (
-        <>
-          {regularItems.map((item, i) => renderFoodItem(item, `${title}-regular-${i}`))}
-          {plusItems.length > 0 && (
-            <>
-              {renderSectionLabel("플러스바")}
-              {plusItems.map((item, i) => renderFoodItem(item, `${title}-plus-${i}`))}
-            </>
-          )}
-          {simpleMealItems.length > 0 && (
-            <>
-              {renderSectionLabel("간편식")}
-              {simpleMealItems.map((item, i) => renderFoodItem(item, `${title}-simple-${i}`))}
-            </>
-          )}
-        </>
-      );
-    }
-
     return (
-      <div className="flex flex-row gap-2">
-        <p className="font-semibold text-[20px]">{SITES.kdmhs.errorMessages.noMealOperation}</p>
-      </div>
+      <>
+        {regularItems.map((item, i) => renderFoodItem(item, `${title}-regular-${i}`))}
+        {plusItems.length > 0 && (
+          <>
+            {renderSectionLabel("플러스바")}
+            {plusItems.map((item, i) => renderFoodItem(item, `${title}-plus-${i}`))}
+          </>
+        )}
+        {simpleMealItems.length > 0 && (
+          <>
+            {renderSectionLabel("간편식")}
+            {simpleMealItems.map((item, i) => renderFoodItem(item, `${title}-simple-${i}`))}
+          </>
+        )}
+      </>
     );
   }, [regularItems, simpleMealItems, plusItems, isLoading, isError, errorMessage, title, isMealOperationEmpty]);
 

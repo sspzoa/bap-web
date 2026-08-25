@@ -18,10 +18,6 @@ export interface SiteConfig {
   googleSiteVerification?: string;
   adsenseClient?: string;
   mealSlots?: MealSlot[];
-  errorMessages: {
-    noMealData: string;
-    noMealOperation: string;
-  };
 }
 
 export const SITES: Record<SiteId, SiteConfig> = {
@@ -37,10 +33,6 @@ export const SITES: Record<SiteId, SiteConfig> = {
     manifestName: "밥.net",
     googleSiteVerification: "Autqjgf5q34Q-Bi4JnRwIuiJW-WzwkCU6Y4wlGU0IVU",
     adsenseClient: "ca-pub-2186209581588169",
-    errorMessages: {
-      noMealData: "정보가 없어요",
-      noMealOperation: "급식 운영이 없어요",
-    },
   },
   dgu: {
     id: "dgu",
@@ -56,10 +48,6 @@ export const SITES: Record<SiteId, SiteConfig> = {
       { time: "중식", operatingHours: "11:30~14:00" },
       { time: "석식", operatingHours: "17:00~19:00" },
     ],
-    errorMessages: {
-      noMealData: "정보가 없어요",
-      noMealOperation: "운영이 없어요",
-    },
   },
   mega: {
     id: "mega",
@@ -75,10 +63,6 @@ export const SITES: Record<SiteId, SiteConfig> = {
       { time: "중식", operatingHours: null },
       { time: "석식", operatingHours: null },
     ],
-    errorMessages: {
-      noMealData: "정보가 없어요",
-      noMealOperation: "운영이 없어요",
-    },
   },
 };
 

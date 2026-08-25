@@ -1,8 +1,8 @@
 import Image from "next/image";
 import { memo } from "react";
 import Glass from "@/shared/components/common/glass";
-import { SITES } from "@/sites/config";
-import { useSiteId } from "@/sites/context";
+import { MealSectionStatusMessage } from "@/shared/components/mealSectionStatusMessage";
+import { resolveMealSectionMessage } from "@/shared/lib/mealErrors";
 import type { MealSectionProps, MenuCorner } from "@/sites/dgu/types";
 
 const MEAL_ICONS: Record<string, string> = {
@@ -42,13 +42,13 @@ export const MealSection = memo(function MealSection({
   errorMessage,
   showContent,
 }: MealSectionProps) {
-  const siteId = useSiteId();
   const showCorners = !isLoading && !isError && meal.corners.length > 0;
-  const fallbackMessage = isError
-    ? errorMessage || SITES[siteId].errorMessages.noMealData
-    : isLoading
-      ? ""
-      : SITES[siteId].errorMessages.noMealOperation;
+  const statusMessage = resolveMealSectionMessage({
+    isLoading,
+    isError,
+    errorMessage,
+    isEmpty: meal.corners.length === 0,
+  });
 
   // 모바일은 카드 1장이 화면 전체를 차지하는 스와이프(snap) 섹션, 데스크톱은 2개가 좌우로 나란히(md:flex-1).
   // min-h-0 + Glass 기본 overflow-y-auto 로 내용이 넘치면 카드 내부에서 세로 스크롤.
@@ -80,7 +80,7 @@ export const MealSection = memo(function MealSection({
               ))}
             </div>
           ) : (
-            fallbackMessage && <p className="font-semibold text-[20px]">{fallbackMessage}</p>
+            statusMessage && <MealSectionStatusMessage message={statusMessage} />
           )}
         </>
       )}
