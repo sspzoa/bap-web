@@ -3,7 +3,6 @@ import { memo } from "react";
 import { MealNavigationBar } from "@/app/(pages)/(home)/(components)/mealNavigationBar";
 import LoadingSpinner from "@/shared/components/common/loadingSpinner";
 import { MealDesktopBackground } from "@/shared/components/mealDesktopBackground";
-import { SiteSelectButton } from "@/shared/components/siteSelectButton";
 
 interface MealPageShellProps {
   background: ReactNode;
@@ -36,7 +35,6 @@ export const MealPageShell = memo(function MealPageShell({
     <div className="relative flex h-svh items-center justify-center overflow-hidden py-4 md:px-4 md:py-8">
       {background}
       <MealDesktopBackground />
-      <SiteSelectButton />
 
       <div className="z-10 flex h-full max-h-[900px] w-full max-w-[1500px] flex-col-reverse gap-4 md:flex-col md:px-4">
         <MealNavigationBar
