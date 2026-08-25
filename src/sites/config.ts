@@ -45,7 +45,7 @@ export const SITES: Record<SiteId, SiteConfig> = {
     siteName: "호랑에듀 구내식당",
     schoolName: "호랑에듀 구내식당",
     apiPath: "/horang",
-    description: "호랑에듀 구내식당을 확인해보세요",
+    description: "호랑에듀 구내식당 메뉴를 확인해보세요",
     keywords: ["구내식당", "호랑에듀", "horang-edu", "식단", "밥.net"],
     mealSlots: [
       { time: "중식", operatingHours: null },
@@ -56,7 +56,7 @@ export const SITES: Record<SiteId, SiteConfig> = {
 
 export const BRAND = {
   title: "밥.net",
-  tagline: "급식·학식·구내식당을 확인해보세요",
+  tagline: "오늘의 메뉴를 확인해보세요",
   url: "https://밥.net",
 } as const;
 
