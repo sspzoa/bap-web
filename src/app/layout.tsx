@@ -44,7 +44,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const description = config.description;
 
   return {
-    metadataBase: new URL(config.url),
+    metadataBase: new URL(BRAND.url),
     title: {
       default: config.siteName,
       template: `%s | ${config.siteName}`,
@@ -53,7 +53,7 @@ export async function generateMetadata(): Promise<Metadata> {
     applicationName: config.siteName,
     keywords: config.keywords,
     alternates: {
-      canonical: config.url,
+      canonical: BRAND.url,
     },
     robots: {
       index: true,
@@ -67,7 +67,7 @@ export async function generateMetadata(): Promise<Metadata> {
     openGraph: {
       type: "website",
       locale: "ko_KR",
-      url: config.url,
+      url: BRAND.url,
       siteName: config.siteName,
       title: config.siteName,
       description,
@@ -124,7 +124,7 @@ export default async function RootLayout({ children }: RootLayoutProps) {
         )}
       </head>
       <body className="antialiased">
-        {config && <JsonLd name={config.siteName} description={config.description} url={config.url} />}
+        {config && <JsonLd name={config.siteName} description={config.description} url={BRAND.url} />}
         <Analytics />
         <SpeedInsights />
         <SiteProvider siteId={siteId}>

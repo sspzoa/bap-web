@@ -13,7 +13,7 @@ export default async function OpenGraphImage() {
   const config = siteId ? getSiteConfig(siteId) : null;
 
   return renderOgCard({
-    mark: config?.title ?? BRAND.title,
+    mark: config?.siteName ?? BRAND.title,
     caption: config?.schoolName ?? BRAND.tagline,
   });
 }

@@ -8,7 +8,6 @@ export default async function manifest(): Promise<MetadataRoute.Manifest> {
     ? getSiteConfig(siteId)
     : {
         siteName: BRAND.title,
-        title: BRAND.title,
         description: BRAND.tagline,
       };
 

@@ -39,7 +39,7 @@ export default function SelectPage() {
 
         <div className="flex w-full flex-col gap-3">
           {SITE_IDS.map((id) => (
-            <SiteSelectLink key={id} siteId={id} href={SITES[id].url}>
+            <SiteSelectLink key={id} siteId={id} href="/">
               <Glass className="flex w-full cursor-pointer items-center justify-center p-5 transition-transform duration-100 active:scale-[0.98] active:opacity-80">
                 <p className="font-bold text-[20px] tracking-tight">{SITES[id].schoolName}</p>
               </Glass>

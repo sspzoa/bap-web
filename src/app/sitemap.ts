@@ -1,16 +1,16 @@
 import type { MetadataRoute } from "next";
-import { BRAND, SITES } from "@/sites/config";
+import { BRAND } from "@/sites/config";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
 
   return [
-    ...Object.values(SITES).map((site) => ({
-      url: site.url,
+    {
+      url: BRAND.url,
       lastModified: now,
-      changeFrequency: "daily" as const,
+      changeFrequency: "daily",
       priority: 1,
-    })),
+    },
     {
       url: `${BRAND.url}/select`,
       lastModified: now,

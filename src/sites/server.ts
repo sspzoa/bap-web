@@ -8,12 +8,7 @@ export async function getSiteId(): Promise<SiteId | null> {
   return isSiteId(siteId) ? siteId : null;
 }
 
-export async function getPathname(): Promise<string> {
-  const headersList = await headers();
-  return headersList.get("x-pathname") ?? "";
-}
-
 export async function isSelectPath(): Promise<boolean> {
-  const pathname = await getPathname();
-  return isSelectPathname(pathname);
+  const headersList = await headers();
+  return isSelectPathname(headersList.get("x-pathname") ?? "");
 }
