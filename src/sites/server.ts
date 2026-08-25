@@ -1,4 +1,5 @@
 import { headers } from "next/headers";
+import { isSelectPath as isSelectPathname } from "@/shared/lib/sitePreference";
 import { isSiteId, type SiteId } from "@/sites/config";
 
 export async function getSiteId(): Promise<SiteId | null> {
@@ -14,5 +15,5 @@ export async function getPathname(): Promise<string> {
 
 export async function isSelectPath(): Promise<boolean> {
   const pathname = await getPathname();
-  return pathname === "/select" || pathname.startsWith("/select/");
+  return isSelectPathname(pathname);
 }

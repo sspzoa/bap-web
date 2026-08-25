@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { BRAND, SITES } from "@/sites/config";
 
 export default function robots(): MetadataRoute.Robots {
   return {
@@ -6,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: "*",
       allow: "/",
     },
-    sitemap: ["https://밥.net/sitemap.xml", "https://dflex.밥.net/sitemap.xml", "https://mega.밥.net/sitemap.xml"],
+    sitemap: [BRAND.url, ...Object.values(SITES).map((site) => site.url)].map((url) => `${url}/sitemap.xml`),
   };
 }
