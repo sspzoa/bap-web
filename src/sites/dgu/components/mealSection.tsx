@@ -27,7 +27,7 @@ const CornerBlock = memo(function CornerBlock({ corner }: { corner: MenuCorner }
   return (
     <div className="flex w-full flex-col gap-2" data-id={corner.name}>
       <div className="flex flex-row items-baseline gap-2">
-        <p className="break-words font-bold text-[20px] tracking-tight">{corner.name}</p>
+        <p className="break-words font-bold text-[15px] opacity-50">{corner.name}</p>
         {corner.price && <p className="shrink-0 font-bold text-[15px] opacity-50">₩{corner.price}</p>}
       </div>
       <MenuItems items={corner.items} />
@@ -70,7 +70,7 @@ export const MealSection = memo(function MealSection({
             />
             <p className="font-bold text-[32px] tracking-tight">{meal.time}</p>
             {meal.operatingHours && (
-              <p className="ml-auto text-[16px] opacity-50 tracking-tight">{meal.operatingHours}</p>
+              <p className="ml-auto text-[16px] tracking-tight opacity-50">{meal.operatingHours}</p>
             )}
           </div>
           {showCorners ? (

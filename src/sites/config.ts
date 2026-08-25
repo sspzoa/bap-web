@@ -43,7 +43,7 @@ export const SITES: Record<SiteId, SiteConfig> = {
   horang: {
     id: "horang",
     siteName: "호랑에듀 구내식당",
-    schoolName: "호랑에듀 구내식당",
+    schoolName: "메가스터디 구내식당",
     apiPath: "/horang",
     description: "호랑에듀 구내식당 메뉴를 확인해보세요",
     keywords: ["구내식당", "호랑에듀", "horang-edu", "식단", "밥.net"],
