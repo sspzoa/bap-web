@@ -1,5 +1,5 @@
-import { redirect } from "next/navigation";
 import MealLayout from "@/shared/components/mealLayout";
+import { SiteSelectView } from "@/shared/components/siteSelectView";
 import { findSite, getCatalog } from "@/shared/lib/catalog";
 import { getMealDataServerSide } from "@/shared/lib/mealService";
 import type { PublicDayMenu } from "@/shared/types/index";
@@ -14,7 +14,7 @@ export default async function Page() {
   const site = findSite(catalog, siteId);
 
   if (!site) {
-    redirect("/select");
+    return <SiteSelectView />;
   }
 
   const formattedDate = formatToDateString(getInitialDateForServer());

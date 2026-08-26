@@ -12,12 +12,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1,
     },
     {
-      url: `${BRAND.url}/select`,
-      lastModified: now,
-      changeFrequency: "monthly",
-      priority: 0.3,
-    },
-    {
       url: `${BRAND.url}/docs`,
       lastModified: now,
       changeFrequency: "monthly",

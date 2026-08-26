@@ -1,34 +1,14 @@
-import type { Metadata } from "next";
-import { SiteSelectLink } from "@/app/(pages)/select/(routes)/siteSelectLink";
+"use client";
+
 import Glass from "@/shared/components/common/glass";
 import { MealDesktopBackground } from "@/shared/components/mealDesktopBackground";
-import { getCatalog } from "@/shared/lib/catalog";
+import { SiteSelectLink } from "@/shared/components/siteSelectLink";
 import { BRAND } from "@/sites/config";
+import { useCatalog, useOptionalSiteId } from "@/sites/context";
 
-export const metadata: Metadata = {
-  title: { absolute: BRAND.title },
-  description: "오늘 메뉴를 한곳에서 확인하세요.",
-  keywords: ["식단", "급식", "학식", "구내식당", "밥.net"],
-  applicationName: BRAND.title,
-  robots: { index: true, follow: true },
-  alternates: { canonical: `${BRAND.url}/select` },
-  openGraph: {
-    type: "website",
-    locale: "ko_KR",
-    url: `${BRAND.url}/select`,
-    siteName: BRAND.title,
-    title: BRAND.title,
-    description: "오늘 메뉴를 한곳에서 확인하세요.",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: BRAND.title,
-    description: "오늘 메뉴를 한곳에서 확인하세요.",
-  },
-};
-
-export default async function SelectPage() {
-  const catalog = await getCatalog();
+export function SiteSelectView() {
+  const catalog = useCatalog();
+  const currentSiteId = useOptionalSiteId();
 
   return (
     <div className="relative flex min-h-svh flex-col overflow-x-hidden p-4">
@@ -44,10 +24,14 @@ export default async function SelectPage() {
           <div className="grid w-full grid-cols-1 gap-3 md:grid-cols-3">
             {catalog.map((site) => {
               const showSchoolName = site.schoolName !== site.name;
+              const isCurrent = site.id === currentSiteId;
 
               return (
-                <SiteSelectLink key={site.id} siteId={site.id} href="/" className="block h-full">
-                  <Glass className="flex h-full w-full cursor-pointer flex-col items-center justify-center gap-1 p-5 transition-transform duration-100 active:scale-[0.98] active:opacity-80">
+                <SiteSelectLink key={site.id} siteId={site.id} className="block h-full">
+                  <Glass
+                    className={`flex h-full w-full cursor-pointer flex-col items-center justify-center gap-1 p-5 transition-transform duration-100 active:scale-[0.98] active:opacity-80 ${
+                      isCurrent ? "bg-white/30" : ""
+                    }`}>
                     <p className="font-bold text-[20px] tracking-tight">{site.name}</p>
                     {showSchoolName && <p className="text-[14px] opacity-55">{site.schoolName}</p>}
                   </Glass>

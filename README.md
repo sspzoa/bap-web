@@ -6,11 +6,10 @@ API: [bap-back](https://github.com/sspzoa/bap-back) · 문서: [/docs](https://�
 
 ## 개요
 
-- `/` — 선택한 사이트 식단 (쿠키 `bap-site-id`)
-- `/select` — 사이트 선택
+- `/` — 식단. 쿠키가 없으면 같은 페이지에서 사이트를 고릅니다 (쿠키 `bap-site-id`)
 - `/docs` — API 문서 (카탈로그·MCP 포함, `GET /docs`에서 렌더)
 
-사이트별 App Router 폴더는 **없습니다**. 백엔드에 프로바이더만 추가하면 select·홈·docs에 자동 반영됩니다.
+사이트별 App Router 폴더는 **없습니다**. 백엔드에 프로바이더만 추가하면 홈 사이트 선택·docs에 자동 반영됩니다.
 
 ## 빠른 시작
 
@@ -41,16 +40,18 @@ Next.js 16 **`proxy.ts`** (middleware 대체):
 
 | 경로 | 동작 |
 |---|---|
-| `/` + 쿠키 없음 | → `/select` |
-| `/`, `/select`, `/docs` | `x-site-id` 헤더 주입 (select·docs는 비움) |
-| `/` + 잘못된 site id | 페이지에서 `/select`로 redirect |
+| `/` + 쿠키 없음 | 홈에서 사이트 선택 UI (리다이렉트 없음) |
+| `/select` | → `/` (이전 북마크용) |
+| `/` | `x-site-id` 헤더 주입 |
+| `/docs` | `x-site-id` 비움 |
+| `/` + 잘못된 site id | 홈에서 사이트 선택 UI |
 
-클라이언트는 쿠키를 직접 읽지 않고 `useSite()` / `SiteProvider`를 씁니다.
+클라이언트는 쿠키를 직접 읽지 않고 `useSite()` / `SiteProvider`를 씁니다. 이미 사이트를 고른 뒤 학교를 바꿀 때는 `SiteSelectButton` → `useSiteSelect()` 오버레이로 `/` 위에서 상태만 전환합니다.
 
 ## 데이터 흐름
 
 ```
-GET / (catalog)           →  layout / select / docs / manifest
+GET / (catalog)           →  layout / 홈 선택 UI / docs / manifest
 GET /{basePath}/{date}    →  TanStack Query (useMealQuery)
 GET /docs                 →  /docs 페이지 (엔드포인트·MCP·프로바이더 가이드)
 POST /mcp                 → 에이전트 (프론트가 호출하지 않음)
@@ -80,7 +81,7 @@ public/
 
 ## 새 사이트 추가
 
-**기본은 프론트 수정 없음.** 학교는 bap-back 프로바이더 + `presentation`으로만 추가합니다. 카탈로그가 `/select`, 홈, 엣지 패널, `/docs`, PWA manifest, MCP `bap_list_providers`에 같이 반영됩니다.
+**기본은 프론트 수정 없음.** 학교는 bap-back 프로바이더 + `presentation`으로만 추가합니다. 카탈로그가 홈 사이트 선택, 엣지 패널, `/docs`, PWA manifest, MCP `bap_list_providers`에 같이 반영됩니다.
 
 공개 가이드: [밥.net/docs#adding-provider](https://밥.net/docs#adding-provider) · 백엔드 절차: [bap-back README](https://github.com/sspzoa/bap-back#새-프로바이더-추가)
 
@@ -118,6 +119,6 @@ Docker (Bun 빌드, `TZ=Asia/Seoul`). 빌드 시 `NEXT_PUBLIC_API_BASE_URL` bake
 
 ## 알려진 이슈
 
-- 카탈로그 fetch 실패 시 select가 빈 그리드 (에러 UI 없음)
+- 카탈로그 fetch 실패 시 사이트 선택이 빈 그리드 (에러 UI 없음)
 - 모든 사이트 OG 이미지 공유 (`public/og.png`)
 - React Query Devtools가 prod에서도 마운트됨

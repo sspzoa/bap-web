@@ -42,7 +42,8 @@ Pair repo: **bap-back** (API). Default API: `https://api.밥.net` / `https://api
 | `src/shared/lib/catalog.ts` | `GET /` catalog (60s revalidate) |
 | `src/shared/lib/mealService.ts` | Meal fetch + kdmhs search |
 | `src/shared/hooks/useMealQuery.ts` | Client meal query + prefetch |
-| `src/app/(pages)/select/` | Site picker |
+| `src/shared/components/siteSelectView.tsx` | Site picker (home state, not a route) |
+| `src/shared/components/siteSelectOverlay.tsx` | Picker overlay (`useSiteSelect`) |
 | `src/shared/lib/docs.ts` | `GET /docs` fetch |
 | `src/sites/config.ts` | `BRAND` only |
 | `public/og.png` | Static OG (served by `ogCard.tsx`) |
@@ -61,7 +62,7 @@ bun run lint
 
 | Surface | Source |
 |---|---|
-| `/select`, home, edge panel, manifest | `GET /` (`getCatalog`) |
+| `/` picker, home, edge panel, manifest | `GET /` (`getCatalog`) |
 | `/docs` (endpoints, MCP, 새 프로바이더 가이드) | `GET /docs` (`getApiDocs`) |
 | MCP tools | `POST /mcp` on the API — not called from this app |
 

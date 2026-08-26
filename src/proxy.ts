@@ -20,12 +20,12 @@ export function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
   const preferredSiteId = readSitePreference(request.cookies.get(SITE_PREFERENCE_COOKIE)?.value);
 
-  if (isSelectPath(pathname) || isDocsPath(pathname)) {
-    return nextWithHeaders(request, null);
+  if (isSelectPath(pathname)) {
+    return NextResponse.redirect(new URL("/", request.url));
   }
 
-  if (pathname === "/" && !preferredSiteId) {
-    return NextResponse.redirect(new URL("/select", request.url));
+  if (isDocsPath(pathname)) {
+    return nextWithHeaders(request, null);
   }
 
   return nextWithHeaders(request, preferredSiteId);

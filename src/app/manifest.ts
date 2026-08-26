@@ -14,7 +14,7 @@ export default async function manifest(): Promise<MetadataRoute.Manifest> {
     name,
     short_name: name,
     description,
-    start_url: site ? "/" : "/select",
+    start_url: "/",
     display: "fullscreen",
     orientation: "any",
     lang: "ko",

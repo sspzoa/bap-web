@@ -52,7 +52,7 @@ export default async function DocsPage() {
               확인해 주세요.
             </p>
           </Glass>
-          <a href="/select" className="text-[14px] underline underline-offset-4 opacity-55">
+          <a href="/" className="text-[14px] underline underline-offset-4 opacity-55">
             {BRAND.title}으로 돌아가기
           </a>
         </div>
@@ -97,7 +97,7 @@ export default async function DocsPage() {
 
       <div className="relative z-10 mx-auto flex min-h-[calc(100svh-2rem)] w-full max-w-[720px] flex-col">
         <header className="flex items-center justify-between">
-          <a href="/select" className="font-bold text-[18px] tracking-tight md:text-[20px]">
+          <a href="/" className="font-bold text-[18px] tracking-tight md:text-[20px]">
             {BRAND.title}
           </a>
           <p className="text-[13px] opacity-55">API</p>
@@ -193,7 +193,7 @@ export default async function DocsPage() {
         </main>
 
         <footer className="pb-2 text-center text-[13px] opacity-45">
-          <a href="/select" className="underline underline-offset-2 duration-100 active:opacity-70">
+          <a href="/" className="underline underline-offset-2 duration-100 active:opacity-70">
             {BRAND.title}
           </a>
           {" · "}

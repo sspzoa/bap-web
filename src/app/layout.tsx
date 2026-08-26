@@ -7,7 +7,7 @@ import { findSite, getCatalog } from "@/shared/lib/catalog";
 import QueryProvider from "@/shared/lib/provider";
 import { BRAND } from "@/sites/config";
 import { SiteProvider } from "@/sites/context";
-import { getSiteId, isSelectPath } from "@/sites/server";
+import { getSiteId } from "@/sites/server";
 
 const FALLBACK_METADATA = {
   title: BRAND.title,
@@ -20,18 +20,18 @@ export async function generateMetadata(): Promise<Metadata> {
   const catalog = await getCatalog();
   const site = findSite(catalog, siteId);
 
-  if (!site || (await isSelectPath())) {
+  if (!site) {
     return {
       metadataBase: new URL(FALLBACK_METADATA.url),
       title: FALLBACK_METADATA.title,
       description: FALLBACK_METADATA.description,
       applicationName: FALLBACK_METADATA.title,
       keywords: ["식단", "급식", "학식", "구내식당", "밥.net"],
-      alternates: { canonical: `${FALLBACK_METADATA.url}/select` },
+      alternates: { canonical: FALLBACK_METADATA.url },
       openGraph: {
         type: "website",
         locale: "ko_KR",
-        url: `${FALLBACK_METADATA.url}/select`,
+        url: FALLBACK_METADATA.url,
         siteName: FALLBACK_METADATA.title,
         title: FALLBACK_METADATA.title,
         description: FALLBACK_METADATA.description,
@@ -111,7 +111,7 @@ interface RootLayoutProps {
 export default async function RootLayout({ children }: RootLayoutProps) {
   const siteId = await getSiteId();
   const catalog = await getCatalog();
-  const site = siteId && !(await isSelectPath()) ? findSite(catalog, siteId) : null;
+  const site = findSite(catalog, siteId);
 
   return (
     <html lang="ko">
