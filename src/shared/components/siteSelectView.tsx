@@ -7,8 +7,14 @@ import { API_BASE_URL } from "@/shared/lib/apiBase";
 import { BRAND } from "@/sites/config";
 import { useCatalog, useOptionalSiteId } from "@/sites/context";
 
-const linkClassName =
-  "font-bold text-[15px] uppercase tracking-tight underline underline-offset-4 opacity-60 duration-100 active:opacity-40";
+const footerLinks = [
+  { href: `${API_BASE_URL}/docs`, label: "API 문서" },
+  { href: `${API_BASE_URL}/changelog`, label: "체인지로그" },
+  { href: BRAND.github.web, label: "프론트 기여하기" },
+  { href: BRAND.github.api, label: "백엔드 기여하기" },
+] as const;
+
+const linkClassName = "underline underline-offset-2 duration-100 active:opacity-70";
 
 export function SiteSelectView() {
   const catalog = useCatalog();
@@ -46,47 +52,43 @@ export function SiteSelectView() {
               );
             })}
           </div>
+
+          <footer className="flex flex-col items-center gap-1 text-[13px] opacity-45">
+            <nav aria-label="사이트 링크" className="flex flex-wrap items-center justify-center gap-x-2 gap-y-0.5">
+              {footerLinks.map((link, index) => (
+                <span key={link.href} className="flex items-center gap-2">
+                  {index > 0 && (
+                    <span aria-hidden className="select-none">
+                      ·
+                    </span>
+                  )}
+                  <a href={link.href} target="_blank" rel="noopener noreferrer" className={linkClassName}>
+                    {link.label}
+                  </a>
+                </span>
+              ))}
+            </nav>
+            <p className="text-center">
+              maintained by{" "}
+              <a
+                href="https://github.com/sspzoa"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline underline-offset-2 duration-100 active:opacity-70">
+                sspzoa
+              </a>
+              ,{" "}
+              <a
+                href="https://github.com/vvcnyy"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline underline-offset-2 duration-100 active:opacity-70">
+                vvcnyy
+              </a>
+            </p>
+          </footer>
         </div>
       </div>
-
-      <div className="z-10 mt-8 mb-3 flex items-center justify-center gap-3 text-[15px] opacity-60">
-        <a
-          href={`${API_BASE_URL}/docs`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className={linkClassName}>
-          API docs
-        </a>
-        <span aria-hidden className="select-none opacity-50">
-          ·
-        </span>
-        <a
-          href={`${API_BASE_URL}/changelog`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className={linkClassName}>
-          CHANGELOG
-        </a>
-      </div>
-
-      <footer className="z-10 pb-2 text-center text-[13px] opacity-45">
-        maintained by{" "}
-        <a
-          href="https://github.com/sspzoa"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="underline underline-offset-2 duration-100 active:opacity-70">
-          sspzoa
-        </a>
-        ,{" "}
-        <a
-          href="https://github.com/vvcnyy"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="underline underline-offset-2 duration-100 active:opacity-70">
-          vvcnyy
-        </a>
-      </footer>
     </div>
   );
 }
