@@ -41,13 +41,11 @@ Pair repo: **bap-back** (API). Default API: `https://api.밥.net` / `https://api
 |---|---|
 | `src/proxy.ts` | Cookie → redirect / headers |
 | `src/shared/lib/catalog.ts` | `GET /` catalog (60s revalidate) |
-| `src/shared/lib/changelog.ts` | `GET /changelog` (60s revalidate) |
 | `src/shared/lib/mealService.ts` | Meal fetch + kdmhs search |
 | `src/shared/hooks/useMealQuery.ts` | Client meal query + prefetch |
 | `src/shared/components/siteSelectView.tsx` | Site picker (home state, not a route) |
 | `src/shared/components/siteSelectOverlay.tsx` | Picker overlay (`useSiteSelect`) |
 | `src/sites/config.ts` | `BRAND` (`version` 포함) |
-| `src/shared/components/changelogMarkdown.tsx` | 홈 CHANGELOG 기본 마크다운 렌더 |
 | `public/og.png` | Static OG (served by `ogCard.tsx`) |
 
 ## Commands
@@ -76,9 +74,9 @@ Walkthrough: [README.md](./README.md#새-사이트-추가) · [bap-back](https:/
 
 푸시(또는 커밋 요청)마다 에이전트가 **알아서** 버전을 올린다. 사용자에게 묻지 않는다.
 
-- **표시** — `src/sites/config.ts`의 `BRAND.version` (홈 `v…`). 업데이트 내역은 `GET /changelog` → `getChangelog()`.
+- **표시** — `src/sites/config.ts`의 `BRAND.version` (홈 `v…`). CHANGELOG 링크는 `API_BASE_URL/changelog` (API HTML 페이지).
 - **함께 수정** — `package.json` `"version"`. **bap-back**도 같은 semver (`APP_VERSION`).
-- **CHANGELOG** — **bap-back** 루트 `CHANGELOG.md`만 수정. 프론트는 API로 읽는다.
+- **CHANGELOG** — **bap-back** 루트 `CHANGELOG.md`만 수정. `GET /changelog`는 HTML 페이지. 프론트는 링크만.
 - **규칙** — 기본은 patch +1. UI/기능 추가는 minor. API 계약·라우팅 breaking은 major.
 - **체크** — 버전 bump 없이 푸시/커밋하지 않는다. CHANGELOG 없이 버전만 올리지 않는다.
 

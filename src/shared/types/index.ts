@@ -61,10 +61,3 @@ export interface CatalogResponse {
   message: string;
   providers: SitePresentation[];
 }
-
-export interface ChangelogResponse {
-  requestId: string;
-  timestamp: string;
-  version: string;
-  markdown: string;
-}
