@@ -48,7 +48,7 @@ Next.js 16 **`proxy.ts`** (middleware 대체):
 | `/docs` | → `API_BASE_URL/docs` (Scalar) |
 | `/` + 잘못된 site id | 홈에서 사이트 선택 UI |
 
-클라이언트는 쿠키를 직접 읽지 않고 `useSite()` / `SiteProvider`를 씁니다. 이미 사이트를 고른 뒤 학교를 바꿀 때는 `SiteSelectButton` → `useSiteSelect()` 오버레이로 `/` 위에서 상태만 전환합니다.
+클라이언트는 쿠키를 직접 읽지 않고 `useSite()` / `SiteProvider`를 씁니다. 홈으로 가면 `bap-site-id`를 지우고 사이트 선택 UI를 보여 줍니다.
 
 ## 데이터 흐름
 

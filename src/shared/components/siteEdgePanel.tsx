@@ -3,25 +3,19 @@
 import { LayoutGrid } from "lucide-react";
 import { memo, useCallback, useRef, useState } from "react";
 import Glass from "@/shared/components/common/glass";
-import { setSitePreferenceCookie } from "@/shared/lib/sitePreference";
-import { useCatalog, useSiteId, useSiteSelect } from "@/sites/context";
+import { goHome, setSitePreferenceCookie } from "@/shared/lib/sitePreference";
+import { useCatalog, useSiteId } from "@/sites/context";
 
 const SWIPE_THRESHOLD = 40;
 
 export const SiteEdgePanel = memo(function SiteEdgePanel() {
   const siteId = useSiteId();
   const catalog = useCatalog();
-  const { openSelect } = useSiteSelect();
   const [isOpen, setIsOpen] = useState(false);
   const touchStartX = useRef<number | null>(null);
 
   const close = useCallback(() => setIsOpen(false), []);
   const toggle = useCallback(() => setIsOpen((open) => !open), []);
-
-  const goHome = () => {
-    close();
-    openSelect();
-  };
 
   const selectSite = (event: React.MouseEvent<HTMLAnchorElement>, id: string) => {
     event.preventDefault();

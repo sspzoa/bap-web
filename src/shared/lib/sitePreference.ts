@@ -22,6 +22,16 @@ export function setSitePreferenceCookie(siteId: string): void {
   document.cookie = `${SITE_PREFERENCE_COOKIE}=${siteId}; Path=/; Max-Age=${SITE_PREFERENCE_MAX_AGE}; SameSite=Lax${secure}`;
 }
 
+export function clearSitePreferenceCookie(): void {
+  const secure = window.location.protocol === "https:" ? "; Secure" : "";
+  document.cookie = `${SITE_PREFERENCE_COOKIE}=; Path=/; Max-Age=0; SameSite=Lax${secure}`;
+}
+
+export function goHome(): void {
+  clearSitePreferenceCookie();
+  window.location.assign("/");
+}
+
 export function readSiteQueryParam(value: string | null | undefined): string | null {
   return readSitePreference(value ?? undefined);
 }

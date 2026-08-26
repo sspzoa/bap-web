@@ -43,8 +43,7 @@ Pair repo: **bap-back** (API). Default API: `https://api.밥.net` / `https://api
 | `src/shared/lib/catalog.ts` | `GET /` catalog (60s revalidate) |
 | `src/shared/lib/mealService.ts` | Meal fetch + kdmhs search |
 | `src/shared/hooks/useMealQuery.ts` | Client meal query + prefetch |
-| `src/shared/components/siteSelectView.tsx` | Site picker (home state, not a route) |
-| `src/shared/components/siteSelectOverlay.tsx` | Picker overlay (`useSiteSelect`) |
+| `src/shared/components/siteSelectView.tsx` | Site picker (home). Mount 시 쿠키 제거 |
 | `src/sites/config.ts` | `BRAND` (`version` 포함) |
 | `public/og.png` | Static OG (served by `ogCard.tsx`) |
 

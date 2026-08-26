@@ -1,9 +1,11 @@
 "use client";
 
+import { useEffect } from "react";
 import Glass from "@/shared/components/common/glass";
 import { MealDesktopBackground } from "@/shared/components/mealDesktopBackground";
 import { SiteSelectLink } from "@/shared/components/siteSelectLink";
 import { API_BASE_URL } from "@/shared/lib/apiBase";
+import { clearSitePreferenceCookie } from "@/shared/lib/sitePreference";
 import { BRAND } from "@/sites/config";
 import { useCatalog, useOptionalSiteId } from "@/sites/context";
 
@@ -19,6 +21,10 @@ const linkClassName = "underline underline-offset-2 duration-100 active:opacity-
 export function SiteSelectView() {
   const catalog = useCatalog();
   const currentSiteId = useOptionalSiteId();
+
+  useEffect(() => {
+    clearSitePreferenceCookie();
+  }, []);
 
   return (
     <div className="relative flex min-h-svh flex-col overflow-x-hidden p-4">

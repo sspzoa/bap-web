@@ -4,7 +4,6 @@ import { MealNavigationBar } from "@/app/(pages)/(home)/(components)/mealNavigat
 import LoadingSpinner from "@/shared/components/common/loadingSpinner";
 import { MealDesktopBackground } from "@/shared/components/mealDesktopBackground";
 import { SiteEdgePanel } from "@/shared/components/siteEdgePanel";
-import { SiteSelectOverlay } from "@/shared/components/siteSelectOverlay";
 
 interface MealPageShellProps {
   background: ReactNode;
@@ -36,7 +35,6 @@ export const MealPageShell = memo(function MealPageShell({
       {background}
       <MealDesktopBackground />
       <SiteEdgePanel />
-      <SiteSelectOverlay />
 
       <div className="z-10 flex h-full max-h-[900px] w-full max-w-[1500px] flex-col-reverse gap-4 md:flex-col md:px-4">
         <MealNavigationBar
