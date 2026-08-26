@@ -3,6 +3,7 @@
 import Glass from "@/shared/components/common/glass";
 import { MealDesktopBackground } from "@/shared/components/mealDesktopBackground";
 import { SiteSelectLink } from "@/shared/components/siteSelectLink";
+import { API_BASE_URL } from "@/shared/lib/apiBase";
 import { BRAND } from "@/sites/config";
 import { useCatalog, useOptionalSiteId } from "@/sites/context";
 
@@ -17,7 +18,10 @@ export function SiteSelectView() {
       <div className="z-10 flex flex-1 flex-col items-center justify-center">
         <div className="flex w-full max-w-[600px] flex-col items-center gap-8 md:max-w-[960px]">
           <div className="flex flex-col items-center gap-2">
-            <h1 className="font-bold text-[40px] tracking-tight">{BRAND.title}</h1>
+            <div className="flex items-baseline gap-2">
+              <h1 className="font-bold text-[40px] tracking-tight">{BRAND.title}</h1>
+              <span className="font-medium text-[14px] opacity-40 tabular-nums">v{BRAND.version}</span>
+            </div>
             <p className="text-[16px] opacity-60">오늘 메뉴를 한곳에서 확인하세요</p>
           </div>
 
@@ -43,7 +47,7 @@ export function SiteSelectView() {
       </div>
 
       <a
-        href="/docs"
+        href={`${API_BASE_URL}/docs`}
         className="z-10 mb-3 text-center font-bold text-[15px] uppercase tracking-tight underline underline-offset-4 opacity-60 duration-100 active:opacity-40">
         API docs
       </a>

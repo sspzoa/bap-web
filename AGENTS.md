@@ -21,12 +21,13 @@ Pair repo: **bap-back** (API). Default API: `https://api.밥.net` / `https://api
 - **Catalog first** — `getCatalog()` / `useSite()` for site metadata. Never hardcode `/kdmhs`, `/dgu`, `/horang` or a `SITES` map.
 - **Single meal UI** — extend `src/shared/components/mealLayout.tsx`, `mealSection.tsx`, shared hooks. Do not add `src/sites/{id}/` trees.
 - **Proxy, not middleware** — routing lives in `src/proxy.ts`. Pass site context via headers (`x-site-id`, `x-pathname`), read on server with `getSiteId()` from `src/sites/server.ts`.
-- **API base** — import `API_BASE_URL` from `src/shared/lib/apiBase.ts` for fetch and docs examples.
+- **API base** — import `API_BASE_URL` from `src/shared/lib/apiBase.ts` for fetch and API docs links.
 - **TanStack Query for meals** — keys in `src/shared/lib/queryKeys.ts`. Do not cache API meal data in Jotai (date atom only).
 - **SSR hydration** — `initialData` from the server applies only when `formattedDate === initialFormattedDate` (see `useMealQuery`).
 - **Shared layer boundaries** — `src/shared/**` must not import from `src/app/(pages)/**`.
 - **Next.js 16** — read `node_modules/next/dist/docs/` before changing routing, metadata, OG, or proxy.
-- **Docs page** — fetch `GET /docs` via `getApiDocs()`; do not hardcode endpoint/type/error/MCP copy in the frontend.
+- **API docs** — Scalar is served by the backend (`API_BASE_URL/docs`). Frontend `/docs` only redirects there.
+- **Version on push** — 커밋·푸시 전에 semver를 올리고 **bap-back과 같은 번호**로 맞춘다. 아래 [Versioning](#versioning) 참고.
 
 ## Don't
 
@@ -44,8 +45,7 @@ Pair repo: **bap-back** (API). Default API: `https://api.밥.net` / `https://api
 | `src/shared/hooks/useMealQuery.ts` | Client meal query + prefetch |
 | `src/shared/components/siteSelectView.tsx` | Site picker (home state, not a route) |
 | `src/shared/components/siteSelectOverlay.tsx` | Picker overlay (`useSiteSelect`) |
-| `src/shared/lib/docs.ts` | `GET /docs` fetch |
-| `src/sites/config.ts` | `BRAND` only |
+| `src/sites/config.ts` | `BRAND` (`version` 포함) |
 | `public/og.png` | Static OG (served by `ogCard.tsx`) |
 
 ## Commands
@@ -63,18 +63,28 @@ bun run lint
 | Surface | Source |
 |---|---|
 | `/` picker, home, edge panel, manifest | `GET /` (`getCatalog`) |
-| `/docs` (endpoints, MCP, 새 프로바이더 가이드) | `GET /docs` (`getApiDocs`) |
+| API docs | Backend Scalar (`API_BASE_URL/docs`) |
 | MCP tools | `POST /mcp` on the API — not called from this app |
 
 Do **not** add `src/sites/{id}/`, a `SITES` map, or hardcoded `/kdmhs` paths. If new meal art is required, add files under `public/icon` and `public/img` and point `presentation.meals` at those URLs. `features.foodSearch` toggles search UI; the search HTTP route lives on the API.
 
-Walkthrough: [README.md](./README.md#새-사이트-추가) · [bap-back](https://github.com/sspzoa/bap-back#새-프로바이더-추가) · [밥.net/docs#adding-provider](https://밥.net/docs#adding-provider).
+Walkthrough: [README.md](./README.md#새-사이트-추가) · [bap-back](https://github.com/sspzoa/bap-back#새-프로바이더-추가) · [api.밥.net/docs](https://api.밥.net/docs).
+
+## Versioning
+
+푸시(또는 커밋 요청)마다 에이전트가 **알아서** 버전을 올린다. 사용자에게 묻지 않는다.
+
+- **표시** — `src/sites/config.ts`의 `BRAND.version` (홈 선택 화면 `v…` 표시).
+- **함께 수정** — `package.json` `"version"`. **bap-back**도 같은 semver (`src/core/version.ts` `APP_VERSION`).
+- **규칙** — 기본은 patch +1. UI/기능 추가는 minor. API 계약·라우팅 breaking은 major.
+- **체크** — 버전 bump 없이 푸시/커밋하지 않는다.
 
 ## Review checklist
 
 - [ ] No hardcoded provider IDs or API paths
 - [ ] Catalog empty-state acceptable for the change
 - [ ] Date navigation does not reuse wrong day's `initialData`
-- [ ] Docs/curl examples use `API_BASE_URL`; MCP and provider-guide copy come from `GET /docs` only
+- [ ] API docs links use `API_BASE_URL`; do not reimplement Scalar in this app
+- [ ] Version bumped (`BRAND.version`, `package.json`) and matches bap-back if both repos ship together
 
 See [README.md](./README.md) for architecture and env vars.

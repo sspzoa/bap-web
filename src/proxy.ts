@@ -1,4 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server";
+import { API_BASE_URL } from "@/shared/lib/apiBase";
 import { isDocsPath, isSelectPath, readSitePreference, SITE_PREFERENCE_COOKIE } from "@/shared/lib/sitePreference";
 
 function nextWithHeaders(request: NextRequest, siteId: string | null) {
@@ -25,7 +26,7 @@ export function proxy(request: NextRequest) {
   }
 
   if (isDocsPath(pathname)) {
-    return nextWithHeaders(request, null);
+    return NextResponse.redirect(new URL("/docs", API_BASE_URL));
   }
 
   return nextWithHeaders(request, preferredSiteId);

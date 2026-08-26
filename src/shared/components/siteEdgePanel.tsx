@@ -89,11 +89,6 @@ export const SiteEdgePanel = memo(function SiteEdgePanel() {
               <p className="font-bold text-[16px] tracking-tight">{site.name}</p>
             </a>
           ))}
-          <a
-            href="/docs"
-            className="rounded-[12px] px-3 py-3 text-left duration-100 active:scale-[0.98] active:opacity-70">
-            <p className="font-bold text-[16px] tracking-tight">API</p>
-          </a>
         </Glass>
       </div>
     </div>

@@ -2,14 +2,14 @@
 
 [밥.net](https://밥.net) 프론트엔드. **쿠키 하나**로 사이트를 고르고, UI·SEO·끼니 슬롯은 **API 카탈로그**에서 받습니다.
 
-API: [bap-back](https://github.com/sspzoa/bap-back) · 문서: [/docs](https://밥.net/docs) · 에이전트: [AGENTS.md](./AGENTS.md)
+API: [bap-back](https://github.com/sspzoa/bap-back) · 문서: [api.밥.net/docs](https://api.밥.net/docs) · 에이전트: [AGENTS.md](./AGENTS.md)
 
 ## 개요
 
 - `/` — 식단. 쿠키가 없으면 같은 페이지에서 사이트를 고릅니다 (쿠키 `bap-site-id`)
-- `/docs` — API 문서 (카탈로그·MCP 포함, `GET /docs`에서 렌더)
+- `/docs` — API Scalar로 리다이렉트 (`api.밥.net/docs`)
 
-사이트별 App Router 폴더는 **없습니다**. 백엔드에 프로바이더만 추가하면 홈 사이트 선택·docs에 자동 반영됩니다.
+사이트별 App Router 폴더는 **없습니다**. 백엔드에 프로바이더만 추가하면 홈 사이트 선택·manifest에 자동 반영됩니다.
 
 ## 빠른 시작
 
@@ -43,7 +43,7 @@ Next.js 16 **`proxy.ts`** (middleware 대체):
 | `/` + 쿠키 없음 | 홈에서 사이트 선택 UI (리다이렉트 없음) |
 | `/select` | → `/` (이전 북마크용) |
 | `/` | `x-site-id` 헤더 주입 |
-| `/docs` | `x-site-id` 비움 |
+| `/docs` | → `API_BASE_URL/docs` (Scalar) |
 | `/` + 잘못된 site id | 홈에서 사이트 선택 UI |
 
 클라이언트는 쿠키를 직접 읽지 않고 `useSite()` / `SiteProvider`를 씁니다. 이미 사이트를 고른 뒤 학교를 바꿀 때는 `SiteSelectButton` → `useSiteSelect()` 오버레이로 `/` 위에서 상태만 전환합니다.
@@ -51,9 +51,9 @@ Next.js 16 **`proxy.ts`** (middleware 대체):
 ## 데이터 흐름
 
 ```
-GET / (catalog)           →  layout / 홈 선택 UI / docs / manifest
+GET / (catalog)           →  layout / 홈 선택 UI / manifest
 GET /{basePath}/{date}    →  TanStack Query (useMealQuery)
-GET /docs                 →  /docs 페이지 (엔드포인트·MCP·프로바이더 가이드)
+GET /docs (API)           →  Scalar (백엔드가 직접 서빙)
 POST /mcp                 → 에이전트 (프론트가 호출하지 않음)
 SSR initialData           →  오늘 날짜에만 시드 (날짜 변경 시 다른 날 메뉴로 섞이지 않음)
 ```
@@ -81,15 +81,15 @@ public/
 
 ## 새 사이트 추가
 
-**기본은 프론트 수정 없음.** 학교는 bap-back 프로바이더 + `presentation`으로만 추가합니다. 카탈로그가 홈 사이트 선택, 엣지 패널, `/docs`, PWA manifest, MCP `bap_list_providers`에 같이 반영됩니다.
+**기본은 프론트 수정 없음.** 학교는 bap-back 프로바이더 + `presentation`으로만 추가합니다. 카탈로그가 홈 사이트 선택, 엣지 패널, PWA manifest, MCP `bap_list_providers`에 같이 반영됩니다.
 
-공개 가이드: [밥.net/docs#adding-provider](https://밥.net/docs#adding-provider) · 백엔드 절차: [bap-back README](https://github.com/sspzoa/bap-back#새-프로바이더-추가)
+공개 문서: [api.밥.net/docs](https://api.밥.net/docs) · 백엔드 절차: [bap-back README](https://github.com/sspzoa/bap-back#새-프로바이더-추가)
 
 하지 말 것:
 
 - `src/sites/{id}/` 트리, `SITES` 맵, `/kdmhs` 같은 경로 하드코딩
 - 클라이언트에서 `bap-site-id` 쿠키를 읽어 라우팅
-- `/docs`에 엔드포인트·MCP·오류 문구를 하드코딩 (`GET /docs`만 렌더)
+- API 문서를 프론트에 다시 구현 (Scalar은 백엔드 `/docs`)
 
 필요할 때만:
 

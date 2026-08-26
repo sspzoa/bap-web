@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { API_BASE_URL_DISPLAY } from "@/shared/lib/apiBase";
 import { BRAND } from "@/sites/config";
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -12,7 +13,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1,
     },
     {
-      url: `${BRAND.url}/docs`,
+      url: `${API_BASE_URL_DISPLAY}/docs`,
       lastModified: now,
       changeFrequency: "monthly",
       priority: 0.4,
