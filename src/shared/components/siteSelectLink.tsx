@@ -1,7 +1,5 @@
-"use client";
-
-import type { MouseEvent, ReactNode } from "react";
-import { setSitePreferenceCookie } from "@/shared/lib/sitePreference";
+import type { ReactNode } from "react";
+import { sitePreferenceHref } from "@/shared/lib/sitePreference";
 
 export function SiteSelectLink({
   siteId,
@@ -12,14 +10,8 @@ export function SiteSelectLink({
   className?: string;
   children: ReactNode;
 }) {
-  const selectSite = (event: MouseEvent<HTMLAnchorElement>) => {
-    event.preventDefault();
-    setSitePreferenceCookie(siteId);
-    window.location.assign("/");
-  };
-
   return (
-    <a href="/" className={className} onClick={selectSite}>
+    <a href={sitePreferenceHref(siteId)} className={className}>
       {children}
     </a>
   );

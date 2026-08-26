@@ -32,6 +32,7 @@ describe("expireSitePreferenceCookies", () => {
 
     expect(writes).toHaveLength(2);
     expect(writes.every((write) => write.name === SITE_PREFERENCE_COOKIE && write.value === "")).toBe(true);
+    expect(writes.every((write) => write.options.httpOnly === false)).toBe(true);
     expect(writes.some((write) => write.options.domain === ".xn--rh3b.net")).toBe(true);
   });
 });

@@ -3,7 +3,7 @@
 import { LayoutGrid } from "lucide-react";
 import { memo, useCallback, useRef, useState } from "react";
 import Glass from "@/shared/components/common/glass";
-import { HOME_HREF, setSitePreferenceCookie } from "@/shared/lib/sitePreference";
+import { HOME_HREF, sitePreferenceHref } from "@/shared/lib/sitePreference";
 import { useCatalog, useSiteId } from "@/sites/context";
 
 const SWIPE_THRESHOLD = 40;
@@ -16,18 +16,6 @@ export const SiteEdgePanel = memo(function SiteEdgePanel() {
 
   const close = useCallback(() => setIsOpen(false), []);
   const toggle = useCallback(() => setIsOpen((open) => !open), []);
-
-  const selectSite = (event: React.MouseEvent<HTMLAnchorElement>, id: string) => {
-    event.preventDefault();
-    setSitePreferenceCookie(id);
-
-    if (id === siteId) {
-      close();
-      return;
-    }
-
-    window.location.assign("/");
-  };
 
   const handleTouchStart = (event: React.TouchEvent) => {
     touchStartX.current = event.touches[0].clientX;
@@ -86,8 +74,15 @@ export const SiteEdgePanel = memo(function SiteEdgePanel() {
           {catalog.map((site) => (
             <a
               key={site.id}
-              href="/"
-              onClick={(event) => selectSite(event, site.id)}
+              href={sitePreferenceHref(site.id)}
+              onClick={
+                site.id === siteId
+                  ? (event) => {
+                      event.preventDefault();
+                      close();
+                    }
+                  : undefined
+              }
               className={`rounded-[12px] px-3 py-3 text-left duration-100 active:scale-[0.98] active:opacity-70 ${
                 site.id === siteId ? "bg-white/30" : ""
               }`}>

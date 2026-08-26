@@ -24,6 +24,9 @@ export function SiteSelectView() {
 
   useEffect(() => {
     clearSitePreferenceCookie();
+    if (new URLSearchParams(window.location.search).has("home")) {
+      window.history.replaceState(null, "", "/");
+    }
   }, []);
 
   return (

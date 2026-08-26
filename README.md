@@ -44,7 +44,7 @@ Next.js 16 **`proxy.ts`** (middleware 대체):
 |---|---|
 | `/` + 쿠키 없음 | 홈에서 사이트 선택 UI (리다이렉트 없음) |
 | `/?site={id}` | `bap-site-id` 쿠키 설정 후 쿼리 제거·리다이렉트 |
-| `/?home=1` | `bap-site-id` 쿠키 삭제 후 `/`로 리다이렉트 |
+| `/?home=1` | `bap-site-id` 쿠키 삭제, 이번 요청은 사이트 선택 UI |
 | 없는 경로 | → `/` (쿼리 유지) |
 | `/` | `x-site-id` 헤더 주입 |
 | `/docs` | → `API_BASE_URL/docs` (Scalar) |

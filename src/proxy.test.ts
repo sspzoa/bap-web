@@ -22,11 +22,12 @@ describe("proxy", () => {
     expect(setCookieHeaders(response).join("\n")).toContain(`${SITE_PREFERENCE_COOKIE}=kdmhs`);
   });
 
-  test("/?home=1 expires the preference cookie and redirects home", async () => {
-    const response = proxy(request(`/?${HOME_QUERY_PARAM}=1`, "kdmhs"));
+  test("/?home=1 expires the preference cookie and ignores the leftover site", async () => {
+    const response = proxy(request(`/?${HOME_QUERY_PARAM}=1`, "dgu"));
 
-    expect(response.status).toBe(307);
-    expect(response.headers.get("location")).toBe("http://localhost/");
+    expect(response.status).toBe(200);
+    expect(response.headers.get("location")).toBeNull();
+    expect(response.headers.get("x-middleware-override-headers") ?? "").not.toContain("x-site-id");
     expect(setCookieHeaders(response).join("\n")).toMatch(new RegExp(`${SITE_PREFERENCE_COOKIE}=;`));
     expect(setCookieHeaders(response).join("\n")).toMatch(/Max-Age=0/i);
   });

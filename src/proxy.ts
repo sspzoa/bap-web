@@ -75,9 +75,7 @@ export function proxy(request: NextRequest) {
   }
 
   if (pathname === "/" && request.nextUrl.searchParams.has(HOME_QUERY_PARAM)) {
-    const destination = request.nextUrl.clone();
-    destination.searchParams.delete(HOME_QUERY_PARAM);
-    const response = NextResponse.redirect(destination);
+    const response = nextWithHeaders(request, null);
     expireSitePreferenceCookies(response.cookies, request.nextUrl.hostname, request.nextUrl.protocol === "https:");
     return response;
   }

@@ -35,13 +35,6 @@ export function isDocsPath(pathname: string): boolean {
   return pathname === "/docs" || pathname.startsWith("/docs/");
 }
 
-export function setSitePreferenceCookie(siteId: string): void {
-  clearSitePreferenceCookie();
-
-  const secure = window.location.protocol === "https:" ? "; Secure" : "";
-  document.cookie = `${SITE_PREFERENCE_COOKIE}=${siteId}; Path=/; Max-Age=${SITE_PREFERENCE_MAX_AGE}; SameSite=Lax${secure}`;
-}
-
 export function clearSitePreferenceCookie(): void {
   const secure = window.location.protocol === "https:" ? "; Secure" : "";
   document.cookie = `${SITE_PREFERENCE_COOKIE}=; Path=/; Max-Age=0; SameSite=Lax${secure}`;
@@ -59,8 +52,10 @@ export function expireSitePreferenceCookies(store: CookieStore, hostname: string
   const base = {
     path: "/",
     maxAge: 0,
+    expires: new Date(0),
     sameSite: "lax" as const,
     secure,
+    httpOnly: false,
   };
 
   store.set(SITE_PREFERENCE_COOKIE, "", base);
@@ -70,8 +65,8 @@ export function expireSitePreferenceCookies(store: CookieStore, hostname: string
   }
 }
 
-export function goHome(): void {
-  window.location.assign(HOME_HREF);
+export function sitePreferenceHref(siteId: string): string {
+  return `/?${SITE_QUERY_PARAM}=${encodeURIComponent(siteId)}`;
 }
 
 export function readSiteQueryParam(value: string | null | undefined): string | null {
