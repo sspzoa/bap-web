@@ -4,18 +4,24 @@ import { LayoutGrid } from "lucide-react";
 import { memo, useCallback, useRef, useState } from "react";
 import Glass from "@/shared/components/common/glass";
 import { setSitePreferenceCookie } from "@/shared/lib/sitePreference";
-import { useCatalog, useSiteId } from "@/sites/context";
+import { useCatalog, useSiteId, useSiteSelect } from "@/sites/context";
 
 const SWIPE_THRESHOLD = 40;
 
 export const SiteEdgePanel = memo(function SiteEdgePanel() {
   const siteId = useSiteId();
   const catalog = useCatalog();
+  const { openSelect } = useSiteSelect();
   const [isOpen, setIsOpen] = useState(false);
   const touchStartX = useRef<number | null>(null);
 
   const close = useCallback(() => setIsOpen(false), []);
   const toggle = useCallback(() => setIsOpen((open) => !open), []);
+
+  const goHome = () => {
+    close();
+    openSelect();
+  };
 
   const selectSite = (event: React.MouseEvent<HTMLAnchorElement>, id: string) => {
     event.preventDefault();
@@ -78,6 +84,12 @@ export const SiteEdgePanel = memo(function SiteEdgePanel() {
         </button>
 
         <Glass className="!rounded-r-none flex w-[220px] flex-col gap-2 border-r-0 p-3">
+          <button
+            type="button"
+            onClick={goHome}
+            className="rounded-[12px] px-3 py-3 text-left duration-100 active:scale-[0.98] active:opacity-70">
+            <p className="font-bold text-[16px] tracking-tight">홈</p>
+          </button>
           {catalog.map((site) => (
             <a
               key={site.id}
