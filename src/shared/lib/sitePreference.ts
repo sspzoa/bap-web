@@ -1,11 +1,14 @@
 export const SITE_PREFERENCE_COOKIE = "bap-site-id";
 export const SITE_QUERY_PARAM = "site";
+export const HOME_QUERY_PARAM = "home";
+export const HOME_HREF = `/?${HOME_QUERY_PARAM}=1`;
 export const SITE_PREFERENCE_MAX_AGE = 60 * 60 * 24 * 365;
 
 export const SITE_PREFERENCE_COOKIE_OPTIONS = {
   path: "/",
   maxAge: SITE_PREFERENCE_MAX_AGE,
   sameSite: "lax" as const,
+  httpOnly: false,
 };
 
 export function readSitePreference(value: string | undefined): string | null {
@@ -28,8 +31,7 @@ export function clearSitePreferenceCookie(): void {
 }
 
 export function goHome(): void {
-  clearSitePreferenceCookie();
-  window.location.assign("/");
+  window.location.assign(HOME_HREF);
 }
 
 export function readSiteQueryParam(value: string | null | undefined): string | null {

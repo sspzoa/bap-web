@@ -35,7 +35,7 @@ export function SiteSelectView() {
           <div className="flex flex-col items-center gap-2">
             <div className="flex items-baseline gap-2">
               <h1 className="font-bold text-[40px] tracking-tight">{BRAND.title}</h1>
-              <span className="font-medium text-[14px] opacity-40 tabular-nums">v{BRAND.version}</span>
+              <span className="font-medium text-[14px] tabular-nums opacity-40">v{BRAND.version}</span>
             </div>
             <p className="text-[16px] opacity-60">오늘 메뉴를 한곳에서 확인하세요</p>
           </div>

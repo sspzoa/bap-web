@@ -3,7 +3,7 @@
 import { LayoutGrid } from "lucide-react";
 import { memo, useCallback, useRef, useState } from "react";
 import Glass from "@/shared/components/common/glass";
-import { goHome, setSitePreferenceCookie } from "@/shared/lib/sitePreference";
+import { HOME_HREF, setSitePreferenceCookie } from "@/shared/lib/sitePreference";
 import { useCatalog, useSiteId } from "@/sites/context";
 
 const SWIPE_THRESHOLD = 40;
@@ -78,12 +78,11 @@ export const SiteEdgePanel = memo(function SiteEdgePanel() {
         </button>
 
         <Glass className="!rounded-r-none flex w-[220px] flex-col gap-2 border-r-0 p-3">
-          <button
-            type="button"
-            onClick={goHome}
+          <a
+            href={HOME_HREF}
             className="rounded-[12px] px-3 py-3 text-left duration-100 active:scale-[0.98] active:opacity-70">
             <p className="font-bold text-[16px] tracking-tight">홈</p>
-          </button>
+          </a>
           {catalog.map((site) => (
             <a
               key={site.id}

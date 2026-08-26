@@ -1,6 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { API_BASE_URL } from "@/shared/lib/apiBase";
 import {
+  HOME_QUERY_PARAM,
   isDocsPath,
   readSitePreference,
   readSiteQueryParam,
@@ -56,6 +57,19 @@ export function proxy(request: NextRequest) {
     const response = NextResponse.redirect(destination);
     response.cookies.set(SITE_PREFERENCE_COOKIE, siteFromQuery, {
       ...SITE_PREFERENCE_COOKIE_OPTIONS,
+      secure: request.nextUrl.protocol === "https:",
+    });
+    return response;
+  }
+
+  if (pathname === "/" && request.nextUrl.searchParams.has(HOME_QUERY_PARAM)) {
+    const destination = request.nextUrl.clone();
+    destination.searchParams.delete(HOME_QUERY_PARAM);
+    const response = NextResponse.redirect(destination);
+    response.cookies.set(SITE_PREFERENCE_COOKIE, "", {
+      path: "/",
+      maxAge: 0,
+      sameSite: "lax",
       secure: request.nextUrl.protocol === "https:",
     });
     return response;
