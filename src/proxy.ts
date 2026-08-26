@@ -1,6 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { API_BASE_URL } from "@/shared/lib/apiBase";
 import {
+  expireSitePreferenceCookies,
   HOME_QUERY_PARAM,
   isDocsPath,
   readSitePreference,
@@ -9,6 +10,15 @@ import {
   SITE_PREFERENCE_COOKIE_OPTIONS,
   SITE_QUERY_PARAM,
 } from "@/shared/lib/sitePreference";
+
+function readPreferredSiteId(request: NextRequest): string | null {
+  const cookies = request.cookies.getAll(SITE_PREFERENCE_COOKIE);
+  if (cookies.length === 0) {
+    return null;
+  }
+
+  return readSitePreference(cookies[cookies.length - 1]?.value);
+}
 
 function isKnownPath(pathname: string): boolean {
   return (
@@ -39,7 +49,7 @@ function nextWithHeaders(request: NextRequest, siteId: string | null) {
 export function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
   const siteFromQuery = readSiteQueryParam(request.nextUrl.searchParams.get(SITE_QUERY_PARAM));
-  const preferredSiteId = readSitePreference(request.cookies.get(SITE_PREFERENCE_COOKIE)?.value);
+  const preferredSiteId = readPreferredSiteId(request);
 
   if (!isKnownPath(pathname)) {
     const home = new URL("/", request.url);
@@ -55,9 +65,11 @@ export function proxy(request: NextRequest) {
     const destination = request.nextUrl.clone();
     destination.searchParams.delete(SITE_QUERY_PARAM);
     const response = NextResponse.redirect(destination);
+    const secure = request.nextUrl.protocol === "https:";
+    expireSitePreferenceCookies(response.cookies, request.nextUrl.hostname, secure);
     response.cookies.set(SITE_PREFERENCE_COOKIE, siteFromQuery, {
       ...SITE_PREFERENCE_COOKIE_OPTIONS,
-      secure: request.nextUrl.protocol === "https:",
+      secure,
     });
     return response;
   }
@@ -66,12 +78,7 @@ export function proxy(request: NextRequest) {
     const destination = request.nextUrl.clone();
     destination.searchParams.delete(HOME_QUERY_PARAM);
     const response = NextResponse.redirect(destination);
-    response.cookies.set(SITE_PREFERENCE_COOKIE, "", {
-      path: "/",
-      maxAge: 0,
-      sameSite: "lax",
-      secure: request.nextUrl.protocol === "https:",
-    });
+    expireSitePreferenceCookies(response.cookies, request.nextUrl.hostname, request.nextUrl.protocol === "https:");
     return response;
   }
 

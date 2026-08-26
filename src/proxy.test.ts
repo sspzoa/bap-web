@@ -31,6 +31,25 @@ describe("proxy", () => {
     expect(setCookieHeaders(response).join("\n")).toMatch(/Max-Age=0/i);
   });
 
+  test("/?home=1 also expires legacy domain cookies on 밥.net hosts", async () => {
+    const response = proxy(new NextRequest(`https://xn--rh3b.net/?${HOME_QUERY_PARAM}=1`));
+
+    const cookies = setCookieHeaders(response).join("\n");
+    expect(cookies).toMatch(/Domain=\.xn--rh3b\.net/i);
+    expect(cookies).toMatch(/Max-Age=0/i);
+  });
+
+  test("prefers the latest cookie when duplicates exist", async () => {
+    const response = proxy(
+      new NextRequest("http://localhost/", {
+        headers: { cookie: `${SITE_PREFERENCE_COOKIE}=dgu; ${SITE_PREFERENCE_COOKIE}=kdmhs` },
+      }),
+    );
+
+    expect(response.status).toBe(200);
+    expect(response.headers.get("x-middleware-override-headers")).toContain("x-site-id");
+  });
+
   test("forwards the cookie as x-site-id on /", async () => {
     const response = proxy(request("/", "dgu"));
 
