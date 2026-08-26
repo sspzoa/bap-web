@@ -1,6 +1,24 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { API_BASE_URL } from "@/shared/lib/apiBase";
-import { isDocsPath, isSelectPath, readSitePreference, SITE_PREFERENCE_COOKIE } from "@/shared/lib/sitePreference";
+import {
+  isDocsPath,
+  readSitePreference,
+  readSiteQueryParam,
+  SITE_PREFERENCE_COOKIE,
+  SITE_PREFERENCE_COOKIE_OPTIONS,
+  SITE_QUERY_PARAM,
+} from "@/shared/lib/sitePreference";
+
+function isKnownPath(pathname: string): boolean {
+  return (
+    pathname === "/" ||
+    isDocsPath(pathname) ||
+    pathname === "/sitemap.xml" ||
+    pathname === "/manifest.webmanifest" ||
+    pathname.startsWith("/opengraph-image") ||
+    pathname.startsWith("/twitter-image")
+  );
+}
 
 function nextWithHeaders(request: NextRequest, siteId: string | null) {
   const requestHeaders = new Headers(request.headers);
@@ -19,14 +37,28 @@ function nextWithHeaders(request: NextRequest, siteId: string | null) {
 
 export function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
+  const siteFromQuery = readSiteQueryParam(request.nextUrl.searchParams.get(SITE_QUERY_PARAM));
   const preferredSiteId = readSitePreference(request.cookies.get(SITE_PREFERENCE_COOKIE)?.value);
 
-  if (isSelectPath(pathname)) {
-    return NextResponse.redirect(new URL("/", request.url));
+  if (!isKnownPath(pathname)) {
+    const home = new URL("/", request.url);
+    home.search = request.nextUrl.search;
+    return NextResponse.redirect(home);
   }
 
   if (isDocsPath(pathname)) {
     return NextResponse.redirect(new URL("/docs", API_BASE_URL));
+  }
+
+  if (pathname === "/" && siteFromQuery) {
+    const destination = request.nextUrl.clone();
+    destination.searchParams.delete(SITE_QUERY_PARAM);
+    const response = NextResponse.redirect(destination);
+    response.cookies.set(SITE_PREFERENCE_COOKIE, siteFromQuery, {
+      ...SITE_PREFERENCE_COOKIE_OPTIONS,
+      secure: request.nextUrl.protocol === "https:",
+    });
+    return response;
   }
 
   return nextWithHeaders(request, preferredSiteId);

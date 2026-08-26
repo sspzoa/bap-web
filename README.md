@@ -7,6 +7,7 @@ API: [bap-back](https://github.com/sspzoa/bap-back) · 문서: [api.밥.net/docs
 ## 개요
 
 - `/` — 식단. 쿠키가 없으면 같은 페이지에서 사이트를 고릅니다 (쿠키 `bap-site-id`)
+- `/?site={id}` — `bap-site-id` 쿠키를 넣고 `/`로 이동 (예: `/?site=kdmhs`)
 - `/docs` — API Scalar로 리다이렉트 (`api.밥.net/docs`)
 
 사이트별 App Router 폴더는 **없습니다**. 백엔드에 프로바이더만 추가하면 홈 사이트 선택·manifest에 자동 반영됩니다.
@@ -41,7 +42,8 @@ Next.js 16 **`proxy.ts`** (middleware 대체):
 | 경로 | 동작 |
 |---|---|
 | `/` + 쿠키 없음 | 홈에서 사이트 선택 UI (리다이렉트 없음) |
-| `/select` | → `/` (이전 북마크용) |
+| `/?site={id}` | `bap-site-id` 쿠키 설정 후 쿼리 제거·리다이렉트 |
+| 없는 경로 | → `/` (쿼리 유지) |
 | `/` | `x-site-id` 헤더 주입 |
 | `/docs` | → `API_BASE_URL/docs` (Scalar) |
 | `/` + 잘못된 site id | 홈에서 사이트 선택 UI |
