@@ -1,15 +1,21 @@
 "use client";
 
 import Glass from "@/shared/components/common/glass";
+import { ChangelogMarkdown } from "@/shared/components/changelogMarkdown";
 import { MealDesktopBackground } from "@/shared/components/mealDesktopBackground";
 import { SiteSelectLink } from "@/shared/components/siteSelectLink";
 import { API_BASE_URL } from "@/shared/lib/apiBase";
 import { BRAND } from "@/sites/config";
-import { useCatalog, useOptionalSiteId } from "@/sites/context";
+import { useCatalog, useChangelog, useOptionalSiteId } from "@/sites/context";
+
+const linkClassName =
+  "font-bold text-[15px] uppercase tracking-tight underline underline-offset-4 opacity-60 duration-100 active:opacity-40";
 
 export function SiteSelectView() {
   const catalog = useCatalog();
+  const changelog = useChangelog();
   const currentSiteId = useOptionalSiteId();
+  const hasChangelog = changelog.trim().length > 0;
 
   return (
     <div className="relative flex min-h-svh flex-col overflow-x-hidden p-4">
@@ -43,14 +49,30 @@ export function SiteSelectView() {
               );
             })}
           </div>
+
+          {hasChangelog && (
+            <div id="changelog" className="w-full scroll-mt-4">
+              <ChangelogMarkdown markdown={changelog} />
+            </div>
+          )}
         </div>
       </div>
 
-      <a
-        href={`${API_BASE_URL}/docs`}
-        className="z-10 mb-3 text-center font-bold text-[15px] uppercase tracking-tight underline underline-offset-4 opacity-60 duration-100 active:opacity-40">
-        API docs
-      </a>
+      <div className="z-10 mb-3 flex items-center justify-center gap-3 text-[15px] opacity-60">
+        <a href={`${API_BASE_URL}/docs`} className={linkClassName}>
+          API docs
+        </a>
+        {hasChangelog && (
+          <>
+            <span aria-hidden className="select-none opacity-50">
+              ·
+            </span>
+            <a href="#changelog" className={linkClassName}>
+              CHANGELOG
+            </a>
+          </>
+        )}
+      </div>
 
       <footer className="z-10 pb-2 text-center text-[13px] opacity-45">
         maintained by{" "}

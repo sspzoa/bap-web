@@ -4,6 +4,7 @@ import "./globals.css";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { findSite, getCatalog } from "@/shared/lib/catalog";
+import { getChangelog } from "@/shared/lib/changelog";
 import QueryProvider from "@/shared/lib/provider";
 import { BRAND } from "@/sites/config";
 import { SiteProvider } from "@/sites/context";
@@ -112,6 +113,7 @@ export default async function RootLayout({ children }: RootLayoutProps) {
   const siteId = await getSiteId();
   const catalog = await getCatalog();
   const site = findSite(catalog, siteId);
+  const changelog = await getChangelog();
 
   return (
     <html lang="ko">
@@ -129,7 +131,7 @@ export default async function RootLayout({ children }: RootLayoutProps) {
         {site && <JsonLd name={site.name} description={site.description} url={BRAND.url} />}
         <Analytics />
         <SpeedInsights />
-        <SiteProvider siteId={site?.id ?? null} site={site} catalog={catalog}>
+        <SiteProvider siteId={site?.id ?? null} site={site} catalog={catalog} changelog={changelog}>
           <QueryProvider>{children}</QueryProvider>
         </SiteProvider>
       </body>
