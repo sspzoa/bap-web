@@ -16,7 +16,7 @@ API: [bap-back](https://github.com/sspzoa/bap-back) · 문서: [api.밥.net/docs
 ## 빠른 시작
 
 ```bash
-bun install
+bun install --frozen-lockfile
 NEXT_PUBLIC_API_BASE_URL=http://localhost:3001 bun dev   # 기본 :3000
 ```
 
