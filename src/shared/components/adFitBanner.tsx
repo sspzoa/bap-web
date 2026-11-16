@@ -2,8 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import Script from "next/script";
-import { type RefObject, useEffect, useId, useRef, useState } from "react";
-import Glass from "@/shared/components/common/glass";
+import { type RefObject, useEffect, useRef, useState } from "react";
 import {
   ADFIT_DESKTOP_MIN_WIDTH,
   ADFIT_SCRIPT_SRC,
@@ -137,14 +136,15 @@ function useCreativeFilled(containerRef: RefObject<HTMLElement | null>, slot: Ad
 export function AdFitBanner({
   placement = "responsive",
   flush = false,
+  align = "center",
   className = "",
 }: {
   placement?: AdFitPlacement;
   /** Skip the banner's own horizontal inset when the parent already pads. */
   flush?: boolean;
+  align?: "start" | "center";
   className?: string;
 }) {
-  const labelId = useId();
   const pathname = usePathname();
   const frameRef = useRef<HTMLDivElement>(null);
   const mobileUnit = readAdFitUnit(process.env.NEXT_PUBLIC_ADFIT_UNIT_MOBILE);
@@ -173,41 +173,32 @@ export function AdFitBanner({
         ? "hidden min-[800px]:flex"
         : "flex min-[800px]:hidden";
 
-  const insetClass = flush ? "px-0" : "px-2 min-[376px]:px-4 min-[800px]:px-0";
-  const cardClass = mobileOnly
-    ? "flex w-full flex-col gap-2 px-2 py-2.5"
-    : "flex w-full flex-col gap-2 px-2 py-2.5 min-[800px]:w-fit min-[800px]:px-2.5";
+  const insetClass = flush ? "px-0" : "px-4";
+  const alignClass = align === "start" ? "justify-start" : "justify-center";
 
   return (
-    <aside
-      aria-labelledby={labelId}
-      className={`${visibilityClass} w-full shrink-0 justify-center ${insetClass} ${className}`}>
-      <Glass className={cardClass}>
-        <p id={labelId} className="px-1 font-bold text-[12px] leading-none tracking-tight opacity-50">
-          광고
-        </p>
-        <div ref={frameRef} className={`relative mx-auto shrink-0 ${frameClass}`}>
-          {slot && <AdFitIns key={`${pathname}:${placement}:${slot.unit}:${slot.width}x${slot.height}`} slot={slot} />}
-          {!filled && (
-            <div className="pointer-events-none absolute inset-0 flex items-center justify-center rounded-[12px] border border-white/15 bg-black/25 text-white">
-              <span className="font-bold text-[12px] leading-none tracking-tight opacity-55">
-                {mobileOnly ? (
-                  "320 × 100"
-                ) : mobileUnit && desktopUnit ? (
-                  <>
-                    <span className="min-[800px]:hidden">320 × 100</span>
-                    <span className="hidden min-[800px]:inline">728 × 90</span>
-                  </>
-                ) : desktopUnit ? (
-                  "728 × 90"
-                ) : (
-                  "320 × 100"
-                )}
-              </span>
-            </div>
-          )}
-        </div>
-      </Glass>
+    <aside aria-label="광고" className={`${visibilityClass} w-full shrink-0 ${alignClass} ${insetClass} ${className}`}>
+      <div ref={frameRef} className={`relative shrink-0 overflow-hidden rounded-[12px] ${frameClass}`}>
+        {slot && <AdFitIns key={`${pathname}:${placement}:${slot.unit}:${slot.width}x${slot.height}`} slot={slot} />}
+        {!filled && (
+          <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-black/25 text-white">
+            <span className="font-bold text-[12px] leading-none tracking-tight opacity-55">
+              {mobileOnly ? (
+                "320 × 100"
+              ) : mobileUnit && desktopUnit ? (
+                <>
+                  <span className="min-[800px]:hidden">320 × 100</span>
+                  <span className="hidden min-[800px]:inline">728 × 90</span>
+                </>
+              ) : desktopUnit ? (
+                "728 × 90"
+              ) : (
+                "320 × 100"
+              )}
+            </span>
+          </div>
+        )}
+      </div>
       <Script id="kakao-adfit" src={ADFIT_SCRIPT_SRC} strategy="afterInteractive" />
     </aside>
   );

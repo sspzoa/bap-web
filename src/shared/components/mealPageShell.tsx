@@ -62,7 +62,7 @@ export const MealPageShell = memo(function MealPageShell({
             className="flex w-full flex-1 snap-x snap-mandatory flex-row gap-4 overflow-x-auto px-4 md:snap-none md:px-0">
             {children}
           </div>
-          {!pickerOpen && <AdFitBanner placement="mobile" />}
+          {!pickerOpen && <AdFitBanner placement="mobile" align="start" />}
         </div>
       </div>
     </div>
