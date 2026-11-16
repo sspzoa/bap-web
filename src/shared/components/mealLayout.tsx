@@ -87,6 +87,7 @@ const MealLayout = memo(function MealLayout({ initialData, initialFormattedDate,
             isError={isError}
             errorMessage={errorMessage}
             showContent={showContent}
+            showMenuAd
           />
         );
       })}

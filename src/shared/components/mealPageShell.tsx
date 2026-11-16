@@ -1,6 +1,7 @@
 import type { ReactNode, RefObject, UIEventHandler } from "react";
 import { memo } from "react";
 import { MealNavigationBar } from "@/app/(pages)/(home)/(components)/mealNavigationBar";
+import { AdFitBanner } from "@/shared/components/adFitBanner";
 import LoadingSpinner from "@/shared/components/common/loadingSpinner";
 import { MealDesktopBackground } from "@/shared/components/mealDesktopBackground";
 import { SiteEdgePanel } from "@/shared/components/siteEdgePanel";
@@ -36,7 +37,7 @@ export const MealPageShell = memo(function MealPageShell({
       <MealDesktopBackground />
       <SiteEdgePanel />
 
-      <div className="z-10 flex h-full max-h-[900px] w-full max-w-[1500px] flex-col-reverse gap-4 md:flex-col md:px-4">
+      <div className="relative z-10 flex h-full max-h-[900px] w-full max-w-[1500px] flex-col-reverse gap-4 md:flex-col md:px-4">
         <MealNavigationBar
           onPrevDay={onPrevDay}
           onNextDay={onNextDay}
@@ -56,6 +57,7 @@ export const MealPageShell = memo(function MealPageShell({
           className="flex w-full flex-1 snap-x snap-mandatory flex-row gap-4 overflow-x-auto px-4 md:snap-none md:px-0">
           {children}
         </div>
+        <AdFitBanner placement="desktop" flush />
       </div>
     </div>
   );

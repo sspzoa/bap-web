@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { memo, useEffect, useMemo, useState } from "react";
+import { AdFitBanner } from "@/shared/components/adFitBanner";
 import Glass from "@/shared/components/common/glass";
 import { ImagePopup } from "@/shared/components/imagePopup";
 import { MealSectionStatusMessage } from "@/shared/components/mealSectionStatusMessage";
@@ -19,6 +20,7 @@ interface MealSectionProps {
   isError?: boolean;
   errorMessage?: string;
   showContent: boolean;
+  showMenuAd?: boolean;
 }
 
 const MenuItems = memo(function MenuItems({
@@ -84,6 +86,7 @@ export const MealSection = memo(function MealSection({
   isError = false,
   errorMessage,
   showContent,
+  showMenuAd = false,
 }: MealSectionProps) {
   const [popupData, setPopupData] = useState<MealSearchResponse | null>(null);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -158,6 +161,8 @@ export const MealSection = memo(function MealSection({
               <p className="font-bold text-[32px] tracking-tight">{meal.title}</p>
               {headerMeta && <p className="ml-auto text-[16px] tracking-tight opacity-50">{headerMeta}</p>}
             </div>
+
+            {showMenuAd && <AdFitBanner placement="mobile" flush />}
 
             {!isLoading && !isError && meal.image && (
               <div className="flex flex-row gap-2">
