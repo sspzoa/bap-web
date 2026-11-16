@@ -6,10 +6,7 @@ export const ADFIT_MOBILE_SIZE = { width: 320, height: 100 } as const;
 /** Leaderboard. Official AdFit size. */
 export const ADFIT_DESKTOP_SIZE = { width: 728, height: 90 } as const;
 
-/**
- * 728px leaderboard plus the glass card fits once the viewport clears page padding.
- * The meal layout itself switches at 768px; meal ads are mobile-only and hide there.
- */
+/** 728px leaderboard fits on the home screen once the viewport clears page padding. */
 export const ADFIT_DESKTOP_MIN_WIDTH = 800;
 
 export type AdFitPlacement = "responsive" | "mobile";

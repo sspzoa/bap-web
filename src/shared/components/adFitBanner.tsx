@@ -136,13 +136,11 @@ function useCreativeFilled(containerRef: RefObject<HTMLElement | null>, slot: Ad
 export function AdFitBanner({
   placement = "responsive",
   flush = false,
-  align = "center",
   className = "",
 }: {
   placement?: AdFitPlacement;
   /** Skip the banner's own horizontal inset when the parent already pads. */
   flush?: boolean;
-  align?: "start" | "center";
   className?: string;
 }) {
   const pathname = usePathname();
@@ -174,10 +172,9 @@ export function AdFitBanner({
         : "flex min-[800px]:hidden";
 
   const insetClass = flush ? "px-0" : "px-4";
-  const alignClass = align === "start" ? "justify-start" : "justify-center";
 
   return (
-    <aside aria-label="광고" className={`${visibilityClass} w-full shrink-0 ${alignClass} ${insetClass} ${className}`}>
+    <aside aria-label="광고" className={`${visibilityClass} w-full shrink-0 justify-center ${insetClass} ${className}`}>
       <div ref={frameRef} className={`relative shrink-0 overflow-hidden rounded-[12px] ${frameClass}`}>
         {slot && <AdFitIns key={`${pathname}:${placement}:${slot.unit}:${slot.width}x${slot.height}`} slot={slot} />}
         {!filled && (

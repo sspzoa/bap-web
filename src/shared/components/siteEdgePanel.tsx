@@ -9,23 +9,14 @@ import { useCatalog, useSiteId } from "@/sites/context";
 
 const SWIPE_THRESHOLD = 40;
 
-export const SiteEdgePanel = memo(function SiteEdgePanel({ onOpenChange }: { onOpenChange?: (open: boolean) => void }) {
+export const SiteEdgePanel = memo(function SiteEdgePanel() {
   const siteId = useSiteId();
   const catalog = useCatalog();
   const [isOpen, setIsOpen] = useState(false);
   const touchStartX = useRef<number | null>(null);
-  const isOpenRef = useRef(false);
 
-  const setOpen = useCallback(
-    (open: boolean) => {
-      isOpenRef.current = open;
-      setIsOpen(open);
-      onOpenChange?.(open);
-    },
-    [onOpenChange],
-  );
-  const close = useCallback(() => setOpen(false), [setOpen]);
-  const toggle = useCallback(() => setOpen(!isOpenRef.current), [setOpen]);
+  const close = useCallback(() => setIsOpen(false), []);
+  const toggle = useCallback(() => setIsOpen((open) => !open), []);
 
   const handleTouchStart = (event: React.TouchEvent) => {
     touchStartX.current = event.touches[0].clientX;
@@ -40,12 +31,12 @@ export const SiteEdgePanel = memo(function SiteEdgePanel({ onOpenChange }: { onO
     touchStartX.current = null;
 
     if (deltaX <= -SWIPE_THRESHOLD) {
-      setOpen(true);
+      setIsOpen(true);
       return;
     }
 
     if (deltaX >= SWIPE_THRESHOLD) {
-      setOpen(false);
+      setIsOpen(false);
     }
   };
 
