@@ -39,4 +39,14 @@ describe("selectAdFitSlot", () => {
     expect(selectAdFitSlot(true, "DAN-mobile", "DAN-pc", "mobile")).toBeNull();
     expect(selectAdFitSlot(false, null, "DAN-pc", "mobile")).toBeNull();
   });
+
+  test("desktop placement is only the 728x90 unit", () => {
+    expect(selectAdFitSlot(true, "DAN-mobile", "DAN-pc", "desktop")).toEqual({
+      unit: "DAN-pc",
+      width: 728,
+      height: 90,
+    });
+    expect(selectAdFitSlot(false, "DAN-mobile", "DAN-pc", "desktop")).toBeNull();
+    expect(selectAdFitSlot(true, "DAN-mobile", null, "desktop")).toBeNull();
+  });
 });

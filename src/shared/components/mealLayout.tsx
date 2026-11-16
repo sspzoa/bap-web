@@ -59,6 +59,19 @@ const MealLayout = memo(function MealLayout({ initialData, initialFormattedDate,
     });
   }, [meals, site.meals]);
 
+  const activeMealId = useMemo(() => {
+    let bestId = site.meals[0]?.id ?? "";
+    let best = -1;
+    for (const slot of site.meals) {
+      const value = backgroundOpacities[slot.id] ?? 0;
+      if (value > best) {
+        best = value;
+        bestId = slot.id;
+      }
+    }
+    return bestId;
+  }, [backgroundOpacities, site.meals]);
+
   const handleResetToToday = useCallback(() => {
     resetToToday();
     setMealByTime();
@@ -87,6 +100,7 @@ const MealLayout = memo(function MealLayout({ initialData, initialFormattedDate,
             isError={isError}
             errorMessage={errorMessage}
             showContent={showContent}
+            showMenuAd={meal.id === activeMealId}
           />
         );
       })}

@@ -9,7 +9,7 @@ export const ADFIT_DESKTOP_SIZE = { width: 728, height: 90 } as const;
 /** 728px leaderboard fits on the home screen once the viewport clears page padding. */
 export const ADFIT_DESKTOP_MIN_WIDTH = 800;
 
-export type AdFitPlacement = "responsive" | "mobile";
+export type AdFitPlacement = "responsive" | "mobile" | "desktop";
 
 export interface AdFitSlot {
   unit: string;
@@ -34,6 +34,14 @@ export function selectAdFitSlot(
     }
 
     return mobileUnit ? { unit: mobileUnit, ...ADFIT_MOBILE_SIZE } : null;
+  }
+
+  if (placement === "desktop") {
+    if (!isDesktop) {
+      return null;
+    }
+
+    return desktopUnit ? { unit: desktopUnit, ...ADFIT_DESKTOP_SIZE } : null;
   }
 
   if (isDesktop) {

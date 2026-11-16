@@ -150,26 +150,31 @@ export function AdFitBanner({
   const slot = useAdFitSlot(mobileUnit, desktopUnit, placement);
   const filled = useCreativeFilled(frameRef, slot);
   const mobileOnly = placement === "mobile";
+  const desktopOnly = placement === "desktop";
 
-  if (mobileOnly ? !mobileUnit : !(mobileUnit || desktopUnit)) {
+  if (mobileOnly ? !mobileUnit : desktopOnly ? !desktopUnit : !(mobileUnit || desktopUnit)) {
     return null;
   }
 
   const frameClass = mobileOnly
     ? "h-[100px] w-[320px]"
-    : mobileUnit && desktopUnit
-      ? "h-[100px] w-[320px] min-[800px]:h-[90px] min-[800px]:w-[728px]"
-      : desktopUnit
-        ? "h-[90px] w-[728px]"
-        : "h-[100px] w-[320px]";
+    : desktopOnly
+      ? "h-[90px] w-[728px]"
+      : mobileUnit && desktopUnit
+        ? "h-[100px] w-[320px] min-[800px]:h-[90px] min-[800px]:w-[728px]"
+        : desktopUnit
+          ? "h-[90px] w-[728px]"
+          : "h-[100px] w-[320px]";
 
   const visibilityClass = mobileOnly
-    ? "flex md:hidden"
-    : mobileUnit && desktopUnit
-      ? "flex"
-      : desktopUnit
-        ? "hidden min-[800px]:flex"
-        : "flex min-[800px]:hidden";
+    ? "flex min-[800px]:hidden"
+    : desktopOnly
+      ? "hidden min-[800px]:flex"
+      : mobileUnit && desktopUnit
+        ? "flex"
+        : desktopUnit
+          ? "hidden min-[800px]:flex"
+          : "flex min-[800px]:hidden";
 
   const insetClass = flush ? "px-0" : "px-4";
 
@@ -182,6 +187,8 @@ export function AdFitBanner({
             <span className="font-bold text-[12px] leading-none tracking-tight opacity-55">
               {mobileOnly ? (
                 "320 × 100"
+              ) : desktopOnly ? (
+                "728 × 90"
               ) : mobileUnit && desktopUnit ? (
                 <>
                   <span className="min-[800px]:hidden">320 × 100</span>
