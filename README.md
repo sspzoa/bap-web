@@ -33,8 +33,24 @@ bun run lint
 | 변수 | 기본값 | 설명 |
 |---|---|---|
 | `NEXT_PUBLIC_API_BASE_URL` | `https://api.xn--rh3b.net` | API 베이스 (`https://api.밥.net`과 동일 호스트) |
+| `NEXT_PUBLIC_ADFIT_UNIT_MOBILE` | 비어 있음 | 카카오 애드핏 모바일 배너(320×100) 광고단위 ID. 비우면 그 칸을 그리지 않음 |
+| `NEXT_PUBLIC_ADFIT_UNIT_PC` | 비어 있음 | 카카오 애드핏 데스크톱 배너(728×90) 광고단위 ID. 비우면 그 칸을 그리지 않음 |
 
-코드에서는 `src/shared/lib/apiBase.ts`의 `API_BASE_URL`을 사용합니다.
+코드에서는 API 주소를 `src/shared/lib/apiBase.ts`의 `API_BASE_URL`로 읽고, 광고단위는 위 환경 변수만 사용합니다. 예시는 [`.env.example`](./.env.example).
+
+`NEXT_PUBLIC_*` 는 빌드에 구워집니다. Vercel·Docker 모두 빌드 시점에 넣어야 식단 화면에 반영됩니다.
+
+## 광고 (카카오 애드핏)
+
+식단 화면에서만, 끼니 카드와 날짜 바 아래 맨 밑에 배너 한 칸을 둡니다. 사이트 선택 화면에는 없습니다.
+
+- 너비 800px 미만: 320×100 (`NEXT_PUBLIC_ADFIT_UNIT_MOBILE`)
+- 너비 800px 이상: 728×90 (`NEXT_PUBLIC_ADFIT_UNIT_PC`)
+- 식단 카드와 같은 유리 카드(`rounded-[15px]`, 흰 글자) 안에 「광고」 라벨과 함께 둡니다. 칸 높이는 고정이라 광고가 늦게 그려져도 밀리지 않습니다.
+- 광고단위가 비어 있으면 그 화면 크기에서는 영역 자체가 없습니다. 둘 다 비어 있으면 배너를 마운트하지 않습니다.
+- 스크립트 `https://t1.daumcdn.net/kas/static/ba.min.js` 는 한 번만 불러오고, 클라이언트 라우트가 바뀌면 기존 유닛을 지운 뒤 다시 그립니다.
+
+매체와 광고단위는 [애드핏](https://adfit.kakao.com) 대시보드에서 `밥.net` 승인 후 발급합니다. 공식 웹 설치 절차에는 `ads.txt`가 없습니다. 대시보드에서 별도 줄을 안내하면 그때 `public/ads.txt`에 추가하면 됩니다.
 
 ## 라우팅
 
@@ -115,7 +131,7 @@ public/
 
 ## 배포
 
-Docker (Bun 빌드, `TZ=Asia/Seoul`). 빌드 시 `NEXT_PUBLIC_API_BASE_URL` bake-in.
+Docker (Bun 빌드, `TZ=Asia/Seoul`). 빌드 시 `NEXT_PUBLIC_API_BASE_URL`과 애드핏 광고단위가 bake-in.
 
 ## 에이전트·기여
 
