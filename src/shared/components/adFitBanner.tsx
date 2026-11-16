@@ -39,23 +39,10 @@ function installAdFitCallbacks() {
   };
 }
 
-function AdSlotNotice({ size }: { size: "mobile" | "desktop" | "responsive" }) {
-  const sizeLabel =
-    size === "mobile" ? (
-      "320 × 100"
-    ) : size === "desktop" ? (
-      "728 × 90"
-    ) : (
-      <>
-        <span className="min-[800px]:hidden">320 × 100</span>
-        <span className="hidden min-[800px]:inline">728 × 90</span>
-      </>
-    );
-
+function AdSlotNotice() {
   return (
-    <div className="absolute inset-0 flex flex-col items-center justify-center gap-1 px-2.5">
-      <p className="text-center font-medium text-[10px] text-white/45 leading-none tracking-tight">{sizeLabel}</p>
-      <p className="text-center font-medium text-[11px] text-white/70 leading-[1.35] [word-break:keep-all] min-[800px]:text-[13px] min-[800px]:leading-snug">
+    <div className="absolute inset-0 flex items-center justify-center rounded-[12px] border border-white/50 bg-transparent px-2.5">
+      <p className="text-center font-medium text-[11px] text-white/75 leading-[1.35] [word-break:keep-all] min-[800px]:text-[13px] min-[800px]:leading-snug">
         유지 비용 때문에 부득이하게 이곳에 광고가 게시될 예정이에요. 동아리 등 제휴 광고 문의는{" "}
         <a href="mailto:me@sspzoa.io" className="underline underline-offset-2">
           me@sspzoa.io
@@ -224,7 +211,7 @@ export function AdFitBanner({
     <aside aria-label="광고" className={`${visibilityClass} w-full shrink-0 justify-center ${insetClass} ${className}`}>
       <div ref={frameRef} className={`relative shrink-0 overflow-hidden rounded-[12px] ${frameClass}`}>
         {slot && <AdFitIns key={`${pathname}:${placement}:${slot.unit}:${slot.width}x${slot.height}`} slot={slot} />}
-        {!filled && <AdSlotNotice size={mobileOnly ? "mobile" : desktopOnly ? "desktop" : "responsive"} />}
+        {!filled && <AdSlotNotice />}
       </div>
       <Script id="kakao-adfit" src={ADFIT_SCRIPT_SRC} strategy="afterInteractive" />
     </aside>
