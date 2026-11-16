@@ -163,9 +163,9 @@ function useCreativeFilled(containerRef: RefObject<HTMLElement | null>, slot: Ad
 }
 
 /**
- * Kakao AdFit banner. Renders nothing when the units for this placement are empty.
- * `ba.min.js` loads once. Route changes and remounts destroy the unit, then render it again.
- * Only one instance of a unit may be mounted: callers must not show two banners at once.
+ * Kakao AdFit banner. An empty unit id still reserves the slot and shows the notice,
+ * but does not mount `<ins>` or load ba.min.js. A set id keeps the current render path.
+ * Route changes destroy and render mounted units again.
  */
 export function AdFitBanner({
   placement = "responsive",
@@ -186,29 +186,13 @@ export function AdFitBanner({
   const mobileOnly = placement === "mobile";
   const desktopOnly = placement === "desktop";
 
-  if (mobileOnly ? !mobileUnit : desktopOnly ? !desktopUnit : !(mobileUnit || desktopUnit)) {
-    return null;
-  }
-
   const frameClass = mobileOnly
     ? "h-[100px] w-[320px]"
     : desktopOnly
       ? "h-[90px] w-[728px]"
-      : mobileUnit && desktopUnit
-        ? "h-[100px] w-[320px] min-[800px]:h-[90px] min-[800px]:w-[728px]"
-        : desktopUnit
-          ? "h-[90px] w-[728px]"
-          : "h-[100px] w-[320px]";
+      : "h-[100px] w-[320px] min-[800px]:h-[90px] min-[800px]:w-[728px]";
 
-  const visibilityClass = mobileOnly
-    ? "flex min-[800px]:hidden"
-    : desktopOnly
-      ? "hidden min-[800px]:flex"
-      : mobileUnit && desktopUnit
-        ? "flex"
-        : desktopUnit
-          ? "hidden min-[800px]:flex"
-          : "flex min-[800px]:hidden";
+  const visibilityClass = mobileOnly ? "flex min-[800px]:hidden" : desktopOnly ? "hidden min-[800px]:flex" : "flex";
 
   const insetClass = flush ? "px-0" : "px-4";
 
@@ -218,7 +202,7 @@ export function AdFitBanner({
         {slot && <AdFitIns key={`${pathname}:${placement}:${slot.unit}:${slot.width}x${slot.height}`} slot={slot} />}
         {!filled && <AdSlotNotice />}
       </div>
-      <Script id="kakao-adfit" src={ADFIT_SCRIPT_SRC} strategy="afterInteractive" />
+      {slot && <Script id="kakao-adfit" src={ADFIT_SCRIPT_SRC} strategy="afterInteractive" />}
     </aside>
   );
 }
