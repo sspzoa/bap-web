@@ -7,10 +7,12 @@ export const ADFIT_MOBILE_SIZE = { width: 320, height: 100 } as const;
 export const ADFIT_DESKTOP_SIZE = { width: 728, height: 90 } as const;
 
 /**
- * Meal layout switches at 768px, but a 728px leaderboard plus the glass
- * card only fits once the viewport clears the shell padding.
+ * 728px leaderboard plus the glass card fits once the viewport clears page padding.
+ * The meal layout itself switches at 768px; meal ads are mobile-only and hide there.
  */
 export const ADFIT_DESKTOP_MIN_WIDTH = 800;
+
+export type AdFitPlacement = "responsive" | "mobile";
 
 export interface AdFitSlot {
   unit: string;
@@ -27,7 +29,16 @@ export function selectAdFitSlot(
   isDesktop: boolean,
   mobileUnit: string | null,
   desktopUnit: string | null,
+  placement: AdFitPlacement = "responsive",
 ): AdFitSlot | null {
+  if (placement === "mobile") {
+    if (isDesktop) {
+      return null;
+    }
+
+    return mobileUnit ? { unit: mobileUnit, ...ADFIT_MOBILE_SIZE } : null;
+  }
+
   if (isDesktop) {
     return desktopUnit ? { unit: desktopUnit, ...ADFIT_DESKTOP_SIZE } : null;
   }

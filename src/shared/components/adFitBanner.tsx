@@ -7,6 +7,7 @@ import Glass from "@/shared/components/common/glass";
 import {
   ADFIT_DESKTOP_MIN_WIDTH,
   ADFIT_SCRIPT_SRC,
+  type AdFitPlacement,
   type AdFitSlot,
   readAdFitUnit,
   selectAdFitSlot,
@@ -94,16 +95,16 @@ function AdFitIns({ slot }: { slot: AdFitSlot }) {
   );
 }
 
-function useAdFitSlot(mobileUnit: string | null, desktopUnit: string | null) {
+function useAdFitSlot(mobileUnit: string | null, desktopUnit: string | null, placement: AdFitPlacement) {
   const [slot, setSlot] = useState<AdFitSlot | null>(null);
 
   useEffect(() => {
     const media = window.matchMedia(`(min-width: ${ADFIT_DESKTOP_MIN_WIDTH}px)`);
-    const apply = () => setSlot(selectAdFitSlot(media.matches, mobileUnit, desktopUnit));
+    const apply = () => setSlot(selectAdFitSlot(media.matches, mobileUnit, desktopUnit, placement));
     apply();
     media.addEventListener("change", apply);
     return () => media.removeEventListener("change", apply);
-  }, [mobileUnit, desktopUnit]);
+  }, [mobileUnit, desktopUnit, placement]);
 
   return slot;
 }
@@ -129,46 +130,70 @@ function useCreativeFilled(containerRef: RefObject<HTMLElement | null>, slot: Ad
 }
 
 /**
- * Kakao AdFit banner. Renders nothing when both public unit env vars are empty.
- * `ba.min.js` is loaded once; route changes destroy and render the unit again.
+ * Kakao AdFit banner. Renders nothing when the units for this placement are empty.
+ * `ba.min.js` loads once. Route changes and remounts destroy the unit, then render it again.
+ * Only one instance of a unit may be mounted: callers must not show two banners at once.
  */
-export function AdFitBanner({ className = "" }: { className?: string }) {
+export function AdFitBanner({
+  placement = "responsive",
+  flush = false,
+  className = "",
+}: {
+  placement?: AdFitPlacement;
+  /** Skip the banner's own horizontal inset when the parent already pads. */
+  flush?: boolean;
+  className?: string;
+}) {
   const labelId = useId();
   const pathname = usePathname();
   const frameRef = useRef<HTMLDivElement>(null);
   const mobileUnit = readAdFitUnit(process.env.NEXT_PUBLIC_ADFIT_UNIT_MOBILE);
   const desktopUnit = readAdFitUnit(process.env.NEXT_PUBLIC_ADFIT_UNIT_PC);
-  const slot = useAdFitSlot(mobileUnit, desktopUnit);
+  const slot = useAdFitSlot(mobileUnit, desktopUnit, placement);
   const filled = useCreativeFilled(frameRef, slot);
+  const mobileOnly = placement === "mobile";
 
-  if (!mobileUnit && !desktopUnit) {
+  if (mobileOnly ? !mobileUnit : !(mobileUnit || desktopUnit)) {
     return null;
   }
 
-  const frameClass =
-    mobileUnit && desktopUnit
+  const frameClass = mobileOnly
+    ? "h-[100px] w-[320px]"
+    : mobileUnit && desktopUnit
       ? "h-[100px] w-[320px] min-[800px]:h-[90px] min-[800px]:w-[728px]"
       : desktopUnit
         ? "h-[90px] w-[728px]"
         : "h-[100px] w-[320px]";
 
-  const visibilityClass =
-    mobileUnit && desktopUnit ? "flex" : desktopUnit ? "hidden min-[800px]:flex" : "flex min-[800px]:hidden";
+  const visibilityClass = mobileOnly
+    ? "flex md:hidden"
+    : mobileUnit && desktopUnit
+      ? "flex"
+      : desktopUnit
+        ? "hidden min-[800px]:flex"
+        : "flex min-[800px]:hidden";
+
+  const insetClass = flush ? "px-0" : "px-2 min-[376px]:px-4 min-[800px]:px-0";
+  const cardClass = mobileOnly
+    ? "flex w-full flex-col gap-2 px-2 py-2.5"
+    : "flex w-full flex-col gap-2 px-2 py-2.5 min-[800px]:w-fit min-[800px]:px-2.5";
 
   return (
     <aside
       aria-labelledby={labelId}
-      className={`${visibilityClass} w-full shrink-0 justify-center px-2 min-[376px]:px-4 min-[800px]:px-0 ${className}`}>
-      <Glass className="flex w-full flex-col gap-2 px-2 py-2.5 min-[800px]:w-fit min-[800px]:px-2.5">
+      className={`${visibilityClass} w-full shrink-0 justify-center ${insetClass} ${className}`}>
+      <Glass className={cardClass}>
         <p id={labelId} className="px-1 font-bold text-[12px] leading-none tracking-tight opacity-50">
           광고
         </p>
         <div ref={frameRef} className={`relative mx-auto shrink-0 ${frameClass}`}>
-          {slot && <AdFitIns key={`${pathname}:${slot.unit}:${slot.width}x${slot.height}`} slot={slot} />}
+          {slot && <AdFitIns key={`${pathname}:${placement}:${slot.unit}:${slot.width}x${slot.height}`} slot={slot} />}
           {!filled && (
             <div className="pointer-events-none absolute inset-0 flex items-center justify-center rounded-[12px] border border-white/15 bg-black/25 text-white">
               <span className="font-bold text-[12px] leading-none tracking-tight opacity-55">
-                {mobileUnit && desktopUnit ? (
+                {mobileOnly ? (
+                  "320 × 100"
+                ) : mobileUnit && desktopUnit ? (
                   <>
                     <span className="min-[800px]:hidden">320 × 100</span>
                     <span className="hidden min-[800px]:inline">728 × 90</span>

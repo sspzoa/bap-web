@@ -29,4 +29,14 @@ describe("selectAdFitSlot", () => {
       height: 90,
     });
   });
+
+  test("mobile placement never uses the desktop unit", () => {
+    expect(selectAdFitSlot(false, "DAN-mobile", "DAN-pc", "mobile")).toEqual({
+      unit: "DAN-mobile",
+      width: 320,
+      height: 100,
+    });
+    expect(selectAdFitSlot(true, "DAN-mobile", "DAN-pc", "mobile")).toBeNull();
+    expect(selectAdFitSlot(false, null, "DAN-pc", "mobile")).toBeNull();
+  });
 });

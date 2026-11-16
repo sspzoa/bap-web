@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { AdFitBanner } from "@/shared/components/adFitBanner";
 import Glass from "@/shared/components/common/glass";
 import { MealDesktopBackground } from "@/shared/components/mealDesktopBackground";
 import { SiteSelectLink } from "@/shared/components/siteSelectLink";
@@ -61,6 +62,8 @@ export function SiteSelectView() {
               );
             })}
           </div>
+
+          <AdFitBanner flush />
 
           <footer className="flex flex-col items-center gap-1 text-[13px] opacity-45">
             <nav aria-label="사이트 링크" className="flex flex-wrap items-center justify-center gap-x-2 gap-y-0.5">

@@ -1,5 +1,7 @@
+"use client";
+
 import type { ReactNode, RefObject, UIEventHandler } from "react";
-import { memo } from "react";
+import { memo, useState } from "react";
 import { MealNavigationBar } from "@/app/(pages)/(home)/(components)/mealNavigationBar";
 import { AdFitBanner } from "@/shared/components/adFitBanner";
 import LoadingSpinner from "@/shared/components/common/loadingSpinner";
@@ -31,11 +33,13 @@ export const MealPageShell = memo(function MealPageShell({
   onScroll,
   children,
 }: MealPageShellProps) {
+  const [pickerOpen, setPickerOpen] = useState(false);
+
   return (
     <div className="relative flex h-svh items-center justify-center overflow-hidden py-4 md:px-4 md:py-8">
       {background}
       <MealDesktopBackground />
-      <SiteEdgePanel />
+      <SiteEdgePanel onOpenChange={setPickerOpen} />
 
       <div className="z-10 flex h-full max-h-[900px] w-full max-w-[1500px] flex-col gap-4 md:px-4">
         <div className="relative flex min-h-0 w-full flex-1 flex-col-reverse gap-4 md:flex-col">
@@ -58,8 +62,8 @@ export const MealPageShell = memo(function MealPageShell({
             className="flex w-full flex-1 snap-x snap-mandatory flex-row gap-4 overflow-x-auto px-4 md:snap-none md:px-0">
             {children}
           </div>
+          {!pickerOpen && <AdFitBanner placement="mobile" />}
         </div>
-        <AdFitBanner />
       </div>
     </div>
   );
