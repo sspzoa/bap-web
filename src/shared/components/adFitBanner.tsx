@@ -72,7 +72,12 @@ function AdFitIns({ slot }: { slot: AdFitSlot }) {
         return;
       }
 
-      window.adfit.render(ins);
+      try {
+        window.adfit.render(ins);
+      } catch {
+        // A second ins with the same unit can throw after the first is registered.
+        // Keep this slot mounted so a later route change can render it again.
+      }
     };
 
     if (window.adfit) {
