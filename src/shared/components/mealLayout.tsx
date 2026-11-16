@@ -8,6 +8,7 @@ import { MealPageShell } from "@/shared/components/mealPageShell";
 import { MealSection } from "@/shared/components/mealSection";
 import { useMealData } from "@/shared/hooks/useMealData";
 import type { MealFetchResult, PublicDayMenu, PublicMeal } from "@/shared/types/index";
+import { getCurrentMealTiming } from "@/shared/utils/mealTimingUtils";
 import { useSite } from "@/sites/context";
 
 interface MealLayoutProps {
@@ -59,18 +60,7 @@ const MealLayout = memo(function MealLayout({ initialData, initialFormattedDate,
     });
   }, [meals, site.meals]);
 
-  const activeMealId = useMemo(() => {
-    let bestId = site.meals[0]?.id ?? "";
-    let best = -1;
-    for (const slot of site.meals) {
-      const value = backgroundOpacities[slot.id] ?? 0;
-      if (value > best) {
-        best = value;
-        bestId = slot.id;
-      }
-    }
-    return bestId;
-  }, [backgroundOpacities, site.meals]);
+  const defaultMealId = getCurrentMealTiming(site.meals).mealId;
 
   const handleResetToToday = useCallback(() => {
     resetToToday();
@@ -100,7 +90,7 @@ const MealLayout = memo(function MealLayout({ initialData, initialFormattedDate,
             isError={isError}
             errorMessage={errorMessage}
             showContent={showContent}
-            showMenuAd={meal.id === activeMealId}
+            showMenuAd={meal.id === defaultMealId}
           />
         );
       })}
