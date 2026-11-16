@@ -1,11 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import { memo, useContext, useEffect, useMemo, useState } from "react";
+import { memo, useEffect, useMemo, useState } from "react";
 import { AdFitBanner } from "@/shared/components/adFitBanner";
 import Glass from "@/shared/components/common/glass";
 import { ImagePopup } from "@/shared/components/imagePopup";
-import { MealPickerOpenContext } from "@/shared/components/mealPageShell";
 import { MealSectionStatusMessage } from "@/shared/components/mealSectionStatusMessage";
 import { useFoodImageSearch } from "@/shared/hooks/useFoodImageSearch";
 import { resolveMealSectionMessage } from "@/shared/lib/mealErrors";
@@ -89,7 +88,6 @@ export const MealSection = memo(function MealSection({
   showContent,
   showMenuAd = false,
 }: MealSectionProps) {
-  const pickerOpen = useContext(MealPickerOpenContext);
   const [popupData, setPopupData] = useState<MealSearchResponse | null>(null);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -164,7 +162,7 @@ export const MealSection = memo(function MealSection({
               {headerMeta && <p className="ml-auto text-[16px] tracking-tight opacity-50">{headerMeta}</p>}
             </div>
 
-            {showMenuAd && !pickerOpen && <AdFitBanner placement="mobile" flush />}
+            {showMenuAd && <AdFitBanner placement="mobile" flush />}
 
             {!isLoading && !isError && meal.image && (
               <div className="flex flex-row gap-2">

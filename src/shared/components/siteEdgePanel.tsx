@@ -2,30 +2,20 @@
 
 import { LayoutGrid } from "lucide-react";
 import { memo, useCallback, useRef, useState } from "react";
-import { AdFitBanner } from "@/shared/components/adFitBanner";
 import Glass from "@/shared/components/common/glass";
 import { HOME_HREF, sitePreferenceHref } from "@/shared/lib/sitePreference";
 import { useCatalog, useSiteId } from "@/sites/context";
 
 const SWIPE_THRESHOLD = 40;
 
-export const SiteEdgePanel = memo(function SiteEdgePanel({ onOpenChange }: { onOpenChange?: (open: boolean) => void }) {
+export const SiteEdgePanel = memo(function SiteEdgePanel() {
   const siteId = useSiteId();
   const catalog = useCatalog();
   const [isOpen, setIsOpen] = useState(false);
   const touchStartX = useRef<number | null>(null);
-  const isOpenRef = useRef(false);
 
-  const setOpen = useCallback(
-    (open: boolean) => {
-      isOpenRef.current = open;
-      setIsOpen(open);
-      onOpenChange?.(open);
-    },
-    [onOpenChange],
-  );
-  const close = useCallback(() => setOpen(false), [setOpen]);
-  const toggle = useCallback(() => setOpen(!isOpenRef.current), [setOpen]);
+  const close = useCallback(() => setIsOpen(false), []);
+  const toggle = useCallback(() => setIsOpen((open) => !open), []);
 
   const handleTouchStart = (event: React.TouchEvent) => {
     touchStartX.current = event.touches[0].clientX;
@@ -40,12 +30,12 @@ export const SiteEdgePanel = memo(function SiteEdgePanel({ onOpenChange }: { onO
     touchStartX.current = null;
 
     if (deltaX <= -SWIPE_THRESHOLD) {
-      setOpen(true);
+      setIsOpen(true);
       return;
     }
 
     if (deltaX >= SWIPE_THRESHOLD) {
-      setOpen(false);
+      setIsOpen(false);
     }
   };
 
@@ -54,20 +44,14 @@ export const SiteEdgePanel = memo(function SiteEdgePanel({ onOpenChange }: { onO
       {isOpen && (
         <button
           type="button"
-          className="pointer-events-auto absolute inset-0 z-0 bg-black/20"
+          className="pointer-events-auto absolute inset-0 bg-black/20"
           onClick={close}
           aria-label="닫기"
         />
       )}
 
-      {isOpen && (
-        <div className="pointer-events-auto absolute inset-x-0 bottom-0 z-10 px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
-          <AdFitBanner placement="mobile" flush />
-        </div>
-      )}
-
       <div
-        className={`-translate-y-1/2 pointer-events-auto absolute top-1/2 right-0 z-20 flex items-stretch transition-transform duration-200 ${
+        className={`-translate-y-1/2 pointer-events-auto absolute top-1/2 right-0 flex items-stretch transition-transform duration-200 ${
           isOpen ? "translate-x-0" : "translate-x-[calc(100%-22px)]"
         }`}
         onTouchStart={handleTouchStart}
