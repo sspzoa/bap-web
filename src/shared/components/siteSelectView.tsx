@@ -52,11 +52,15 @@ export function SiteSelectView() {
               return (
                 <SiteSelectLink key={site.id} siteId={site.id} className="block h-full">
                   <Glass
-                    className={`flex h-full w-full cursor-pointer flex-col items-center justify-center gap-1 p-5 transition-transform duration-100 active:scale-[0.98] active:opacity-80 ${
-                      isCurrent ? "bg-white/30" : ""
-                    }`}>
-                    <p className="font-bold text-[20px] tracking-tight">{site.name}</p>
-                    {showSchoolName && <p className="text-[14px] opacity-55">{site.schoolName}</p>}
+                    className={`flex h-full w-full cursor-pointer items-center gap-3 px-5 py-4 transition-transform duration-100 active:scale-[0.98] active:opacity-80 md:flex-col md:justify-center md:gap-1 md:p-5 ${
+                      showSchoolName ? "justify-between" : "justify-center"
+                    } ${isCurrent ? "bg-white/30" : ""}`}>
+                    <p className="shrink-0 font-bold text-[18px] tracking-tight md:text-[20px]">{site.name}</p>
+                    {showSchoolName && (
+                      <p className="min-w-0 text-right text-[13px] leading-snug opacity-55 md:text-center md:text-[14px]">
+                        {site.schoolName}
+                      </p>
+                    )}
                   </Glass>
                 </SiteSelectLink>
               );
