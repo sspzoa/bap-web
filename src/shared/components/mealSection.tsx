@@ -31,18 +31,29 @@ const MenuItems = memo(function MenuItems({
   onFoodClick: (foodName: string) => void;
 }) {
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1.5 md:flex-col md:flex-nowrap md:gap-2">
       {items.map((item, index) => (
-        <div key={`${item}-${index}`} className="flex flex-row gap-2">
-          <p className="shrink-0 font-semibold text-[20px]">-</p>
+        <div key={`${item}-${index}`} className="flex max-w-full flex-row items-baseline gap-1.5 md:gap-2">
+          <span className="hidden shrink-0 font-semibold text-[20px] md:inline" aria-hidden>
+            -
+          </span>
           {foodSearch ? (
             <button
               className="text-left duration-100 active:scale-95 active:opacity-50"
               onClick={() => onFoodClick(item)}>
-              <p className="break-words font-semibold text-[20px]">{item}</p>
+              <p className="break-words font-semibold text-[17px] leading-snug md:text-[20px] md:leading-normal">
+                {item}
+              </p>
             </button>
           ) : (
-            <p className="break-words font-semibold text-[20px]">{item}</p>
+            <p className="break-words font-semibold text-[17px] leading-snug md:text-[20px] md:leading-normal">
+              {item}
+            </p>
+          )}
+          {index < items.length - 1 && (
+            <span className="shrink-0 font-semibold text-[16px] opacity-40 md:hidden" aria-hidden>
+              ·
+            </span>
           )}
         </div>
       ))}
