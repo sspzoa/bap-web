@@ -2,6 +2,7 @@
 
 import { type RefObject, useEffect, useRef, useState } from "react";
 import { AdFitBanner } from "@/shared/components/adFitBanner";
+import { AdInquiryLink } from "@/shared/components/adInquiryLink";
 import {
   ADFIT_DESKTOP_SIZE,
   ADFIT_MOBILE_SIZE,
@@ -79,33 +80,36 @@ function PartnerBanner({
     <aside
       aria-label="광고"
       className={`${adSlotVisibilityClass(adPlacement)} w-full shrink-0 justify-center ${flush ? "px-0" : "px-4"} ${className}`}>
-      <a
-        ref={frameRef}
-        href={href}
-        target="_blank"
-        rel="noopener"
-        referrerPolicy="origin"
-        data-partner-slot={slot}
-        onClick={() => recordPartnerAdEvent({ siteId: creative.siteId, slot, type: "click" })}
-        className={`relative block shrink-0 overflow-hidden rounded-[12px] ${adSlotFrameClass(adPlacement)}`}>
-        <img
-          ref={imageRef}
-          src={src}
-          alt={creative.alt}
-          width={size.width}
-          height={size.height}
-          draggable={false}
-          decoding="async"
-          className="h-full w-full object-cover"
-          onLoad={() => setReady(true)}
-          onError={onBroken}
-        />
-        <span
-          aria-hidden
-          className="pointer-events-none absolute right-1 bottom-1 rounded bg-black/60 px-1 py-px font-semibold text-[9px] text-white leading-none">
-          광고
-        </span>
-      </a>
+      <div className={`relative shrink-0 overflow-hidden rounded-[12px] ${adSlotFrameClass(adPlacement)}`}>
+        <a
+          ref={frameRef}
+          href={href}
+          target="_blank"
+          rel="noopener"
+          referrerPolicy="origin"
+          data-partner-slot={slot}
+          onClick={() => recordPartnerAdEvent({ siteId: creative.siteId, slot, type: "click" })}
+          className="block h-full w-full">
+          <img
+            ref={imageRef}
+            src={src}
+            alt={creative.alt}
+            width={size.width}
+            height={size.height}
+            draggable={false}
+            decoding="async"
+            className="h-full w-full object-cover"
+            onLoad={() => setReady(true)}
+            onError={onBroken}
+          />
+          <span
+            aria-hidden
+            className="pointer-events-none absolute right-1 bottom-1 rounded bg-black/60 px-1 py-px font-semibold text-[9px] text-white leading-none">
+            광고
+          </span>
+        </a>
+        <AdInquiryLink />
+      </div>
     </aside>
   );
 }

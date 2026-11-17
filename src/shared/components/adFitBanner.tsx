@@ -3,6 +3,7 @@
 import { usePathname } from "next/navigation";
 import Script from "next/script";
 import { type RefObject, useEffect, useRef, useState } from "react";
+import { AdInquiryLink } from "@/shared/components/adInquiryLink";
 import {
   ADFIT_DESKTOP_MIN_WIDTH,
   ADFIT_SCRIPT_SRC,
@@ -195,6 +196,7 @@ export function AdFitBanner({
       <div ref={frameRef} className={`relative shrink-0 overflow-hidden rounded-[12px] ${frameClass}`}>
         {slot && <AdFitIns key={`${pathname}:${placement}:${slot.unit}:${slot.width}x${slot.height}`} slot={slot} />}
         {!filled && <AdSlotNotice />}
+        <AdInquiryLink />
       </div>
       {slot && <Script id="kakao-adfit" src={ADFIT_SCRIPT_SRC} strategy="afterInteractive" />}
     </aside>
