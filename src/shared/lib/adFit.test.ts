@@ -1,5 +1,14 @@
 import { describe, expect, test } from "bun:test";
-import { readAdFitUnit, selectAdFitSlot } from "@/shared/lib/adFit";
+import { adSlotFrameClass, adSlotVisibilityClass, readAdFitUnit, selectAdFitSlot } from "@/shared/lib/adFit";
+
+describe("ad slot box", () => {
+  test("keeps the AdFit sizes and the 800px switch", () => {
+    expect(adSlotFrameClass("mobile")).toBe("h-[100px] w-[320px]");
+    expect(adSlotFrameClass("desktop")).toBe("h-[90px] w-[728px]");
+    expect(adSlotVisibilityClass("mobile")).toBe("flex min-[800px]:hidden");
+    expect(adSlotVisibilityClass("desktop")).toBe("hidden min-[800px]:flex");
+  });
+});
 
 describe("readAdFitUnit", () => {
   test("drops blank values and trims a real unit id", () => {
