@@ -64,10 +64,17 @@ function PartnerBanner({
 
   useEffect(() => {
     const image = imageRef.current;
-    if (image?.complete && image.naturalWidth > 0) {
-      setReady(true);
+    if (!image?.complete) {
+      return;
     }
-  }, [src]);
+
+    if (image.naturalWidth > 0) {
+      setReady(true);
+      return;
+    }
+
+    onBroken();
+  }, [src, onBroken]);
 
   useImpression(frameRef, creative.siteId, slot, ready);
 

@@ -17,9 +17,9 @@ interface MealPageShellProps {
   initialLoad: boolean;
   scrollContainerRef: RefObject<HTMLDivElement | null>;
   onScroll: UIEventHandler<HTMLDivElement>;
-  /** Bottom desktop slot. Three-card layouts hide it once the ad sits between lunch and dinner. */
+  /** Bottom desktop slot. Three-card layouts hide it once the ad sits under lunch and dinner. */
   bottomAdSpan?: DesktopAdSpan;
-  /** Three meal cards: the row is a fixed two-column layout from 1200px. */
+  /** Three meal cards: a 3-column grid from 1200px, where a 728px ad fits under two columns. */
   wideTrio?: boolean;
   children: ReactNode;
 }

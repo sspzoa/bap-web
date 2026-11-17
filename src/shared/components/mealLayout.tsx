@@ -79,7 +79,7 @@ const MealLayout = memo(function MealLayout({ initialData, initialFormattedDate,
         errorMessage={errorMessage}
         showContent={showContent}
         showMenuAd
-        stretch={trio && index === 0}
+        spanRows={trio && index === 0}
       />
     );
   });
@@ -98,16 +98,17 @@ const MealLayout = memo(function MealLayout({ initialData, initialFormattedDate,
       bottomAdSpan={trio ? "from-800-until-1200" : "from-800"}
       wideTrio={trio}>
       {trio ? (
-        <>
-          <div className="contents min-[1200px]:flex min-[1200px]:h-full min-[1200px]:min-h-0 min-[1200px]:flex-1">
-            {sections[0]}
-          </div>
-          <div className="contents min-[1200px]:flex min-[1200px]:h-full min-[1200px]:min-h-0 min-[1200px]:min-w-[728px] min-[1200px]:flex-1 min-[1200px]:flex-col min-[1200px]:gap-4">
-            {sections[1]}
-            <MealAdBanner placement="desktop" flush desktopSpan="from-1200" />
-            {sections[2]}
-          </div>
-        </>
+        <div className="contents min-[1200px]:grid min-[1200px]:h-full min-[1200px]:min-h-0 min-[1200px]:w-full min-[1200px]:flex-1 min-[1200px]:grid-cols-3 min-[1200px]:grid-rows-[minmax(0,1fr)_auto] min-[1200px]:gap-4">
+          {sections[0]}
+          {sections[1]}
+          {sections[2]}
+          <MealAdBanner
+            placement="desktop"
+            flush
+            desktopSpan="from-1200"
+            className="min-[1200px]:col-span-2 min-[1200px]:col-start-2"
+          />
+        </div>
       ) : (
         sections
       )}
