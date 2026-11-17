@@ -12,7 +12,7 @@ const CLICK_GAP_MS = 1000;
 const seen = new Map<string, number>();
 
 export function partnerAdEventUrl(): string {
-  return `${API_BASE_URL}/partner-ads/events`;
+  return `${API_BASE_URL}/c/hit`;
 }
 
 export function partnerAdEventBody(event: PartnerAdEvent): string {

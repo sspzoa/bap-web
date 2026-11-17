@@ -8,7 +8,7 @@ import {
 
 describe("partner ad events", () => {
   test("posts only the institution, slot, and event type", () => {
-    expect(partnerAdEventUrl()).toMatch(/\/partner-ads\/events$/);
+    expect(partnerAdEventUrl()).toMatch(/\/c\/hit$/);
     expect(JSON.parse(partnerAdEventBody({ siteId: "kdmhs", slot: "mobile-breakfast", type: "impression" }))).toEqual({
       siteId: "kdmhs",
       slot: "mobile-breakfast",

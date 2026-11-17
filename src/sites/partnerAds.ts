@@ -38,8 +38,9 @@ export interface PartnerAdCreative {
  */
 export const PARTNER_ADS: Record<string, PartnerAdConfig> = {
   kdmhs: {
-    mobile: "https://growdrill.app/banner-320x100.png",
-    pc: "https://growdrill.app/banner-728x90.png",
+    // Served by this site. The browser must not request a URL containing 728x90 or "banner".
+    mobile: "/c/kdmhs/narrow",
+    pc: "/c/kdmhs/wide",
     href: "https://growdrill.app",
     alt: "그로우드릴, 드릴 키우기",
   },

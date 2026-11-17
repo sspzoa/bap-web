@@ -12,8 +12,8 @@ describe("resolvePartnerAd", () => {
   test("maps 디미고 to the Growdrill banners and leaves other schools alone", () => {
     expect(resolvePartnerAd("kdmhs")).toEqual({
       siteId: "kdmhs",
-      mobileSrc: "https://growdrill.app/banner-320x100.png",
-      pcSrc: "https://growdrill.app/banner-728x90.png",
+      mobileSrc: "/c/kdmhs/narrow",
+      pcSrc: "/c/kdmhs/wide",
       href: "https://growdrill.app",
       alt: "그로우드릴, 드릴 키우기",
     });
