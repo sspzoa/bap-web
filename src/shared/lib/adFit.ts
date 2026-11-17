@@ -35,13 +35,24 @@ export function adSlotFrameClass(placement: AdFitPlacement): string {
   return "h-[100px] w-[320px] min-[800px]:h-[90px] min-[800px]:w-[728px]";
 }
 
+/** Where the desktop slot is shown. Wide means the three-card arrangement. */
+export type DesktopAdSpan = "from-800" | "from-1200" | "from-800-until-1200";
+
 /** Mobile slots hide at 800px. The desktop slot is hidden below that. */
-export function adSlotVisibilityClass(placement: AdFitPlacement): string {
+export function adSlotVisibilityClass(placement: AdFitPlacement, desktopSpan: DesktopAdSpan = "from-800"): string {
   if (placement === "mobile") {
     return "flex min-[800px]:hidden";
   }
 
   if (placement === "desktop") {
+    if (desktopSpan === "from-1200") {
+      return "hidden min-[1200px]:flex";
+    }
+
+    if (desktopSpan === "from-800-until-1200") {
+      return "hidden min-[800px]:flex min-[1200px]:hidden";
+    }
+
     return "hidden min-[800px]:flex";
   }
 

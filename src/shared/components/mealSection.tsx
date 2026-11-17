@@ -21,6 +21,8 @@ interface MealSectionProps {
   errorMessage?: string;
   showContent: boolean;
   showMenuAd?: boolean;
+  /** Stretch to the lunch/ad/dinner column on a wide three-card desktop. */
+  stretch?: boolean;
 }
 
 const MenuItems = memo(function MenuItems({
@@ -87,6 +89,7 @@ export const MealSection = memo(function MealSection({
   errorMessage,
   showContent,
   showMenuAd = false,
+  stretch = false,
 }: MealSectionProps) {
   const [popupData, setPopupData] = useState<MealSearchResponse | null>(null);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -145,7 +148,9 @@ export const MealSection = memo(function MealSection({
   return (
     <>
       <Glass
-        className="flex min-h-0 w-full flex-shrink-0 snap-center snap-always flex-col gap-4 p-4 md:flex-1"
+        className={`flex min-h-0 w-full flex-shrink-0 snap-center snap-always flex-col gap-4 p-4 md:flex-1 ${
+          stretch ? "min-[1200px]:h-full min-[1200px]:w-full" : ""
+        }`}
         data-id={meal.id}>
         {showContent && (
           <>
