@@ -7,6 +7,8 @@ describe("ad slot box", () => {
     expect(adSlotFrameClass("desktop")).toBe("h-[90px] w-[728px]");
     expect(adSlotVisibilityClass("mobile")).toBe("flex min-[800px]:hidden");
     expect(adSlotVisibilityClass("desktop")).toBe("hidden min-[800px]:flex");
+    expect(adSlotVisibilityClass("desktop", "from-1200")).toBe("hidden min-[1200px]:flex");
+    expect(adSlotVisibilityClass("desktop", "from-800-until-1200")).toBe("hidden min-[800px]:flex min-[1200px]:hidden");
   });
 });
 

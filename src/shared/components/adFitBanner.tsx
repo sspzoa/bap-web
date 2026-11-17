@@ -11,6 +11,7 @@ import {
   type AdFitSlot,
   adSlotFrameClass,
   adSlotVisibilityClass,
+  type DesktopAdSpan,
   readAdFitUnit,
   selectAdFitSlot,
 } from "@/shared/lib/adFit";
@@ -173,11 +174,13 @@ function useCreativeFilled(containerRef: RefObject<HTMLElement | null>, slot: Ad
 export function AdFitBanner({
   placement = "responsive",
   flush = false,
+  desktopSpan = "from-800",
   className = "",
 }: {
   placement?: AdFitPlacement;
   /** Skip the banner's own horizontal inset when the parent already pads. */
   flush?: boolean;
+  desktopSpan?: DesktopAdSpan;
   className?: string;
 }) {
   const pathname = usePathname();
@@ -187,7 +190,7 @@ export function AdFitBanner({
   const slot = useAdFitSlot(mobileUnit, desktopUnit, placement);
   const filled = useCreativeFilled(frameRef, slot);
   const frameClass = adSlotFrameClass(placement);
-  const visibilityClass = adSlotVisibilityClass(placement);
+  const visibilityClass = adSlotVisibilityClass(placement, desktopSpan);
 
   const insetClass = flush ? "px-0" : "px-4";
 

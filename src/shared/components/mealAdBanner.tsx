@@ -3,7 +3,7 @@
 import { type RefObject, useEffect, useRef, useState } from "react";
 import { AdFitBanner } from "@/shared/components/adFitBanner";
 import { AdInquiryLink } from "@/shared/components/adInquiryLink";
-import { type AdFitPlacement, adSlotFrameClass, adSlotVisibilityClass } from "@/shared/lib/adFit";
+import { type AdFitPlacement, adSlotFrameClass, adSlotVisibilityClass, type DesktopAdSpan } from "@/shared/lib/adFit";
 import { recordPartnerAdEvent } from "@/shared/lib/partnerAdTracking";
 import { useOptionalSiteId } from "@/sites/context";
 import {
@@ -43,6 +43,7 @@ function PartnerBanner({
   placement,
   slot,
   flush,
+  desktopSpan,
   className,
   onBroken,
 }: {
@@ -50,6 +51,7 @@ function PartnerBanner({
   placement: PartnerAdPlacement;
   slot: string;
   flush: boolean;
+  desktopSpan: DesktopAdSpan;
   className: string;
   onBroken: () => void;
 }) {
@@ -62,17 +64,24 @@ function PartnerBanner({
 
   useEffect(() => {
     const image = imageRef.current;
-    if (image?.complete && image.naturalWidth > 0) {
-      setReady(true);
+    if (!image?.complete) {
+      return;
     }
-  }, [src]);
+
+    if (image.naturalWidth > 0) {
+      setReady(true);
+      return;
+    }
+
+    onBroken();
+  }, [src, onBroken]);
 
   useImpression(frameRef, creative.siteId, slot, ready);
 
   return (
     <aside
       aria-label={creative.alt}
-      className={`${adSlotVisibilityClass(adPlacement)} w-full shrink-0 justify-center ${flush ? "px-0" : "px-4"} ${className}`}>
+      className={`${adSlotVisibilityClass(adPlacement, desktopSpan)} w-full shrink-0 justify-center ${flush ? "px-0" : "px-4"} ${className}`}>
       <div className={`relative shrink-0 overflow-hidden rounded-[12px] ${adSlotFrameClass(adPlacement)}`}>
         <a
           ref={frameRef}
@@ -108,11 +117,13 @@ export function MealAdBanner({
   placement,
   mealId,
   flush = false,
+  desktopSpan = "from-800",
   className = "",
 }: {
   placement: PartnerAdPlacement;
   mealId?: string;
   flush?: boolean;
+  desktopSpan?: DesktopAdSpan;
   className?: string;
 }) {
   const siteId = useOptionalSiteId();
@@ -122,7 +133,7 @@ export function MealAdBanner({
   const adPlacement: AdFitPlacement = placement === "desktop" ? "desktop" : "mobile";
 
   if (!creative || !slot || broken) {
-    return <AdFitBanner placement={adPlacement} flush={flush} className={className} />;
+    return <AdFitBanner placement={adPlacement} flush={flush} desktopSpan={desktopSpan} className={className} />;
   }
 
   return (
@@ -131,6 +142,7 @@ export function MealAdBanner({
       placement={placement}
       slot={slot}
       flush={flush}
+      desktopSpan={desktopSpan}
       className={className}
       onBroken={() => setBroken(true)}
     />

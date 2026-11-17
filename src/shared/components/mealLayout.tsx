@@ -3,6 +3,7 @@
 import { format } from "date-fns/format";
 import { ko } from "date-fns/locale/ko";
 import { memo, useCallback, useMemo } from "react";
+import { MealAdBanner } from "@/shared/components/mealAdBanner";
 import { MealBackgroundImages } from "@/shared/components/mealBackgroundImages";
 import { MealPageShell } from "@/shared/components/mealPageShell";
 import { MealSection } from "@/shared/components/mealSection";
@@ -64,6 +65,25 @@ const MealLayout = memo(function MealLayout({ initialData, initialFormattedDate,
     setMealByTime();
   }, [resetToToday, setMealByTime]);
 
+  const trio = displayMeals.length === 3;
+  const sections = displayMeals.map((meal, index) => {
+    const slot = site.meals.find((item) => item.id === meal.id);
+    return (
+      <MealSection
+        key={meal.id}
+        meal={meal}
+        icon={slot?.icon ?? "/icon/utensils.svg"}
+        foodSearch={site.features.foodSearch}
+        isLoading={isLoading}
+        isError={isError}
+        errorMessage={errorMessage}
+        showContent={showContent}
+        showMenuAd
+        spanRows={trio && index === 0}
+      />
+    );
+  });
+
   return (
     <MealPageShell
       background={<MealBackgroundImages slots={site.meals} opacities={backgroundOpacities} />}
@@ -74,23 +94,24 @@ const MealLayout = memo(function MealLayout({ initialData, initialFormattedDate,
       isLoading={isLoading}
       initialLoad={initialLoad}
       scrollContainerRef={scrollContainerRef}
-      onScroll={handleScroll}>
-      {displayMeals.map((meal) => {
-        const slot = site.meals.find((item) => item.id === meal.id);
-        return (
-          <MealSection
-            key={meal.id}
-            meal={meal}
-            icon={slot?.icon ?? "/icon/utensils.svg"}
-            foodSearch={site.features.foodSearch}
-            isLoading={isLoading}
-            isError={isError}
-            errorMessage={errorMessage}
-            showContent={showContent}
-            showMenuAd
+      onScroll={handleScroll}
+      bottomAdSpan={trio ? "from-800-until-1200" : "from-800"}
+      wideTrio={trio}>
+      {trio ? (
+        <div className="contents min-[1200px]:grid min-[1200px]:h-full min-[1200px]:min-h-0 min-[1200px]:w-full min-[1200px]:flex-1 min-[1200px]:grid-cols-3 min-[1200px]:grid-rows-[minmax(0,1fr)_auto] min-[1200px]:gap-4">
+          {sections[0]}
+          {sections[1]}
+          {sections[2]}
+          <MealAdBanner
+            placement="desktop"
+            flush
+            desktopSpan="from-1200"
+            className="min-[1200px]:col-span-2 min-[1200px]:col-start-2"
           />
-        );
-      })}
+        </div>
+      ) : (
+        sections
+      )}
     </MealPageShell>
   );
 });
