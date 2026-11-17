@@ -1,7 +1,7 @@
 export interface PartnerAdConfig {
-  /** Site-root path under `public/`. 320×100. Example: `/ads/kdmhs/mobile.png`. */
+  /** 320×100. `public` 경로(`/ads/...`) 또는 https 주소. */
   mobile: string;
-  /** Site-root path under `public/`. 728×90. Example: `/ads/kdmhs/pc.png`. */
+  /** 728×90. `public` 경로(`/ads/...`) 또는 https 주소. */
   pc: string;
   /** Absolute http(s) URL. UTM params are added at render time. */
   href: string;
@@ -23,26 +23,25 @@ export interface PartnerAdCreative {
  * `GET /` providers[].id 와 같고, basePath 는 `/kdmhs` 입니다.
  *
  * 소재를 넣는 방법:
- * 1. 이미지를 `public/ads/<id>/` 에 둡니다.
- *    - `mobile.png` — 320×100. 급식 카드 안 (아침·점심·저녁, 800px 미만).
- *    - `pc.png` — 728×90. 끼니 카드 줄 아래 (800px 이상).
- *    png / webp / jpg 모두 됩니다. 파일명이 다르면 아래 경로를 그 파일로 적습니다.
+ * 1. 이미지를 `public/ads/<id>/` 에 두거나, 이미 호스팅된 https 주소를 그대로 적습니다.
+ *    파일로 둘 때 관례는 `mobile.png` 320×100, `pc.png` 728×90 입니다.
  * 2. 해당 기관의 mobile, pc, href, alt 를 모두 채웁니다.
- *    - mobile, pc: `/ads/kdmhs/mobile.png` 처럼 `/` 로 시작하는 경로
+ *    - mobile, pc: `/ads/kdmhs/mobile.png` 또는 `https://example.com/banner.png`
  *    - href: https 절대 주소 하나
  *    - alt: 배너 설명
- * 3. 네 값 중 하나라도 비어 있거나 주소가 http(s)가 아니면 그 기관은 제휴 배너를 쓰지 않습니다.
- *    이미지 파일 요청이 실패해도 급식 화면은 카카오 AdFit(유닛이 없으면 안내 문구)으로 돌아갑니다.
+ * 3. 네 값 중 하나라도 비어 있거나 주소가 아니면 그 기관은 제휴 배너를 쓰지 않습니다.
+ *    이미지 요청이 실패해도 급식 화면은 카카오 AdFit(유닛이 없으면 안내 문구)으로 돌아갑니다.
+ *    배너는 `<img>`로 그리므로 next/image remotePatterns 는 쓰지 않습니다.
  *
  * 홈(사이트 선택)은 이 맵을 보지 않고 항상 AdFit 입니다.
  * 급식 화면에서 제휴가 켜지면 모바일 3칸과 데스크톱 1칸을 모두 이 배너로 바꿉니다.
  */
 export const PARTNER_ADS: Record<string, PartnerAdConfig> = {
   kdmhs: {
-    mobile: "",
-    pc: "",
-    href: "",
-    alt: "",
+    mobile: "https://growdrill.app/banner-320x100.png",
+    pc: "https://growdrill.app/banner-728x90.png",
+    href: "https://growdrill.app",
+    alt: "그로우드릴, 드릴 키우기",
   },
 };
 
@@ -53,6 +52,10 @@ function filled(value: string | undefined): string | null {
 
 function isPublicAssetPath(value: string): boolean {
   return value.startsWith("/") && !value.startsWith("//") && !value.includes("..");
+}
+
+function isCreativeSrc(value: string): boolean {
+  return isPublicAssetPath(value) || isHttpUrl(value);
 }
 
 function isHttpUrl(value: string): boolean {
@@ -85,7 +88,7 @@ export function resolvePartnerAd(
     return null;
   }
 
-  if (!isPublicAssetPath(mobile) || !isPublicAssetPath(pc) || !isHttpUrl(href)) {
+  if (!isCreativeSrc(mobile) || !isCreativeSrc(pc) || !isHttpUrl(href)) {
     return null;
   }
 

@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { PARTNER_ADS, type PartnerAdConfig, partnerAdSlot, resolvePartnerAd, withPartnerUtm } from "@/sites/partnerAds";
+import { type PartnerAdConfig, partnerAdSlot, resolvePartnerAd, withPartnerUtm } from "@/sites/partnerAds";
 
 const sample: PartnerAdConfig = {
   mobile: "/ads/kdmhs/mobile.png",
@@ -9,9 +9,14 @@ const sample: PartnerAdConfig = {
 };
 
 describe("resolvePartnerAd", () => {
-  test("maps 디미고 to kdmhs and stays off until the creative is filled", () => {
-    expect(PARTNER_ADS.kdmhs).toBeDefined();
-    expect(resolvePartnerAd("kdmhs")).toBeNull();
+  test("maps 디미고 to the Growdrill banners and leaves other schools alone", () => {
+    expect(resolvePartnerAd("kdmhs")).toEqual({
+      siteId: "kdmhs",
+      mobileSrc: "https://growdrill.app/banner-320x100.png",
+      pcSrc: "https://growdrill.app/banner-728x90.png",
+      href: "https://growdrill.app",
+      alt: "그로우드릴, 드릴 키우기",
+    });
     expect(resolvePartnerAd("dgu")).toBeNull();
     expect(resolvePartnerAd(null)).toBeNull();
   });
@@ -26,11 +31,19 @@ describe("resolvePartnerAd", () => {
     });
   });
 
-  test("falls back when any field, the path, or the link is unusable", () => {
+  test("accepts an https creative and falls back when a field is unusable", () => {
+    const remote: PartnerAdConfig = {
+      ...sample,
+      mobile: "https://growdrill.app/banner-320x100.png",
+      pc: "https://growdrill.app/banner-728x90.png",
+    };
+
+    expect(resolvePartnerAd("kdmhs", { kdmhs: remote })?.mobileSrc).toBe(remote.mobile);
     expect(resolvePartnerAd("kdmhs", { kdmhs: { ...sample, alt: "  " } })).toBeNull();
     expect(resolvePartnerAd("kdmhs", { kdmhs: { ...sample, mobile: "ads/kdmhs/mobile.png" } })).toBeNull();
     expect(resolvePartnerAd("kdmhs", { kdmhs: { ...sample, href: "javascript:alert(1)" } })).toBeNull();
     expect(resolvePartnerAd("kdmhs", { kdmhs: { ...sample, pc: "/ads/../secret.png" } })).toBeNull();
+    expect(resolvePartnerAd("kdmhs", { kdmhs: { ...remote, pc: "javascript:alert(1)" } })).toBeNull();
   });
 });
 
