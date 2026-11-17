@@ -22,6 +22,32 @@ export function readAdFitUnit(value: string | undefined): string | null {
   return unit ? unit : null;
 }
 
+/** Fixed frame so a partner banner occupies the same box as AdFit. */
+export function adSlotFrameClass(placement: AdFitPlacement): string {
+  if (placement === "mobile") {
+    return "h-[100px] w-[320px]";
+  }
+
+  if (placement === "desktop") {
+    return "h-[90px] w-[728px]";
+  }
+
+  return "h-[100px] w-[320px] min-[800px]:h-[90px] min-[800px]:w-[728px]";
+}
+
+/** Mobile slots hide at 800px. The desktop slot is hidden below that. */
+export function adSlotVisibilityClass(placement: AdFitPlacement): string {
+  if (placement === "mobile") {
+    return "flex min-[800px]:hidden";
+  }
+
+  if (placement === "desktop") {
+    return "hidden min-[800px]:flex";
+  }
+
+  return "flex";
+}
+
 export function selectAdFitSlot(
   isDesktop: boolean,
   mobileUnit: string | null,

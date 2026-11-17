@@ -8,6 +8,8 @@ import {
   ADFIT_SCRIPT_SRC,
   type AdFitPlacement,
   type AdFitSlot,
+  adSlotFrameClass,
+  adSlotVisibilityClass,
   readAdFitUnit,
   selectAdFitSlot,
 } from "@/shared/lib/adFit";
@@ -183,16 +185,8 @@ export function AdFitBanner({
   const desktopUnit = readAdFitUnit(process.env.NEXT_PUBLIC_ADFIT_UNIT_PC);
   const slot = useAdFitSlot(mobileUnit, desktopUnit, placement);
   const filled = useCreativeFilled(frameRef, slot);
-  const mobileOnly = placement === "mobile";
-  const desktopOnly = placement === "desktop";
-
-  const frameClass = mobileOnly
-    ? "h-[100px] w-[320px]"
-    : desktopOnly
-      ? "h-[90px] w-[728px]"
-      : "h-[100px] w-[320px] min-[800px]:h-[90px] min-[800px]:w-[728px]";
-
-  const visibilityClass = mobileOnly ? "flex min-[800px]:hidden" : desktopOnly ? "hidden min-[800px]:flex" : "flex";
+  const frameClass = adSlotFrameClass(placement);
+  const visibilityClass = adSlotVisibilityClass(placement);
 
   const insetClass = flush ? "px-0" : "px-4";
 

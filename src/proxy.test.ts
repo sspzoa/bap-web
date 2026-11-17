@@ -51,6 +51,13 @@ describe("proxy", () => {
     expect(response.headers.get("x-middleware-override-headers")).toContain("x-site-id");
   });
 
+  test("lets partner ad images through instead of sending them home", () => {
+    const response = proxy(request("/ads/kdmhs/mobile.png"));
+
+    expect(response.status).toBe(200);
+    expect(response.headers.get("location")).toBeNull();
+  });
+
   test("forwards the cookie as x-site-id on /", async () => {
     const response = proxy(request("/", "dgu"));
 

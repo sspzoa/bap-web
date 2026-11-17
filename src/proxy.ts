@@ -51,6 +51,10 @@ export function proxy(request: NextRequest) {
   const siteFromQuery = readSiteQueryParam(request.nextUrl.searchParams.get(SITE_QUERY_PARAM));
   const preferredSiteId = readPreferredSiteId(request);
 
+  if (pathname === "/ads.txt" || pathname.startsWith("/ads/")) {
+    return nextWithHeaders(request, preferredSiteId);
+  }
+
   if (!isKnownPath(pathname)) {
     const home = new URL("/", request.url);
     home.search = request.nextUrl.search;
@@ -84,5 +88,5 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!_next/static|_next/image|favicon.ico|icon|icons|img|ads.txt|robots.txt).*)"],
+  matcher: ["/((?!_next/static|_next/image|favicon.ico|icon|icons|img|ads|robots.txt).*)"],
 };
