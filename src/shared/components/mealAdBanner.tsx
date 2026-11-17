@@ -108,7 +108,7 @@ function PartnerBanner({
             광고
           </span>
         </a>
-        <AdInquiryLink />
+        {ready && <AdInquiryLink />}
       </div>
     </aside>
   );

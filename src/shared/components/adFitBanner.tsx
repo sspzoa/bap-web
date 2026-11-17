@@ -196,7 +196,7 @@ export function AdFitBanner({
       <div ref={frameRef} className={`relative shrink-0 overflow-hidden rounded-[12px] ${frameClass}`}>
         {slot && <AdFitIns key={`${pathname}:${placement}:${slot.unit}:${slot.width}x${slot.height}`} slot={slot} />}
         {!filled && <AdSlotNotice />}
-        <AdInquiryLink />
+        {filled && <AdInquiryLink />}
       </div>
       {slot && <Script id="kakao-adfit" src={ADFIT_SCRIPT_SRC} strategy="afterInteractive" />}
     </aside>
