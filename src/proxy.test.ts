@@ -51,8 +51,8 @@ describe("proxy", () => {
     expect(response.headers.get("x-middleware-override-headers")).toContain("x-site-id");
   });
 
-  test("lets partner ad images through instead of sending them home", () => {
-    const response = proxy(request("/ads/kdmhs/mobile.png"));
+  test("lets creative images through instead of sending them home", () => {
+    const response = proxy(request("/c/kdmhs/narrow"));
 
     expect(response.status).toBe(200);
     expect(response.headers.get("location")).toBeNull();

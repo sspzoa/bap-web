@@ -3,13 +3,7 @@
 import { type RefObject, useEffect, useRef, useState } from "react";
 import { AdFitBanner } from "@/shared/components/adFitBanner";
 import { AdInquiryLink } from "@/shared/components/adInquiryLink";
-import {
-  ADFIT_DESKTOP_SIZE,
-  ADFIT_MOBILE_SIZE,
-  type AdFitPlacement,
-  adSlotFrameClass,
-  adSlotVisibilityClass,
-} from "@/shared/lib/adFit";
+import { type AdFitPlacement, adSlotFrameClass, adSlotVisibilityClass } from "@/shared/lib/adFit";
 import { recordPartnerAdEvent } from "@/shared/lib/partnerAdTracking";
 import { useOptionalSiteId } from "@/sites/context";
 import {
@@ -63,7 +57,6 @@ function PartnerBanner({
   const imageRef = useRef<HTMLImageElement>(null);
   const [ready, setReady] = useState(false);
   const adPlacement: AdFitPlacement = placement === "desktop" ? "desktop" : "mobile";
-  const size = placement === "desktop" ? ADFIT_DESKTOP_SIZE : ADFIT_MOBILE_SIZE;
   const src = placement === "desktop" ? creative.pcSrc : creative.mobileSrc;
   const href = withPartnerUtm(creative.href, creative.siteId, slot);
 
@@ -78,7 +71,7 @@ function PartnerBanner({
 
   return (
     <aside
-      aria-label="광고"
+      aria-label={creative.alt}
       className={`${adSlotVisibilityClass(adPlacement)} w-full shrink-0 justify-center ${flush ? "px-0" : "px-4"} ${className}`}>
       <div className={`relative shrink-0 overflow-hidden rounded-[12px] ${adSlotFrameClass(adPlacement)}`}>
         <a
@@ -87,15 +80,13 @@ function PartnerBanner({
           target="_blank"
           rel="noopener"
           referrerPolicy="origin"
-          data-partner-slot={slot}
+          data-creative={slot}
           onClick={() => recordPartnerAdEvent({ siteId: creative.siteId, slot, type: "click" })}
           className="block h-full w-full">
           <img
             ref={imageRef}
             src={src}
             alt={creative.alt}
-            width={size.width}
-            height={size.height}
             draggable={false}
             decoding="async"
             className="h-full w-full object-cover"
