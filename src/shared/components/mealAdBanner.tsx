@@ -102,11 +102,6 @@ function PartnerBanner({
             onLoad={() => setReady(true)}
             onError={onBroken}
           />
-          <span
-            aria-hidden
-            className="pointer-events-none absolute right-1 bottom-1 rounded bg-black/60 px-1 py-px font-semibold text-[9px] text-white leading-none">
-            광고
-          </span>
         </a>
         {ready && <AdInquiryLink />}
       </div>
